@@ -7,7 +7,7 @@ class FireStoreOperations {
   createFamilyRecord(Map family) async {
 
     // for check if this family already exist 
-    final a = await databaseReference
+    final a = databaseReference
         .collection("families")
         .where('family_name', isEqualTo: family['family_name'])
         .where('phone', isEqualTo: family['phone']);

@@ -23,78 +23,81 @@ class _LoginScreenState extends State<LoginScreen> {
     FirebaseAuth _auth = FirebaseAuth.fromApp(app);
 
     _auth.verifyPhoneNumber(
-        phoneNumber: phone,
-        timeout: Duration(seconds: 60),
-        verificationCompleted: (AuthCredential credential) async {
-          Navigator.of(context).pop();
+      phoneNumber: phone,
+      timeout: Duration(seconds: 60),
+      verificationCompleted: (AuthCredential credential) async {
+        Navigator.of(context).pop();
 
-          AuthResult result = await _auth.signInWithCredential(credential);
+        AuthResult result = await _auth.signInWithCredential(credential);
 
-          FirebaseUser user = result.user;
+        FirebaseUser user = result.user;
 
-          if (user != null) {
-            await SharedPreferencesOperations().store_user(user);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => SignUpChoices()));
-          } else {
-            print("Error");
-          }
+        if (user != null) {
+          await SharedPreferencesOperations().storeUser(user);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => SignUpChoices()));
+        } else {
+          print("Error");
+        }
 
 //This callback would gets called when verification is done auto maticlly
-        },
-        verificationFailed: (AuthException exception) {
-          print(exception.message);
-        },
-        codeSent: (String verificationId, [int forceResendingToken]) {
-          showDialog(
-              context: context,
-              barrierDismissible: false,
-              builder: (context) {
-                return AlertDialog(
-                  title: Text("هل استلمت الكود"),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      TextField(
-                        controller: _codeController,
-                      ),
-                    ],
+      },
+      verificationFailed: (AuthException exception) {
+        print(exception.message);
+      },
+      codeSent: (String verificationId, [int forceResendingToken]) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              title: Text("هل استلمت الكود"),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  TextField(
+                    controller: _codeController,
                   ),
-                  actions: <Widget>[
-                    FlatButton(
-                      child: Text("Confirm"),
-                      textColor: Colors.white,
-                      color: Colors.blue,
-                      onPressed: () async {
-                        final code = _codeController.text.trim();
-                        AuthCredential credential =
-                        PhoneAuthProvider.getCredential(
-                            verificationId: verificationId, smsCode: code);
+                ],
+              ),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text("Confirm"),
+                  textColor: Colors.white,
+                  color: Colors.blue,
+                  onPressed: () async {
+                    final code = _codeController.text.trim();
+                    AuthCredential credential = PhoneAuthProvider.getCredential(
+                        verificationId: verificationId, smsCode: code);
 
-                        AuthResult result =
+                    AuthResult result =
                         await _auth.signInWithCredential(credential);
 
-                        FirebaseUser user = result.user;
+                    FirebaseUser user = result.user;
 
-                        if (user != null) {
-                          await SharedPreferencesOperations().store_user(user);
+                    if (user != null) {
+                      await SharedPreferencesOperations().storeUser(user);
 
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    SignUpChoices(), //user: user,)
-                              ));
-                        } else {
-                          print("Error");
-                        }
-                      },
-                    )
-                  ],
-                );
-              });
-        },
-        codeAutoRetrievalTimeout: null);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SignUpChoices(), //user: user,)
+                          ));
+                    } else {
+                      print("Error");
+                    }
+                  },
+                )
+              ],
+            );
+          },
+        );
+      },
+      codeAutoRetrievalTimeout: null,
+    );
+
+    return true;
   }
 
   String phoneTxt, pswdTxt = "";
@@ -104,61 +107,62 @@ class _LoginScreenState extends State<LoginScreen> {
 // for initiliaze size config
     SizeConfig().init(context);
     return Scaffold(
-        body: SafeArea(
-          child: Container(
-              width: SizeConfig.screenWidth * 1,
-              height: SizeConfig.screenHeight * 1,
-              padding: EdgeInsets.all(6.0),
-              child: Center(
-                child: ListView(children: <Widget>[
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+      body: SafeArea(
+        child: Container(
+          width: SizeConfig.screenWidth * 1,
+          height: SizeConfig.screenHeight * 1,
+          padding: EdgeInsets.all(6.0),
+          child: Center(
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.0),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(top: 10.0),
-                        ),
-                        Row(
+                        Column(
+                          children: <Widget>[
+                            Padding(
+                              padding: EdgeInsets.only(bottom: 10),
+                              child: SvgPicture.asset(
+                                "assets/icons/sign_up.svg",
+                                color: const Color(0xFF2356C7),
+                                height: 200.0,
+                              ),
+                            ),
+                            Text("تسجيل الدخول", style: emptyblueText),
+                          ],
+                        )
+                      ],
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 40),
+                      child: Form(
+                        key: _formkey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          textDirection: TextDirection.rtl,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            Column(
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 10),
-                                  child: SvgPicture.asset(
-                                    "assets/icons/sign_up.svg",
-                                    color: const Color(0xFF2356C7),
-                                    height: 200.0,
-                                  ),
-                                ),
-                                Text("تسجيل الدخول", style: emptyblueText),
-                              ],
-                            )
-                          ],
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 40),
-                          child: Form(
-                            key: _formkey,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              textDirection: TextDirection.rtl,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(height: 30),
-                                SizedBox(
-                                  height: 60.0,
-                                  child: crdTxtFrmFld(
-                                      valTxt: phoneTxt,
-                                      cntrTxt: _phoneController,
-                                      hinttxt: 'رقم الهاتف',
-                                      LargerElseValue: 20,
-                                      SmallerValue: 10,
-                                      validationifText:
+                            SizedBox(height: 30),
+                            SizedBox(
+                              height: 60.0,
+                              child: crdTxtFrmFld(
+                                  valTxt: phoneTxt,
+                                  cntrTxt: _phoneController,
+                                  hinttxt: 'رقم الهاتف',
+                                  largerElseValue: 20,
+                                  smallerValue: 10,
+                                  validationifText:
                                       'رقم الهاتف غير صحيح ادخل 11 رقما',
-                                      validationElseText: 'رقم الهاتف كبير جدا',
-                                      Passwrd: false),
-                                ),
-                                SizedBox(height: 16),
+                                  validationElseText: 'رقم الهاتف كبير جدا',
+                                  password: false),
+                            ),
+                            SizedBox(height: 16),
 /* SizedBox(
 height: 60.0,
 child: crdTxtFrmFld(
@@ -175,31 +179,35 @@ Passwrd: false),
 SizedBox(
 height: 20,
 ), */
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    ButtonBlueShape('تسجيل الدخول', context, () {
-                                      print(_phoneController.text);
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                buttonBlueShape('تسجيل الدخول', context, () {
+                                  print(_phoneController.text);
 
-                                      if (_formkey.currentState.validate()) {
-                                        _formkey.currentState.save();
-                                        String number =
-                                            '+964' + _phoneController.text;
-                                        print('number phone is $number ');
-                                        loginUser(number, context);
-                                      } else {
-                                        print('not valid');
-                                      }
-                                    })
-                                  ],
-                                )
+                                  if (_formkey.currentState.validate()) {
+                                    _formkey.currentState.save();
+                                    String number =
+                                        '+964' + _phoneController.text;
+                                    print('number phone is $number ');
+                                    loginUser(number, context);
+                                  } else {
+                                    print('not valid');
+                                  }
+                                })
                               ],
-                            ),
-                          ),
+                            )
+                          ],
                         ),
-                      ]),
-                ]),
-              )),
-        ));
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

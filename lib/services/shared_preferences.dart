@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SharedPreferencesOperations{
 
 
-  store_user(FirebaseUser user) async {
+  storeUser(FirebaseUser user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
     await prefs.setStringList('user', [
@@ -19,9 +19,9 @@ class SharedPreferencesOperations{
      ]);
   }
 
-  get_user() async {
+  getUser() async {
         SharedPreferences prefs = await SharedPreferences.getInstance();
-        final list= await prefs.getStringList('user');
+        final list= prefs.getStringList('user');
 
         return list;
    
