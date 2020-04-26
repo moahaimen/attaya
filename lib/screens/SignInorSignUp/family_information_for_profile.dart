@@ -1,13 +1,13 @@
 import 'package:attayairaq/functions/geoloacater/geo.dart';
-import 'package:attayairaq/screens/SignInorSignUp/HomeScreen.dart';
 import 'package:attayairaq/services/firestore_operations.dart';
 import 'package:attayairaq/services/shared_preferences.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:attayairaq/consts/consts.dart';
 import 'package:geolocator/geolocator.dart';
+
+import '../HomeScreen.dart';
 
 class FamilySignup extends StatefulWidget {
   @override
@@ -70,8 +70,8 @@ class _FamilySignupState extends State<FamilySignup> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(bottom: 15),
-                            child: SvgPicture.asset(
-                              "assets/icons/family_icon.svg",
+                            child: Image.asset(
+                              "assets/icons/family_icon.png",
                               //color: const Color(0xFF2356C7),
                               height: 150.0,
                             ),

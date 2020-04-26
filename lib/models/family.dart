@@ -1,42 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
-class FamilyModel {
-  String id; //1
-  String firstName; //2
-  String lastName; //3
-  String familyName; //4
-  String province; //5
-  String city; //6
-  String phoneNo; //7
-  String geolocation; //8
-  String password; //9
-  String timeStamp; //10
+import 'package:attayairaq/models/location.dart';
 
-  FamilyModel({
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.familyName,
-    this.province,
-    this.city,
-    this.geolocation,
-    this.password,
-    this.phoneNo,
-    this.timeStamp,
+class Family {
+  final String id; //1
+  final String headOfFamily; //2
+  final String province; //5
+  final String city; //6
+  final String phoneNo; //7
+  final Location location;
+  final DateTime timeStamp; //10
+  final bool isNeedHelp;
+  final bool isApprovedFromAdmin;
+  final int noOffamilyMembers;
+  final String nearestKnownPoint;
+
+  Family({
+    @required this.id,
+    @required this.headOfFamily,
+    @required this.province,
+    @required this.city,
+    @required this.phoneNo,
+    @required this.location,
+    @required this.timeStamp,
+    @required this.isNeedHelp,
+    @required this.isApprovedFromAdmin,
+    @required this.noOffamilyMembers,
+    @required this.nearestKnownPoint,
   });
 
-  factory FamilyModel.fromDocument(DocumentSnapshot doc) {
-    return FamilyModel(
-      id: doc['id'],
-      firstName: doc['first_name'],
-      lastName: doc['last_name'],
-      familyName: doc['family_name'],
-      province: doc['province'],
-      city: doc['city'],
-      password: doc['passowrd'],
-      geolocation: doc['geolocation'],
-      phoneNo: doc['phone_no'],
-      timeStamp: doc['timeStamp'],
+  factory Family.fromDocument(DocumentSnapshot doc) {
+    return Family(
+      id: doc.data['id'],
+      headOfFamily: doc.data['head_of_family'],
+      province: doc.data['province'],
+      city: doc.data['city'],
+      phoneNo: doc.data['phone_no'],
+      timeStamp: doc.data['time_stamp'],
+      isNeedHelp: doc.data['is_need_help'],
+      nearestKnownPoint: doc.data['nearest_known_point'],
+      noOffamilyMembers: doc.data['no_of_family_members'],
+      isApprovedFromAdmin: doc.data['is_approved_from_admin'],
+      location: Location(
+        longitude: doc.data['longitude'],
+        latitude: doc.data['latitude'],
+      ),
     );
   }
 }

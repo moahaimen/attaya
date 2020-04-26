@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'consts/consts.dart';
 
 class Home extends StatefulWidget {
@@ -34,8 +33,8 @@ class _HomeState extends State<Home> {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 85),
-                    child: SvgPicture.asset(
-                      "assets/icons/logo.svg",
+                    child: Image.asset(
+                      "assets/icons/logo_icon.png",
                       height: 250.0,
                     ),
                   ),

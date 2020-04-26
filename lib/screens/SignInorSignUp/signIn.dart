@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:attayairaq/consts/consts.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -128,8 +127,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: <Widget>[
                             Padding(
                               padding: EdgeInsets.only(bottom: 10),
-                              child: SvgPicture.asset(
-                                "assets/icons/sign_up.svg",
+                              child: Image.asset(
+                                "assets/icons/sign_up.png",
                                 color: const Color(0xFF2356C7),
                                 height: 200.0,
                               ),

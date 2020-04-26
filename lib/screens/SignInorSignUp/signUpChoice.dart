@@ -3,7 +3,6 @@ import 'package:attayairaq/screens/SignInorSignUp/orginization_information_for_p
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:attayairaq/consts/consts.dart';
 
 class SignUpChoices extends StatefulWidget {
@@ -46,8 +45,8 @@ class _SignUpChoicesState extends State<SignUpChoices> {
                         children: <Widget>[
                           Padding(
                             padding: EdgeInsets.only(bottom: 15),
-                            child: SvgPicture.asset(
-                              "assets/icons/sign_up2.svg",
+                            child: Image.asset(
+                              "assets/icons/sign_up.png",
                               height: 100.0,
                             ),
                           ),

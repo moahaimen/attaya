@@ -1,30 +1,23 @@
+import 'package:attayairaq/models/location.dart';
+import 'package:attayairaq/models/organization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:attayairaq/consts/consts.dart';
 
-class FamilyAddAprrov extends StatefulWidget {
+class OrganizationDetails extends StatefulWidget {
+  final Organization org;
+
+  const OrganizationDetails({this.org});
   @override
-  _FamilyAddAprrovState createState() => _FamilyAddAprrovState();
+  _OrganizationDetailsState createState() => _OrganizationDetailsState();
 }
 
-class _FamilyAddAprrovState extends State<FamilyAddAprrov> {
-  int _currentIndex = 0;
-  // final List<Widget> _children = [];
-  void onTabTapped(int index) {
-    setState(() {
-      _currentIndex = index;
-    });
-  }
-
-  txt() {
-    print("family added");
-  }
-
+class _OrganizationDetailsState extends State<OrganizationDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: apBar('معلومات المنظمة', context),
+      appBar: apBar('معلومات المنظمة', context, false),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(6.0),
@@ -58,31 +51,39 @@ class _FamilyAddAprrovState extends State<FamilyAddAprrov> {
                                 children: <Widget>[
                                   Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text("منظمة امل",
-                                        textAlign: TextAlign.right,
-                                        textDirection: TextDirection.rtl,
-                                        style: DeepBlueText),
+                                    child: Text(
+                                      widget.org.name,
+                                      textAlign: TextAlign.right,
+                                      textDirection: TextDirection.rtl,
+                                      style: DeepBlueText,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text("رقم التواصل:07712345678",
-                                        textAlign: TextAlign.right,
-                                        textDirection: TextDirection.rtl,
-                                        style: CardBorderTextstyle),
+                                    child: Text(
+                                      "رقم التواصل: ${widget.org.phoneNumber}",
+                                      textAlign: TextAlign.right,
+                                      textDirection: TextDirection.rtl,
+                                      style: cardBorderTextstyle,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text("المحافظة:بغداد",
-                                        textAlign: TextAlign.right,
-                                        textDirection: TextDirection.rtl,
-                                        style: CardBorderTextstyle),
+                                    child: Text(
+                                      "المحافظة: ${widget.org.governorate}",
+                                      textAlign: TextAlign.right,
+                                      textDirection: TextDirection.rtl,
+                                      style: cardBorderTextstyle,
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
-                                    child: Text("مناطق التوزيع:حي اكد-النورين",
-                                        textAlign: TextAlign.right,
-                                        textDirection: TextDirection.rtl,
-                                        style: CardBorderTextstyle),
+                                    child: Text(
+                                      "مناطق التوزيع: ${widget.org.distributionArea}",
+                                      textAlign: TextAlign.right,
+                                      textDirection: TextDirection.rtl,
+                                      style: cardBorderTextstyle,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -101,7 +102,10 @@ class _FamilyAddAprrovState extends State<FamilyAddAprrov> {
                         height: 50,
                         width: 280,
                         child: buttonBlueOldShape(
-                            'ارسال رسالة للمنظمة', context, txt()),
+                          'ارسال رسالة للمنظمة',
+                          context,
+                          () {},
+                        ),
                       ),
                       SizedBox(
                         height: 10,
@@ -123,7 +127,7 @@ class _FamilyAddAprrovState extends State<FamilyAddAprrov> {
                         padding: EdgeInsets.only(
                             left: 10, right: 10.0, top: 28, bottom: 5),
                         child: Text(
-                          "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
+                          widget.org.description,
                           textAlign: TextAlign.center,
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
@@ -140,28 +144,6 @@ class _FamilyAddAprrovState extends State<FamilyAddAprrov> {
               ],
             ),
           ),
-        ),
-      ),
-      bottomNavigationBar: SizedBox(
-        height: 48,
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          showSelectedLabels: false,
-          showUnselectedLabels: false,
-          backgroundColor: Color(0xff2356c7),
-          onTap: onTabTapped, // new
-          currentIndex: _currentIndex, // new
-          items: [
-            new BottomNavigationBarItem(
-                icon: Icon(Icons.person_outline, color: Colors.white),
-                title: Container(height: 10.0)),
-            new BottomNavigationBarItem(
-                icon: Icon(Icons.location_on, color: Colors.white),
-                title: Container(height: 10.0)),
-            new BottomNavigationBarItem(
-                icon: Icon(Icons.map, color: Colors.white),
-                title: Container(height: 10.0))
-          ],
         ),
       ),
     );

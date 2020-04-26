@@ -26,7 +26,6 @@ Card crdTxtOldFrmFld({
   return Card(
     elevation: 5,
     child: TextFormField(
-      
       obscureText: password,
       textAlign: TextAlign.right,
       textAlignVertical: TextAlignVertical.center,
@@ -66,7 +65,7 @@ const DeepBlueText = TextStyle(
   fontSize: 20.0,
   fontFamily: 'Changa',
 );
-const CardBorderTextstyle = TextStyle(
+const cardBorderTextstyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
   fontSize: 16.0,
@@ -126,7 +125,7 @@ Card buttonBlueShape(String titleOfButton, context, Function function) {
   return Card(
     child: Container(
       height: 50.0,
-      width: 300.0,
+      width: double.infinity,
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: const Color(0xFF2356C7),
@@ -142,12 +141,15 @@ Card buttonBlueOldShape(String titleOfButton, context, Function function) {
   return Card(
     child: Container(
       height: 50.0,
-      width: 300.0,
+      width: double.infinity,
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: const Color(0xFF2356C7),
-        child: Text('$titleOfButton',
-            textAlign: TextAlign.center, style: buttonWhiteText),
+        child: Text(
+          '$titleOfButton',
+          textAlign: TextAlign.center,
+          style: buttonWhiteText,
+        ),
         onPressed: function,
       ),
     ),
@@ -182,7 +184,7 @@ Card buttonRedShape(
   return Card(
     child: Container(
       height: 50.0,
-      width: 300.0,
+      width: double.infinity,
       child: RaisedButton(
         elevation: 10.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -221,12 +223,6 @@ const aboutTextstyle = TextStyle(
   fontSize: 18.0,
   fontFamily: 'Changa',
 );
-const cardBorderTextstyle = TextStyle(
-  color: Colors.black,
-  fontWeight: FontWeight.bold,
-  fontSize: 16.0,
-  fontFamily: 'Changa',
-);
 
 const deepBlueTextStyle = TextStyle(
   color: deepTxtBlue,
@@ -242,7 +238,12 @@ const txtWritingFldForm = TextStyle(
   fontFamily: 'Changa',
 );
 
-Card crdTxtFrmFld({
+final outlineInputBorder = OutlineInputBorder(
+  borderRadius: BorderRadius.all(Radius.circular(15.0)),
+  borderSide: BorderSide.none,
+);
+
+Widget crdTxtFrmFld({
   String valTxt,
   TextEditingController cntrTxt,
   String hinttxt,
@@ -252,38 +253,46 @@ Card crdTxtFrmFld({
   int smallerValue,
   bool password,
 }) {
-  return Card(
-    elevation: 5,
-    child: TextFormField(
-      obscureText: password,
-      textAlign: TextAlign.right,
-      textAlignVertical: TextAlignVertical.center,
-      textDirection: TextDirection.rtl,
-      decoration: InputDecoration(
-        focusedBorder: InputBorder.none,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide.none),
-        hintText: "$hinttxt",
-        hintStyle: TextStyle(
+  return Padding(
+    padding: const EdgeInsets.all(2.0),
+    child: Material(
+      elevation: 5,
+      child: TextFormField(
+        obscureText: password,
+        textAlign: TextAlign.right,
+        textAlignVertical: TextAlignVertical.center,
+        textDirection: TextDirection.rtl,
+        decoration: InputDecoration(
+          focusedBorder: InputBorder.none,
+          filled: true,
+          fillColor: Colors.white,
+          border: outlineInputBorder,
+          disabledBorder: outlineInputBorder,
+          enabledBorder: outlineInputBorder,
+          errorBorder: outlineInputBorder,
+          focusedErrorBorder: outlineInputBorder,
+          hintText: "$hinttxt",
+          hintStyle: TextStyle(
             fontSize: 16.0,
             fontFamily: 'Changa',
             fontWeight: FontWeight.bold,
-            color: const Color(0xffA5D5EB)),
+            color: const Color(0xffA5D5EB),
+          ),
+        ),
+        controller: cntrTxt,
+        validator: (val) {
+          if (val.trim().length > largerElseValue) {
+            return validationElseText;
+          } else if (val.trim().isEmpty) {
+            return 'يرجى ملئ الحقل';
+          } else if (val.trim().length < smallerValue) {
+            return validationifText;
+          } else {
+            return null;
+          }
+        },
+        onChanged: (val) => valTxt = val,
       ),
-      controller: cntrTxt,
-      validator: (val) {
-        if (val.trim().length < smallerValue || val.isEmpty) {
-          return validationifText;
-        } else if (val.trim().length > largerElseValue) {
-          return validationElseText;
-        } else {
-          return null;
-        }
-      },
-      onSaved: (val) => valTxt = val,
     ),
   );
 }
@@ -472,16 +481,18 @@ Card crdRedTxtFrmFldorg(
   );
 }
 
-AppBar apBar(String ttl, context) {
+AppBar apBar(String ttl, context, bool isNotsubScreen) {
   return AppBar(
     centerTitle: true,
     title: Text('$ttl', textAlign: TextAlign.center, style: headerWhiteText),
     backgroundColor: const Color(0xFF2356C7),
     elevation: 5,
-    leading: IconButton(
-      icon: Icon(Icons.arrow_back_ios),
-      onPressed: () => Navigator.of(context).pop(),
-    ),
+    leading: isNotsubScreen
+        ? null
+        : IconButton(
+            icon: Icon(Icons.arrow_back_ios),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
   );
 }
 

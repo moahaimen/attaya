@@ -26,6 +26,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_spinkit: ^4.1.2+1
+  uuid: ^2.0.4
 
 
 # For information on the generic Dart part of this file, see the
@@ -41,9 +43,22 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-   - assets/images/
-   - assets/icons/
-   -
+   - assets/icons/add_icon.png
+   - assets/icons/back_icon.png
+   - assets/icons/change_status.png
+   - assets/icons/correct_icon.png
+   - assets/icons/delete_icon.png
+   - assets/icons/diagnose_icon.png
+   - assets/icons/family_icon.png
+   - assets/icons/family.png
+   - assets/icons/map_pin_1.png
+   - assets/icons/organization_icon.png
+   - assets/icons/user_icon.png
+   - assets/icons/edit_icon.png
+   - assets/icons/sign_up.png
+   - assets/icons/sign_in.png
+   - assets/icons/logo_icon.png
+   
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
@@ -58,7 +73,9 @@ flutter:
   fonts:
     - family: Changa
       fonts:
+        - asset: assets/fonts/Changa-Regular.ttf
         - asset: assets/fonts/Changa-Bold.ttf
+          weight: 700
 #        - asset: assets/fonts/Changa-Medium.ttf
 
   # For details regarding fonts from package dependencies,
