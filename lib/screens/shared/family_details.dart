@@ -1,21 +1,21 @@
 import 'package:attayairaq/consts/consts.dart';
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/models/family.dart';
+import 'package:attayairaq/screens/admin/delete.dart';
 import 'package:attayairaq/services/family_sevices.dart';
 import 'package:flutter/material.dart';
 
-import 'delete.dart';
 
-class AdminFamilyDetails extends StatefulWidget {
+class FamilyDetails extends StatefulWidget {
   final Family familyObj;
 
-  const AdminFamilyDetails({this.familyObj});
+  const FamilyDetails({this.familyObj});
 
   @override
-  _AdminFamilyDetailsState createState() => _AdminFamilyDetailsState();
+  _FamilyDetailsState createState() => _FamilyDetailsState();
 }
 
-class _AdminFamilyDetailsState extends State<AdminFamilyDetails> {
+class _FamilyDetailsState extends State<FamilyDetails> {
   bool _loading = false;
   bool _changeStateloading = false;
 

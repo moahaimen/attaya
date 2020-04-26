@@ -1,8 +1,8 @@
 import 'package:attayairaq/consts/consts.dart';
 import 'package:attayairaq/models/family.dart';
 import 'package:attayairaq/models/location.dart';
-import 'package:attayairaq/screens/admin/family_details.dart';
 import 'package:attayairaq/screens/shared/add_family.dart';
+import 'package:attayairaq/screens/shared/family_details.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -117,7 +117,7 @@ class FamiliesList extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (_) => AdminFamilyDetails(
+                                      builder: (_) => FamilyDetails(
                                         familyObj: familyList[i],
                                       ),
                                     ),
