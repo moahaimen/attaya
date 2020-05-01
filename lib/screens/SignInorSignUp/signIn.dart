@@ -1,8 +1,9 @@
-import 'package:attayairaq/screens/SignInorSignUp/signUpChoice.dart';
-import 'package:attayairaq/services/shared_preferences.dart';
+import 'package:attayairaq/Test/verify.dart';
+import 'package:attayairaq/functions/show_overlay.dart';
+import 'package:attayairaq/screens/HomeScreen.dart';
+import 'package:attayairaq/services/auth_service.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:attayairaq/consts/consts.dart';
@@ -16,90 +17,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formkey = GlobalKey<FormState>();
   final _phoneController = TextEditingController();
 //final _passController = TextEditingController();
-  final _codeController = TextEditingController();
-  Future<bool> loginUser(String phone, BuildContext context) async {
-    FirebaseApp app = FirebaseApp(name: '[DEFAULT]');
-    FirebaseAuth _auth = FirebaseAuth.fromApp(app);
+  String status = '';
+  UserType userType = UserType.family;
 
-    _auth.verifyPhoneNumber(
-      phoneNumber: phone,
-      timeout: Duration(seconds: 60),
-      verificationCompleted: (AuthCredential credential) async {
-        Navigator.of(context).pop();
+  String transUserTyp(UserType u) {
+    switch (u) {
+      case UserType.family:
+        return 'عائلة';
+        break;
+      case UserType.organisation:
+        return 'منظمة';
 
-        AuthResult result = await _auth.signInWithCredential(credential);
+        break;
 
-        FirebaseUser user = result.user;
-
-        if (user != null) {
-          await SharedPreferencesOperations().storeUser(user);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => SignUpChoices()));
-        } else {
-          print("Error");
-        }
-
-//This callback would gets called when verification is done auto maticlly
-      },
-      verificationFailed: (AuthException exception) {
-        print(exception.message);
-      },
-      codeSent: (String verificationId, [int forceResendingToken]) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              title: Text("هل استلمت الكود"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  TextField(
-                    controller: _codeController,
-                  ),
-                ],
-              ),
-              actions: <Widget>[
-                FlatButton(
-                  child: Text("Confirm"),
-                  textColor: Colors.white,
-                  color: Colors.blue,
-                  onPressed: () async {
-                    final code = _codeController.text.trim();
-                    AuthCredential credential = PhoneAuthProvider.getCredential(
-                        verificationId: verificationId, smsCode: code);
-
-                    AuthResult result =
-                        await _auth.signInWithCredential(credential);
-
-                    FirebaseUser user = result.user;
-
-                    if (user != null) {
-                      await SharedPreferencesOperations().storeUser(user);
-
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                SignUpChoices(), //user: user,)
-                          ));
-                    } else {
-                      print("Error");
-                    }
-                  },
-                )
-              ],
-            );
-          },
-        );
-      },
-      codeAutoRetrievalTimeout: null,
-    );
-
-    return true;
+      default:
+        return 'ادمن';
+    }
   }
 
-  String phoneTxt, pswdTxt = "";
 //Place A
   @override
   Widget build(BuildContext context) {
@@ -138,66 +73,111 @@ class _LoginScreenState extends State<LoginScreen> {
                         )
                       ],
                     ),
+                    SizedBox(
+                      width: 142,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.circular(30)),
+                        padding: const EdgeInsets.only(
+                            left: 30, right: 30, top: 10, bottom: 5),
+                        child: DropdownButton<UserType>(
+                          value: userType,
+                          icon: Icon(Icons.arrow_drop_down),
+                          iconSize: 24,
+                          onChanged: (newValue) {
+                            setState(() {
+                              userType = newValue;
+                            });
+                          },
+                          underline: Container(),
+                          items: [
+                            UserType.admin,
+                            UserType.family,
+                            UserType.organisation,
+                          ].map<DropdownMenuItem<UserType>>((val) {
+                            return DropdownMenuItem<UserType>(
+                              value: val,
+                              child: Text(
+                                transUserTyp(val),
+                                style: textStyle,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 40),
-                      child: Form(
-                        key: _formkey,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          textDirection: TextDirection.rtl,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 30),
-                            SizedBox(
-                              height: 60.0,
-                              child: crdTxtFrmFld(
-                                  valTxt: phoneTxt,
-                                  cntrTxt: _phoneController,
-                                  hinttxt: 'رقم الهاتف',
-                                  largerElseValue: 20,
-                                  smallerValue: 10,
-                                  validationifText:
-                                      'رقم الهاتف غير صحيح ادخل 11 رقما',
-                                  validationElseText: 'رقم الهاتف كبير جدا',
-                                  password: false),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        textDirection: TextDirection.rtl,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          SizedBox(height: 30),
+                          SizedBox(
+                            height: 60.0,
+                            child: Form(
+                              key: _formkey,
+                              child: CrdTxtFrmFld(
+                                cntrTxt: _phoneController,
+                                hinttxt: 'رقم الهاتف',
+                                largerElseValue: 12,
+                                smallerValue: 11,
+                                validationifText:
+                                    'رقم الهاتف غير صحيح ادخل 11 رقما',
+                                validationElseText: 'رقم الهاتف كبير جدا',
+                                password: false,
+                              ),
                             ),
-                            SizedBox(height: 16),
-/* SizedBox(
-height: 60.0,
-child: crdTxtFrmFld(
-valTxt: pswdTxt,
-cntrTxt: _passController,
-hinttxt: 'كلمة السر',
-LargerElseValue: 12,
-SmallerValue: 8,
-validationifText:
-'كلمة السر يجب ان تكون اكثر من 8 ',
-validationElseText: 'كلمة السر كبيرة جدا',
-Passwrd: false),
-),
-SizedBox(
-height: 20,
-), */
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                buttonBlueShape('تسجيل الدخول', context, () {
-                                  print(_phoneController.text);
+                          ),
+                          SizedBox(height: 16),
+                          SizedBox(
+                            width: SizeConfig.screenWidth * 0.7,
+                            child: buttonBlueShape(
+                              'تسجيل الدخول',
+                              context,
+                              () async {
+                                print(_phoneController.text);
 
-                                  if (_formkey.currentState.validate()) {
-                                    _formkey.currentState.save();
-                                    String number =
-                                        '+964' + _phoneController.text;
-                                    print('number phone is $number ');
-                                    loginUser(number, context);
-                                  } else {
-                                    print('not valid');
+                                if (_formkey.currentState.validate()) {
+                                  _formkey.currentState.save();
+                                  String number = '+964' +
+                                      _phoneController.text.substring(1);
+                                  print('number phone is $number ');
+                                  try {
+                                    await AuthService.instantiate(
+                                      phoneNumber: number,
+                                      type: userType,
+                                    );
+                                    Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                        builder: (_) => PhoneAuthVerify(),
+                                      ),
+                                    );
+                                    // await AuthService().verifyNumber(
+                                    //     number, context, userType);
+                                  } on AuthException catch (e) {
+                                    switch (e.message) {
+                                      case 'ERROR_INVALID_CREDENTIAL':
+                                        return showOverlay(
+                                            text: 'الرقم غير صحيح',
+                                            context: context);
+                                        break;
+                                      case 'ERROR_USER_NOT_FOUND':
+                                        return showOverlay(
+                                            text: 'لا يوجد حساب بهذا الرقم',
+                                            context: context);
+                                        break;
+
+                                      default:
+                                    }
                                   }
-                                })
-                              ],
-                            )
-                          ],
-                        ),
+                                }
+                              },
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ],

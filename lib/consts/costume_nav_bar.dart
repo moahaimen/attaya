@@ -24,7 +24,7 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => FamiliesList(),
+                  builder: (_) => FamiliesList(isAdmin: true),
                 ),
               );
             },
@@ -52,7 +52,89 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => OrganizationsList(),
+                  builder: (_) => OrganizationsList(
+                    isAdmin: true,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class FamilyNavBar extends StatelessWidget {
+  const FamilyNavBar({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: 50,
+      color: Color.fromRGBO(35, 68, 199, 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          IconButton(
+            icon: Image.asset(
+              'assets/icons/organization_icon.png',
+              width: 25,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => OrganizationsList(
+                    isAdmin: false,
+                  ),
+                ),
+              );
+            },
+          ),
+          IconButton(
+            icon: Image.asset(
+              'assets/icons/map_pin_1.png',
+              width: 25,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => MapScreen(isNotSupScreen: false,),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OrganizationNavBar extends StatelessWidget {
+  const OrganizationNavBar({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      height: 50,
+      color: Color.fromRGBO(35, 68, 199, 1),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          IconButton(
+            icon: Image.asset(
+              'assets/icons/family_icon.png',
+              width: 25,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => FamiliesList(isAdmin: false),
                 ),
               );
             },

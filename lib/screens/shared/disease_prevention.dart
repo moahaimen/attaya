@@ -21,7 +21,7 @@ class DiseasePrevention extends StatelessWidget {
       'تجنب الاماكن المزدحمة',
     ];
     return Scaffold(
-      appBar: apBar('الوقاية من المرض', context,false),
+      appBar: apBar('الوقاية من المرض', context),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Padding(

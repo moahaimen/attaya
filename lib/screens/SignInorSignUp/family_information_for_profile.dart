@@ -1,232 +1,265 @@
-import 'package:attayairaq/functions/geoloacater/geo.dart';
-import 'package:attayairaq/services/firestore_operations.dart';
-import 'package:attayairaq/services/shared_preferences.dart';
+import 'package:attayairaq/consts/loading.dart';
+import 'package:attayairaq/models/family.dart';
+import 'package:attayairaq/models/location.dart';
+import 'package:attayairaq/models/user.dart';
+import 'package:attayairaq/screens/HomeScreen.dart';
+import 'package:attayairaq/services/data_base.dart';
+import 'package:attayairaq/services/shered_Preference.dart';
 import 'package:attayairaq/services/size_config.dart';
+import 'package:attayairaq/wrapper.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:attayairaq/consts/consts.dart';
-import 'package:geolocator/geolocator.dart';
-
-import '../HomeScreen.dart';
 
 class FamilySignup extends StatefulWidget {
+  final FirebaseUser user;
+  final String phoneNo;
+
+  const FamilySignup({this.user, this.phoneNo});
   @override
   _FamilySignupState createState() => _FamilySignupState();
 }
 
 class _FamilySignupState extends State<FamilySignup> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   final _formkey = GlobalKey<FormState>();
-  String fulFamilyName,
-      province,
-      city,
-      phoneno,
-      password,
-      nearPoint,
-      gelocation = "";
-  int familycount = 0;
-  final familyCount = new TextEditingController();
-  final cty = new TextEditingController();
-  final nearPnt = new TextEditingController();
-  final phno = new TextEditingController();
-  final pswd = new TextEditingController();
-  final gloc = new TextEditingController();
-  final prv = new TextEditingController();
-  final fullFamilyaName = new TextEditingController();
+  bool loading = false;
 
-  sendInofrmationToFireStore() async {
-    _formkey.currentState.save();
-    Position position = await Geolocator()
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+  final familyCountController = TextEditingController();
+  final cityController = TextEditingController();
+  final nearPointController = TextEditingController();
+  final provinceController = TextEditingController();
+  final fullFamilyaNameController = TextEditingController();
 
-    print('Geolocation = ');
+  @override
+  void dispose() {
+    familyCountController.dispose();
+    cityController.dispose();
+    nearPointController.dispose();
+    provinceController.dispose();
+    fullFamilyaNameController.dispose();
+    super.dispose();
   }
 
-  FireStoreOperations firestore = new FireStoreOperations();
   @override
   Widget build(BuildContext context) {
     // for initiliaze size config
     SizeConfig().init(context);
     return Scaffold(
-      key: _scaffoldKey,
-      body: SafeArea(
-        child: Container(
-          width: SizeConfig.screenWidth * 1,
-          height: SizeConfig.screenHeight * 1,
-          padding: EdgeInsets.all(6.0),
-          child: ListView(
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 10.0),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 15),
-                            child: Image.asset(
-                              "assets/icons/family_icon.png",
-                              //color: const Color(0xFF2356C7),
-                              height: 150.0,
+      body: loading
+          ? Loading()
+          : SafeArea(
+              child: Container(
+                width: SizeConfig.screenWidth * 1,
+                height: SizeConfig.screenHeight * 1,
+                padding: EdgeInsets.all(6.0),
+                child: ListView(
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(top: 10.0),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 15),
+                                  child: Image.asset(
+                                    "assets/icons/family_icon.png",
+                                    //color: const Color(0xFF2356C7),
+                                    height: 150.0,
+                                  ),
+                                ),
+                                Text(
+                                  "اكمال تسجيل معلومات العائلة",
+                                  style: emptyTallRedText,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 40),
+                          child: Form(
+                            key: _formkey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              textDirection: TextDirection.rtl,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                SizedBox(height: 30),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: CrdTxtFrmFld(
+                                    cntrTxt: fullFamilyaNameController,
+                                    hinttxt: 'اسم رب العائلة: الاسم الثلاثي',
+                                    largerElseValue: 30,
+                                    smallerValue: 11,
+                                    validationifText:
+                                        'يرجى ادخال الاسم الثلاثي بالكامل',
+                                    validationElseText: 'الاسم طويل جدا',
+                                    isBlue: false,
+                                    isNumber: false,
+                                    password: false,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: CrdTxtFrmFld(
+                                    cntrTxt: familyCountController,
+                                    hinttxt: 'عدد افراد العائلة',
+                                    largerElseValue: 5,
+                                    smallerValue: 0,
+                                    validationifText: 'عدد الافراد كبير جدا ',
+                                    validationElseText: 'اكتب عدد الافراد',
+                                    isBlue: false,
+                                    isNumber: true,
+                                    password: false,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: CrdTxtFrmFld(
+                                    cntrTxt: provinceController,
+                                    hinttxt: 'المحافظة',
+                                    largerElseValue: 12,
+                                    smallerValue: 3,
+                                    validationifText: 'اسم المحافظة كبير جد',
+                                    validationElseText: 'ادخل اسم المحافظة',
+                                    isBlue: false,
+                                    isNumber: false,
+                                    password: false,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: CrdTxtFrmFld(
+                                    cntrTxt: cityController,
+                                    hinttxt: 'المنطقة',
+                                    largerElseValue: 22,
+                                    smallerValue: 3,
+                                    validationifText: 'اسم المنطقة كبير جدا ',
+                                    validationElseText: 'ادخل المنطقة',
+                                    password: false,
+                                    isBlue: false,
+                                    isNumber: false,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                SizedBox(
+                                  height: 60.0,
+                                  child: CrdTxtFrmFld(
+                                    cntrTxt: nearPointController,
+                                    hinttxt: 'اقرب نقطة دالة للمنزل',
+                                    largerElseValue: 22,
+                                    smallerValue: 3,
+                                    validationifText:
+                                        'اسم النقطة دالة  للمنزل كبير جدا',
+                                    validationElseText:
+                                        ' ادخل النقطة  دالة للمنزل',
+                                    password: false,
+                                    isBlue: false,
+                                    isNumber: false,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                SizedBox(height: 30),
+                                FlatButton.icon(
+                                  onPressed: () {
+                                    //TODO: Implement select location wedgit
+                                  },
+                                  icon: Image.asset(
+                                    'assets/icons/map_pin_1.png',
+                                    color: Colors.red,
+                                  ),
+                                  label: Text(
+                                    'تحديد على الخريطة',
+                                    style: textStyle,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth * 0.7,
+                                      child: buttonRedShape(
+                                        'انشاء الحساب',
+                                        context,
+                                        () async {
+                                          if (_formkey.currentState
+                                              .validate()) {
+                                            final Family newFamily = Family(
+                                              id: widget.user.uid,
+                                              headOfFamily:
+                                                  fullFamilyaNameController
+                                                      .text,
+                                              province: provinceController.text,
+                                              city: cityController.text,
+                                              phoneNo: widget.phoneNo,
+                                              location: Location(
+                                                longitude: 1000,
+                                                latitude: 2000,
+                                              ),
+                                              timeStamp: DateTime.now(),
+                                              isNeedHelp: true,
+                                              noOfMembers: int.parse(
+                                                  familyCountController.text),
+                                              nearestKnownPoint:
+                                                  nearPointController.text,
+                                            );
+                                            setState(() {
+                                              loading = true;
+                                            });
+
+                                            await DatabaseService(
+                                                    widget.user.uid)
+                                                .updateFamilyData(newFamily);
+                                            // navige to the home page
+                                            await SharedPrefs().setUser(
+                                              widget.phoneNo,
+                                              widget.user.uid,
+                                              'family',
+                                            );
+                                            print('ctx');
+                                            Navigator.of(context)
+                                                .pushReplacement(
+                                              MaterialPageRoute(
+                                                builder: (_) => Wrapper(
+                                                  child: HomeScreen(
+                                                    user: User(
+                                                      uid: widget.user.uid,
+                                                      phoneNo: widget.phoneNo,
+                                                      userType: UserType.family,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
                             ),
                           ),
-                          Text("اكمال تسجيل معلومات العائلة",
-                              style: emptyTallRedText),
-                        ],
-                      )
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 40),
-                    child: Form(
-                      key: _formkey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        textDirection: TextDirection.rtl,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SizedBox(height: 30),
-                          SizedBox(
-                            height: 60.0,
-                            child: crdRedTxtFrmFld(
-                                valTxt: fulFamilyName,
-                                cntrTxt: fullFamilyaName,
-                                hinttxt: 'اسم رب العائلة: الاسم الثلاثي',
-                                largerElseValue: 30,
-                                smallerValue: 11,
-                                validationElseText:
-                                    'يرجى ادخال الاسم الثلاثي بالكامل',
-                                validationifText: 'الاسم طويل جدا',
-                                passwrd: false),
-                          ),
-                          SizedBox(height: 4),
-                          SizedBox(
-                            height: 60.0,
-                            child: crdRedTxtFrmFldforInteger(
-                                valTxt: familycount,
-                                cntrTxt: familyCount,
-                                hinttxt: 'عدد افراد العائلة',
-                                largerElseValue: 5,
-                                smallerValue: 0,
-                                validationifText: 'عدد الافراد كبير جدا ',
-                                validationElseText: 'اكتب عدد الافراد',
-                                passwrd: false),
-                          ),
-                          SizedBox(height: 4),
-                          SizedBox(
-                            height: 60.0,
-                            child: crdRedTxtFrmFld(
-                                valTxt: province,
-                                cntrTxt: prv,
-                                hinttxt: 'المحافظة',
-                                largerElseValue: 12,
-                                smallerValue: 3,
-                                validationifText: 'اسم المحافظة كبير جد',
-                                validationElseText: 'ادخل اسم المحافظة',
-                                passwrd: false),
-                          ),
-                          SizedBox(height: 4),
-                          SizedBox(
-                            height: 60.0,
-                            child: crdRedTxtFrmFld(
-                                valTxt: city,
-                                cntrTxt: cty,
-                                hinttxt: 'المنطقة',
-                                largerElseValue: 22,
-                                smallerValue: 3,
-                                validationifText: 'اسم النقطة الدالة كبير جدا ',
-                                validationElseText: 'ادخل النقطة الدالة',
-                                passwrd: false),
-                          ),
-                          SizedBox(height: 4),
-                          SizedBox(
-                            height: 60.0,
-                            child: crdRedTxtFrmFld(
-                                valTxt: nearPoint,
-                                cntrTxt: nearPnt,
-                                hinttxt: 'اقرب نقطة دالة للمنزل',
-                                largerElseValue: 22,
-                                smallerValue: 3,
-                                validationifText:
-                                    'اسم النقطة دالة  للمنزل كبير جدا',
-                                validationElseText: ' ادخل النقطة  دالة للمنزل',
-                                passwrd: false),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              buttonRedShape(
-                                'انشاء الحساب',
-                                context,
-                                () async {
-                                  if (_formkey.currentState.validate()) {
-                                    _formkey.currentState.save();
-
-                                    print('hello');
-                                    final myloc = await mylocation();
-
-                                    print(myloc.latitude);
-                                    final userInfo =
-                                        await SharedPreferencesOperations()
-                                            .getUser();
-
-                                    Map<String, dynamic> familyData = {
-                                      'city': cty.text,
-                                      'user_id': userInfo[0].toString(),
-                                      'phone': userInfo[1].toString(),
-                                      'family_name': fullFamilyaName.text,
-                                      'near_point': nearPnt.text,
-                                      'longitude': myloc.longitude.toString(),
-                                      'latitude': myloc.latitude.toString(),
-                                      'family_count': familyCount.text,
-                                      'province': prv.text,
-                                    };
-
-                                    final value = await firestore
-                                        .createFamilyRecord(familyData);
-
-                                    // for make a snackbar for give the user a message if he is resitreg or not
-                                    _scaffoldKey.currentState.showSnackBar(
-                                      new SnackBar(
-                                        duration: new Duration(seconds: 5),
-                                        content: new Text('$value'),
-                                      ),
-                                    );
-
-                                    // navige to the home page
-
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              HomeScreen(), //user: user,)
-                                        ));
-                                  } else {
-                                    print('form not valid');
-                                  }
-                                },
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

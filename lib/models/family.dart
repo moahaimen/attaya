@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -12,8 +14,7 @@ class Family {
   final Location location;
   final DateTime timeStamp; //10
   final bool isNeedHelp;
-  final bool isApprovedFromAdmin;
-  final int noOffamilyMembers;
+  final int noOfMembers;
   final String nearestKnownPoint;
 
   Family({
@@ -25,26 +26,26 @@ class Family {
     @required this.location,
     @required this.timeStamp,
     @required this.isNeedHelp,
-    @required this.isApprovedFromAdmin,
-    @required this.noOffamilyMembers,
+    @required this.noOfMembers,
     @required this.nearestKnownPoint,
   });
 
-  factory Family.fromDocument(DocumentSnapshot doc) {
+  factory Family.fromDocument(DocumentSnapshot doc, String id) {
+    final Map location = doc.data['location'];
+
     return Family(
-      id: doc.data['id'],
-      headOfFamily: doc.data['head_of_family'],
+      id: id,
+      headOfFamily: doc.data['family_name'],
       province: doc.data['province'],
       city: doc.data['city'],
-      phoneNo: doc.data['phone_no'],
-      timeStamp: doc.data['time_stamp'],
+      phoneNo: doc.data['phone_number'],
+      timeStamp: DateTime.parse(doc.data['time_stamp']),
       isNeedHelp: doc.data['is_need_help'],
       nearestKnownPoint: doc.data['nearest_known_point'],
-      noOffamilyMembers: doc.data['no_of_family_members'],
-      isApprovedFromAdmin: doc.data['is_approved_from_admin'],
+      noOfMembers: doc.data['no_of_members'],
       location: Location(
-        longitude: doc.data['longitude'],
-        latitude: doc.data['latitude'],
+        longitude: location['longitude'],
+        latitude: location['latitude'],
       ),
     );
   }

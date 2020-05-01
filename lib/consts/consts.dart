@@ -1,4 +1,5 @@
 // import 'package:attayairaq/services/size_config.dart';
+import 'package:attayairaq/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 const headerWhiteText = TextStyle(
@@ -129,8 +130,11 @@ Card buttonBlueShape(String titleOfButton, context, Function function) {
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: const Color(0xFF2356C7),
-        child: Text('$titleOfButton',
-            textAlign: TextAlign.center, style: buttonWhiteText),
+        child: Text(
+          '$titleOfButton',
+          textAlign: TextAlign.center,
+          style: buttonWhiteText,
+        ),
         onPressed: function,
       ),
     ),
@@ -224,6 +228,13 @@ const aboutTextstyle = TextStyle(
   fontFamily: 'Changa',
 );
 
+TextStyle textStyle = TextStyle(
+  fontSize: 18,
+  fontFamily: 'Changa',
+  fontWeight: FontWeight.bold,
+  color: deepTxtBlue,
+);
+
 const deepBlueTextStyle = TextStyle(
   color: deepTxtBlue,
   fontWeight: FontWeight.bold,
@@ -239,109 +250,88 @@ const txtWritingFldForm = TextStyle(
 );
 
 final outlineInputBorder = OutlineInputBorder(
-  borderRadius: BorderRadius.all(Radius.circular(15.0)),
-  borderSide: BorderSide.none,
+  borderRadius: BorderRadius.circular(0),
+  borderSide: BorderSide(color: Colors.white),
 );
 
-Widget crdTxtFrmFld({
-  String valTxt,
-  TextEditingController cntrTxt,
-  String hinttxt,
-  String validationifText,
-  String validationElseText,
-  int largerElseValue,
-  int smallerValue,
-  bool password,
-}) {
-  return Padding(
-    padding: const EdgeInsets.all(2.0),
-    child: Material(
-      elevation: 5,
-      child: TextFormField(
-        obscureText: password,
-        textAlign: TextAlign.right,
-        textAlignVertical: TextAlignVertical.center,
-        textDirection: TextDirection.rtl,
-        decoration: InputDecoration(
-          focusedBorder: InputBorder.none,
-          filled: true,
-          fillColor: Colors.white,
-          border: outlineInputBorder,
-          disabledBorder: outlineInputBorder,
-          enabledBorder: outlineInputBorder,
-          errorBorder: outlineInputBorder,
-          focusedErrorBorder: outlineInputBorder,
-          hintText: "$hinttxt",
-          hintStyle: TextStyle(
-            fontSize: 16.0,
-            fontFamily: 'Changa',
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffA5D5EB),
-          ),
-        ),
-        controller: cntrTxt,
-        validator: (val) {
-          if (val.trim().length > largerElseValue) {
-            return validationElseText;
-          } else if (val.trim().isEmpty) {
-            return 'يرجى ملئ الحقل';
-          } else if (val.trim().length < smallerValue) {
-            return validationifText;
-          } else {
-            return null;
-          }
-        },
-        onChanged: (val) => valTxt = val,
-      ),
-    ),
-  );
-}
+class CrdTxtFrmFld extends StatelessWidget {
+  final String hinttxt;
+  final String validationifText;
+  final String validationElseText;
+  final int largerElseValue;
+  final int smallerValue;
+  final bool password;
+  final bool isNumber;
+  final bool isBlue;
 
-Card crdRedTxtFrmFld({
-  String hinttxt,
-  TextEditingController cntrTxt,
-  String valTxt,
-  String validationifText,
-  String validationElseText,
-  int largerElseValue,
-  int smallerValue,
-  bool passwrd,
-}) {
-  return Card(
-    elevation: 5,
-    child: TextFormField(
-      obscureText: passwrd,
-      textAlign: TextAlign.right,
-      textAlignVertical: TextAlignVertical.center,
-      textDirection: TextDirection.rtl,
-      decoration: InputDecoration(
-        focusedBorder: InputBorder.none,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(15.0)),
-            borderSide: BorderSide.none),
-        hintText: "$hinttxt",
-        hintStyle: TextStyle(
-            fontSize: 16.0,
-            fontFamily: 'Changa',
-            fontWeight: FontWeight.bold,
-            color: const Color(0xffDC9292)),
+  const CrdTxtFrmFld({
+    @required TextEditingController cntrTxt,
+    this.hinttxt,
+    this.validationifText,
+    this.validationElseText,
+    this.largerElseValue,
+    this.smallerValue,
+    this.password = false,
+    this.isNumber = false,
+    this.isBlue = true,
+  }) : _cntrTxt = cntrTxt;
+
+  final TextEditingController _cntrTxt;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Material(
+        elevation: 5,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: Colors.white,
+              width: 2,
+            )),
+        child: TextFormField(
+          obscureText: password,
+          keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+          textAlign: TextAlign.right,
+          textAlignVertical: TextAlignVertical.center,
+          textDirection: TextDirection.rtl,
+          decoration: InputDecoration(
+            // focusedBorder: InputBorder.none,
+            filled: true,
+            fillColor: Colors.white,
+            focusColor: Colors.white,
+            border: outlineInputBorder,
+            disabledBorder: outlineInputBorder,
+            enabledBorder: outlineInputBorder,
+            errorBorder: outlineInputBorder,
+            focusedErrorBorder: outlineInputBorder,
+            hintText: "$hinttxt",
+            hintStyle: TextStyle(
+              fontSize: 16.0,
+              fontFamily: 'Changa',
+              fontWeight: FontWeight.bold,
+              color: isBlue ? const Color(0xffA5D5EB) : const Color(0xffDC9292),
+            ),
+          ),
+          controller: _cntrTxt,
+          validator: (val) {
+            if (val.trim().length > largerElseValue) {
+              return validationElseText;
+            } else if (val.trim().isEmpty) {
+              return 'يرجى ملئ الحقل';
+            } else if (val.trim().length < smallerValue) {
+              return validationifText;
+            } else if (isNumber) {
+              return int.tryParse(val) != null ? null : 'الرجاء ادخال رقم';
+            } else {
+              return null;
+            }
+          },
+        ),
       ),
-      controller: cntrTxt,
-      validator: (val) {
-        if (val.trim().length < smallerValue || val.isEmpty) {
-          return validationifText;
-        } else if (val.trim().length > largerElseValue) {
-          return validationElseText;
-        } else {
-          return null;
-        }
-      },
-      onSaved: (val) => valTxt = val,
-      onChanged: (val) {},
-    ),
-  );
+    );
+  }
 }
 
 Card crdRedTxtFrmFldforInteger({
@@ -481,18 +471,29 @@ Card crdRedTxtFrmFldorg(
   );
 }
 
-AppBar apBar(String ttl, context, bool isNotsubScreen) {
+AppBar apBar(String ttl, context, {bool isNotsubScreen = false}) {
   return AppBar(
     centerTitle: true,
     title: Text('$ttl', textAlign: TextAlign.center, style: headerWhiteText),
     backgroundColor: const Color(0xFF2356C7),
     elevation: 5,
     leading: isNotsubScreen
-        ? null
+        ? Container()
         : IconButton(
             icon: Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
           ),
+    actions: <Widget>[
+      isNotsubScreen? FlatButton(
+        onPressed: () {
+          AuthService().signOut();
+        },
+        child: Text(
+          'تسجيل الخروج',
+          style: textStyle.copyWith(fontSize: 10, color: Colors.white),
+        ),
+      ): Container(),
+    ],
   );
 }
 

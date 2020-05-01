@@ -1,7 +1,11 @@
 import 'package:attayairaq/consts/consts.dart';
+import 'package:attayairaq/screens/admin/add_family_requests.dart';
 import 'package:attayairaq/screens/admin/organisations_list.dart';
 import 'package:attayairaq/screens/shared/add_family.dart';
+import 'package:attayairaq/screens/shared/families._list.dart';
 import 'package:flutter/material.dart';
+
+import 'delete_family_requests.dart';
 
 class ControlPanel extends StatelessWidget {
   const ControlPanel({Key key}) : super(key: key);
@@ -34,7 +38,7 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => AddFamily(isAdmin: true,),
+                    builder: (_) => AddFamily(isAdmin: true),
                   ),
                 );
               },
@@ -43,19 +47,37 @@ class ControlPanel extends StatelessWidget {
               textStyle: textStyle,
               imageIcon: Image.asset('assets/icons/delete_icon.png'),
               lable: 'حذف عائلة',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => FamiliesList(isAdmin: true),
+                  ),
+                );
+              },
             ),
             ControlPanelButton(
               textStyle: textStyle,
               imageIcon: Image.asset('assets/icons/family.png'),
               lable: 'طلبات الاضافة من الجمعيات',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => AddFamilyRequests(),
+                  ),
+                );
+              },
             ),
             ControlPanelButton(
               textStyle: textStyle,
               imageIcon: Image.asset('assets/icons/delete_icon.png'),
               lable: 'طلبات الحذف  من الجمعيات',
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => DeleteFamilyRequests(),
+                  ),
+                );
+              },
             ),
             ControlPanelButton(
               textStyle: textStyle,
@@ -64,7 +86,7 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => OrganizationsList(),
+                    builder: (_) => OrganizationsList(isAdmin: true),
                   ),
                 );
               },
@@ -94,27 +116,28 @@ class ControlPanelButton extends StatelessWidget {
     return InkWell(
       onTap: onPressed,
       child: Container(
-          height: 70,
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey.withOpacity(0.5),
-            ),
-            color: Color(0xFFA5D5EB).withOpacity(0.3),
+        height: 70,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey.withOpacity(0.5),
           ),
-          child: Row(
-            children: <Widget>[
-              imageIcon,
-              SizedBox(
-                width: 5,
-              ),
-              Text(
-                lable,
-                style: textStyle,
-                textAlign: TextAlign.start,
-              ),
-            ],
-          )),
+          color: Color(0xFFA5D5EB).withOpacity(0.3),
+        ),
+        child: Row(
+          children: <Widget>[
+            imageIcon,
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              lable,
+              style: textStyle,
+              textAlign: TextAlign.start,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

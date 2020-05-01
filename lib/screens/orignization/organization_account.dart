@@ -9,7 +9,7 @@ class OrganizationAccount extends StatelessWidget {
       id: '0',
       name: 'منظمة امل',
       phoneNumber: '07721304321',
-      governorate: 'بغداد',
+      province: 'بغداد',
       distributionArea: 'حي اكد-النورين',
       managerName: 'محمد عباس',
       managerPhoneNo: '07823232323',
@@ -22,7 +22,7 @@ class OrganizationAccount extends StatelessWidget {
     );
 
     return Scaffold(
-      appBar: apBar('حساب المنظمة', context,false),
+      appBar: apBar('حساب المنظمة', context),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: ListView(
@@ -40,7 +40,7 @@ class OrganizationAccount extends StatelessWidget {
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 border: Border.all(
-                    color: Color.fromRGBO(35, 68, 199, 0.86), width: 3),
+                    color: Color(0xFF2356C7).withOpacity(0.86), width: 3),
                 borderRadius: BorderRadius.circular(15),
               ),
               margin: EdgeInsets.all(20),
@@ -63,7 +63,7 @@ class OrganizationAccount extends StatelessWidget {
                   ),
                   SizedBox(height: 25),
                   Text(
-                    'المحافظة: ${org.governorate}',
+                    'المحافظة: ${org.province}',
                     style: textStyle,
                   ),
                   SizedBox(height: 25),

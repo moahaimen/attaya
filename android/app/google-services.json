@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "659535613833-7pv1e6teq70bameu18o0749tuuphr7ik.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.attayairaq",
+            "certificate_hash": "5c2360cd6ecd8ea72bd0a4bf3b1d36cee277dfad"
+          }
+        },
+        {
           "client_id": "659535613833-3u1ep77bq3jui05beu2eg3l8q25m6dmh.apps.googleusercontent.com",
           "client_type": 3
         }

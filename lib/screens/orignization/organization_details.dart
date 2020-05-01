@@ -1,4 +1,4 @@
-import 'package:attayairaq/models/location.dart';
+import 'package:attayairaq/functions/send_message.dart';
 import 'package:attayairaq/models/organization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +17,7 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: apBar('معلومات المنظمة', context, false),
+      appBar: apBar('معلومات المنظمة', context),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.all(6.0),
@@ -70,7 +70,7 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                                   Padding(
                                     padding: const EdgeInsets.only(right: 10.0),
                                     child: Text(
-                                      "المحافظة: ${widget.org.governorate}",
+                                      "المحافظة: ${widget.org.province}",
                                       textAlign: TextAlign.right,
                                       textDirection: TextDirection.rtl,
                                       style: cardBorderTextstyle,
@@ -104,7 +104,9 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                         child: buttonBlueOldShape(
                           'ارسال رسالة للمنظمة',
                           context,
-                          () {},
+                          () {
+                            sendMessage(widget.org.phoneNumber);
+                          },
                         ),
                       ),
                       SizedBox(

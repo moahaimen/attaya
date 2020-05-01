@@ -26,7 +26,7 @@ class _ConformDeleteState extends State<ConformDelete> {
       color: deepTxtBlue,
     );
     return Scaffold(
-      appBar: apBar('حذف ${widget.deleteType}', context, false),
+      appBar: apBar('حذف ${widget.deleteType}', context),
       body: _loading
           ? Loading()
           : Directionality(
