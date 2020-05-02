@@ -101,12 +101,19 @@ class DatabaseService {
         .map(_organizationsListFromSnapshot);
   }
 
+ 
+
+  Future<DocumentSnapshot> get organizationDataSnap {
+    return organizationsCollection.document(uid).get();
+  }
+
   Stream<Organization> get organizatioData {
     return organizationsCollection
         .document(uid)
         .snapshots()
         .map(_organizationDataFromSnapshot);
   }
+
   Future deleteOrg() async {
     //this can be used to add new family or update an exsisting one
     return await organizationsCollection.document(uid).delete();

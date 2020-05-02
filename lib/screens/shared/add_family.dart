@@ -4,6 +4,7 @@ import 'package:attayairaq/models/family.dart';
 import 'package:attayairaq/models/location.dart';
 import 'package:attayairaq/models/request.dart';
 import 'package:attayairaq/services/family_sevices.dart';
+import 'package:attayairaq/services/organization_srvices.dart';
 import 'package:attayairaq/services/send_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -191,11 +192,14 @@ class _AddFamilyState extends State<AddFamily> {
                                               context: context,
                                               text: 'تم اضافة العائلة');
                                         } else {
+                                          final org =
+                                              await getOrganizationData();
+
                                           await requestAddFamily(
                                             Request(
                                               id: Uuid().v4(),
-                                              orgThatRequested: 'منظمة امل',
-                                              deleteReason: '',
+                                              orgThatRequested: org.name,
+                                              deleteReason: null,
                                               theFamily: _family,
                                               isDeleteRequest: false,
                                             ),

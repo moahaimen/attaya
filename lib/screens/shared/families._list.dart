@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 
 class FamiliesList extends StatelessWidget {
   final bool isAdmin;
+  
 
   const FamiliesList({@required this.isAdmin});
 

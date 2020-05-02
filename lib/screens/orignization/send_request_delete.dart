@@ -1,7 +1,11 @@
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/functions/show_overlay.dart';
+import 'package:attayairaq/models/organization.dart';
 import 'package:attayairaq/models/request.dart';
+import 'package:attayairaq/services/data_base.dart';
+import 'package:attayairaq/services/organization_srvices.dart';
 import 'package:attayairaq/services/send_request.dart';
+import 'package:attayairaq/services/shered_Preference.dart';
 import 'package:flutter/material.dart';
 
 import 'package:attayairaq/consts/consts.dart';
@@ -91,10 +95,12 @@ class _RequestDeleteState extends State<RequestDelete> {
                         setState(() {
                           isLoading = true;
                         });
+
+                        final org = await getOrganizationData();
                         await sendDeleteRequestByOrg(
                           request: Request(
                             id: Uuid().v4(),
-                            orgThatRequested: 'blah',
+                            orgThatRequested: org.name,
                             theFamily: widget.family,
                             deleteReason: deleteReasonController.text,
                             isDeleteRequest: true,

@@ -1,5 +1,5 @@
 import 'package:attayairaq/screens/HomeScreen.dart';
-import 'package:attayairaq/screens/SignInorSignUp/Validate_number.dart';
+import 'package:attayairaq/screens/authentication/Validate_number.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';

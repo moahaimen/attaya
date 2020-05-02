@@ -1,5 +1,5 @@
 import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/screens/SignInorSignUp/sign_up.dart';
+import 'package:attayairaq/screens/authentication/sign_up.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
