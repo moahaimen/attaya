@@ -1,7 +1,6 @@
 import 'package:attayairaq/consts/consts.dart';
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/functions/send_message.dart';
-import 'package:attayairaq/models/location.dart';
 import 'package:attayairaq/models/organization.dart';
 import 'package:attayairaq/screens/admin/delete.dart';
 import 'package:attayairaq/screens/orignization/organization_details.dart';
@@ -16,56 +15,56 @@ class OrganizationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Organization> organizationsListw = [
-      Organization(
-        id: '0',
-        name: 'منظمة امل',
-        phoneNumber: '07721304321',
-        province: 'بغداد',
-        distributionArea: 'حي اكد-النورين',
-        managerName: 'محمد عباس',
-        description:
-            "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-        location: Location(longitude: null, latitude: null),
-        managerPhoneNo: '07781273773',
-      ),
-      Organization(
-        id: '1',
-        name: 'منظمة امل',
-        phoneNumber: '07721304321',
-        province: 'بغداد',
-        distributionArea: 'حي اكد-النورين',
-        managerName: 'محمد عباس',
-        description:
-            "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-        location: Location(longitude: null, latitude: null),
-        managerPhoneNo: '07781273773',
-      ),
-      Organization(
-        id: '2',
-        name: 'منظمة امل',
-        phoneNumber: '07721304321',
-        province: 'بغداد',
-        distributionArea: 'حي اكد-النورين',
-        managerName: 'محمد عباس',
-        description:
-            "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-        location: Location(longitude: null, latitude: null),
-        managerPhoneNo: '07781273773',
-      ),
-      Organization(
-        id: '3',
-        name: 'منظمة امل',
-        phoneNumber: '07721304321',
-        province: 'بغداد',
-        distributionArea: 'حي اكد-النورين',
-        managerName: 'محمد عباس',
-        description:
-            "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-        location: Location(longitude: null, latitude: null),
-        managerPhoneNo: '07781273773',
-      ),
-    ];
+    // List<Organization> organizationsListw = [
+    //   Organization(
+    //     id: '0',
+    //     name: 'منظمة امل',
+    //     phoneNumber: '07721304321',
+    //     province: 'بغداد',
+    //     distributionArea: 'حي اكد-النورين',
+    //     managerName: 'محمد عباس',
+    //     description:
+    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
+    //     location: Location(longitude: null, latitude: null),
+    //     managerPhoneNo: '07781273773',
+    //   ),
+    //   Organization(
+    //     id: '1',
+    //     name: 'منظمة امل',
+    //     phoneNumber: '07721304321',
+    //     province: 'بغداد',
+    //     distributionArea: 'حي اكد-النورين',
+    //     managerName: 'محمد عباس',
+    //     description:
+    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
+    //     location: Location(longitude: null, latitude: null),
+    //     managerPhoneNo: '07781273773',
+    //   ),
+    //   Organization(
+    //     id: '2',
+    //     name: 'منظمة امل',
+    //     phoneNumber: '07721304321',
+    //     province: 'بغداد',
+    //     distributionArea: 'حي اكد-النورين',
+    //     managerName: 'محمد عباس',
+    //     description:
+    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
+    //     location: Location(longitude: null, latitude: null),
+    //     managerPhoneNo: '07781273773',
+    //   ),
+    //   Organization(
+    //     id: '3',
+    //     name: 'منظمة امل',
+    //     phoneNumber: '07721304321',
+    //     province: 'بغداد',
+    //     distributionArea: 'حي اكد-النورين',
+    //     managerName: 'محمد عباس',
+    //     description:
+    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
+    //     location: Location(longitude: null, latitude: null),
+    //     managerPhoneNo: '07781273773',
+    //   ),
+    // ];
     TextStyle textStyle = TextStyle(
       fontSize: 18,
       fontFamily: 'Changa',
@@ -87,7 +86,9 @@ class OrganizationsList extends StatelessWidget {
                   : Container(
                       // height: SizeConfig.screenHeight * 0.5,
                       child: organizationsList.isEmpty
-                          ? Center(child: Text('لايوجد منظمات حاليا',style: textStyle))
+                          ? Center(
+                              child:
+                                  Text('لايوجد منظمات حاليا', style: textStyle))
                           : ListView.builder(
                               itemCount: organizationsList.length,
                               itemBuilder: (BuildContext context, int i) {

@@ -1,12 +1,10 @@
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/functions/show_overlay.dart';
-import 'package:attayairaq/models/organization.dart';
 import 'package:attayairaq/models/request.dart';
 import 'package:attayairaq/services/send_request.dart';
 import 'package:flutter/material.dart';
 
 import 'package:attayairaq/consts/consts.dart';
-import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:attayairaq/models/family.dart';
 
@@ -27,7 +25,6 @@ class _RequestDeleteState extends State<RequestDelete> {
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
       appBar: apBar('حذف عائلة', context),
       body: isLoading
@@ -94,7 +91,6 @@ class _RequestDeleteState extends State<RequestDelete> {
                         setState(() {
                           isLoading = true;
                         });
-
                         await sendDeleteRequestByOrg(
                           request: Request(
                             id: Uuid().v4(),
@@ -108,7 +104,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           isLoading = false;
                         });
                         showOverlay(text: 'تم ارسال الطلب', context: context);
-                      })
+                      }),
                     ],
                   ),
                 ),

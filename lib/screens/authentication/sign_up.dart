@@ -1,7 +1,5 @@
 import 'package:attayairaq/screens/HomeScreen.dart';
 import 'package:attayairaq/screens/SignInorSignUp/Validate_number.dart';
-import 'package:attayairaq/screens/SignInorSignUp/family_information_for_profile.dart';
-import 'package:attayairaq/screens/SignInorSignUp/orginization_information_for_profile.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
@@ -87,6 +85,7 @@ class _SignUpState extends State<SignUp> {
               SizedBox(
                 height: SizeConfig.screenHeight * 0.2,
               ),
+              
               RichText(
                 text: TextSpan(
                   text: 'تسجيل دخول كأدمن؟ ',
@@ -112,6 +111,12 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ],
                 ),
+                
+              ),
+              SizedBox(height: 20),
+              Text(
+                'اذا لم يكن لديك حساب سيتم \nتوجيهك لانشاء حساب جديد',
+                style: textStyle.copyWith(fontSize: 15),
               ),
             ],
           ),

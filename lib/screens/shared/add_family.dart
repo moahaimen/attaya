@@ -146,7 +146,7 @@ class _AddFamilyState extends State<AddFamily> {
                                   SizedBox(height: 30),
                                   FlatButton.icon(
                                       onPressed: () {
-                                        //TODO: Implement select location wedgit
+                                        //TODO: Implement select location Widget
                                       },
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',
@@ -172,7 +172,9 @@ class _AddFamilyState extends State<AddFamily> {
                                           city: cityController.text,
                                           phoneNo: phoneNoController.text,
                                           location: Location(
-                                              longitude: null, latitude: null),
+                                            longitude: null,
+                                            latitude: null,
+                                          ),
                                           timeStamp: DateTime.now(),
                                           isNeedHelp: true,
                                           noOfMembers: int.parse(

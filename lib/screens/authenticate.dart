@@ -1,5 +1,4 @@
 import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/screens/SignInorSignUp/signIn.dart';
 import 'package:attayairaq/screens/SignInorSignUp/sign_up.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -50,26 +49,12 @@ class _AuthenticateState extends State<Authenticate> {
                       child: Column(
                         children: <Widget>[
                           SizedBox(
-                            width: SizeConfig.screenWidth * 0.7,
-                            child: buttonBlueShape(
-                              'تسجيل الدخول',
-                              context,
-                              () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => LoginScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
                             height: 15.0,
                           ),
                           SizedBox(
                             width: SizeConfig.screenWidth * 0.7,
                             child: buttonRedShape(
-                              'انشاء حساب جديد',
+                              'التسجيل',
                               context,
                               () {
                                 Navigator.of(context).push(

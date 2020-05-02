@@ -2,8 +2,8 @@ import 'package:attayairaq/main.dart';
 import 'dart:async';
 import 'package:attayairaq/models/user.dart';
 import 'package:attayairaq/screens/HomeScreen.dart';
-import 'package:attayairaq/screens/SignInorSignUp/family_information_for_profile.dart';
-import 'package:attayairaq/screens/SignInorSignUp/orginization_information_for_profile.dart';
+import 'package:attayairaq/screens/authentication/family_information_for_profile.dart';
+import 'package:attayairaq/screens/authentication/orginization_information_for_profile.dart';
 import 'package:attayairaq/screens/authenticate.dart';
 import 'package:attayairaq/services/data_base.dart';
 import 'package:attayairaq/services/shered_Preference.dart';
@@ -11,7 +11,6 @@ import 'package:attayairaq/wrapper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 enum PhoneAuthState {
   Started,

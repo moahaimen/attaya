@@ -2,7 +2,6 @@ import 'package:attayairaq/consts/consts.dart';
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/functions/send_message.dart';
 import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/location.dart';
 import 'package:attayairaq/screens/admin/delete.dart';
 import 'package:attayairaq/screens/orignization/send_request_delete.dart';
 import 'package:attayairaq/screens/shared/add_family.dart';
@@ -19,32 +18,32 @@ class FamiliesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Family> familyList2 = [
-      Family(
-        location: Location(longitude: 12, latitude: 34),
-        id: '0',
-        city: "حي اكد",
-        headOfFamily: 'حسين اسامة عبود',
-        phoneNo: '07716100805',
-        province: "بغداد",
-        timeStamp: DateTime.now(),
-        isNeedHelp: true,
-        nearestKnownPoint: 'اسواق عباس',
-        noOfMembers: 6,
-      ),
-      Family(
-        id: '1',
-        location: Location(longitude: 12, latitude: 34),
-        city: "الدورة",
-        headOfFamily: 'جاسم محمد علي',
-        phoneNo: '07821457541',
-        province: "بغداد",
-        timeStamp: DateTime.now(),
-        isNeedHelp: true,
-        nearestKnownPoint: 'شارع المصافي',
-        noOfMembers: 4,
-      ),
-    ];
+    // List<Family> familyList2 = [
+    //   Family(
+    //     location: Location(longitude: 12, latitude: 34),
+    //     id: '0',
+    //     city: "حي اكد",
+    //     headOfFamily: 'حسين اسامة عبود',
+    //     phoneNo: '07716100805',
+    //     province: "بغداد",
+    //     timeStamp: DateTime.now(),
+    //     isNeedHelp: true,
+    //     nearestKnownPoint: 'اسواق عباس',
+    //     noOfMembers: 6,
+    //   ),
+    //   Family(
+    //     id: '1',
+    //     location: Location(longitude: 12, latitude: 34),
+    //     city: "الدورة",
+    //     headOfFamily: 'جاسم محمد علي',
+    //     phoneNo: '07821457541',
+    //     province: "بغداد",
+    //     timeStamp: DateTime.now(),
+    //     isNeedHelp: true,
+    //     nearestKnownPoint: 'شارع المصافي',
+    //     noOfMembers: 4,
+    //   ),
+    // ];
     TextStyle textStyle = TextStyle(
       fontSize: 18,
       fontFamily: 'Changa',

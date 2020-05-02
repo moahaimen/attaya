@@ -1,6 +1,5 @@
 import 'package:attayairaq/consts/loading.dart';
 import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/location.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
