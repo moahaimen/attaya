@@ -51,7 +51,7 @@ class _SignUpState extends State<SignUp> {
                   () {
                     //navige to family sign up
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (BuildContext context) => ValidateNumberPage(
                           isRegister: true,
                           userType: UserType.family,
@@ -72,7 +72,7 @@ class _SignUpState extends State<SignUp> {
                   () {
                     // navige to Organization page
                     Navigator.of(context).push(
-                      MaterialPageRoute(
+                      CupertinoPageRoute(
                         builder: (BuildContext context) => ValidateNumberPage(
                           isRegister: true,
                           userType: UserType.organisation,
@@ -99,7 +99,7 @@ class _SignUpState extends State<SignUp> {
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            CupertinoPageRoute(
                               builder: (BuildContext context) =>
                                   ValidateNumberPage(
                                 isRegister: true,

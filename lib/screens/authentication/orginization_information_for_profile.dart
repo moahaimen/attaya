@@ -1,4 +1,5 @@
 import 'package:attayairaq/screens/authenticate.dart';
+import 'package:attayairaq/screens/shared/map_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ import 'package:attayairaq/services/data_base.dart';
 import 'package:attayairaq/services/shered_Preference.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:attayairaq/wrapper.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class OrgiziationSignup extends StatefulWidget {
   final FirebaseUser user;
@@ -30,6 +32,7 @@ class OrgiziationSignup extends StatefulWidget {
 class _OrgiziationSignupState extends State<OrgiziationSignup> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  LatLng location;
 
   final orgName = TextEditingController();
   final managerNameController = TextEditingController();
@@ -212,8 +215,17 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                       ),
                                       SizedBox(height: 30),
                                       FlatButton.icon(
-                                        onPressed: () {
-                                          //TODO: Implement select location Widget
+                                        onPressed: () async {
+                                          location =
+                                              await Navigator.of(context).push(
+                                            CupertinoPageRoute(
+                                              builder: (c) => MapScreen(
+                                                isNotSupScreen: false,
+                                                isSelectLocation: true,
+                                                isOrg: false,
+                                              ),
+                                            ),
+                                          );
                                         },
                                         icon: Image.asset(
                                           'assets/icons/map_pin_1.png',
@@ -253,8 +265,8 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                 phoneNumber:
                                                     phoneNumberController.text,
                                                 location: Location(
-                                                  longitude: 1000,
-                                                  latitude: 2000,
+                                                  longitude: location.longitude,
+                                                  latitude: location.latitude,
                                                 ),
                                               );
                                               setState(() {
@@ -273,7 +285,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                 );
                                                 Navigator.of(context)
                                                     .pushReplacement(
-                                                  MaterialPageRoute(
+                                                  CupertinoPageRoute(
                                                     builder: (_) => Wrapper(
                                                       child: HomeScreen(
                                                         user: User(
@@ -294,7 +306,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                 );
                                                 Navigator.of(context)
                                                     .pushReplacement(
-                                                  MaterialPageRoute(
+                                                  CupertinoPageRoute(
                                                       builder: (_) =>
                                                           Authenticate()),
                                                 );

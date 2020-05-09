@@ -58,7 +58,7 @@ class _AuthenticateState extends State<Authenticate> {
                               context,
                               () {
                                 Navigator.of(context).push(
-                                  MaterialPageRoute(
+                                  CupertinoPageRoute(
                                     builder: (_) => SignUp(),
                                   ),
                                 );

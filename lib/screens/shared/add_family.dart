@@ -3,12 +3,14 @@ import 'package:attayairaq/functions/show_overlay.dart';
 import 'package:attayairaq/models/family.dart';
 import 'package:attayairaq/models/location.dart';
 import 'package:attayairaq/models/request.dart';
+import 'package:attayairaq/screens/shared/map_screen.dart';
 import 'package:attayairaq/services/family_sevices.dart';
 import 'package:attayairaq/services/organization_srvices.dart';
 import 'package:attayairaq/services/send_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:attayairaq/consts/consts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
 
 class AddFamily extends StatefulWidget {
@@ -23,6 +25,8 @@ class AddFamily extends StatefulWidget {
 class _AddFamilyState extends State<AddFamily> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  bool locationIsEmpty = false;
+  LatLng location;
 
   final headOfFamilyController = TextEditingController();
   final provinceController = TextEditingController();
@@ -146,17 +150,39 @@ class _AddFamilyState extends State<AddFamily> {
                                   ),
                                   SizedBox(height: 30),
                                   FlatButton.icon(
-                                      onPressed: () {
-                                        //TODO: Implement select location Widget
+                                      onPressed: () async {
+                                        location =
+                                            await Navigator.of(context).push(
+                                          CupertinoPageRoute(
+                                            builder: (c) {
+                                              return MapScreen(
+                                                isNotSupScreen: false,
+                                                isSelectLocation: true,
+                                                isOrg: false,
+                                              );
+                                            },
+                                          ),
+                                        );
+                                        print(location);
                                       },
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',
                                         color: Colors.red,
                                       ),
                                       label: Text(
-                                        'تحديد على الخريطة',
+                                        location == null
+                                            ? 'تحديد على الخريطة'
+                                            : 'تحديد مرة اخرى',
                                         style: textStyle,
                                       )),
+                                  locationIsEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'الرجاء تحديد الموقع',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        )
+                                      : Container(),
                                   SizedBox(
                                     height: 30,
                                   ),
@@ -164,7 +190,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     'اضافة العائلة',
                                     context,
                                     () async {
-                                      if (_formkey.currentState.validate()) {
+                                      if (_formkey.currentState.validate() &&
+                                          location != null) {
                                         final _family = Family(
                                           id: Uuid().v4(),
                                           headOfFamily:
@@ -173,8 +200,8 @@ class _AddFamilyState extends State<AddFamily> {
                                           city: cityController.text,
                                           phoneNo: phoneNoController.text,
                                           location: Location(
-                                            longitude: null,
-                                            latitude: null,
+                                            longitude: location.longitude,
+                                            latitude: location.latitude,
                                           ),
                                           timeStamp: DateTime.now(),
                                           isNeedHelp: true,
@@ -209,6 +236,10 @@ class _AddFamilyState extends State<AddFamily> {
                                               text: 'تم ارسال طلب الى الادمن');
                                         }
                                         Navigator.of(context).pop();
+                                      } else if (location == null) {
+                                        setState(() {
+                                          locationIsEmpty = true;
+                                        });
                                       }
                                     },
                                   )

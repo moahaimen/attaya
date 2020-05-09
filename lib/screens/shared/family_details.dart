@@ -1,4 +1,5 @@
 import 'package:attayairaq/services/data_base.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:attayairaq/functions/send_message.dart';
@@ -138,7 +139,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                     context,
                                     () {
                                       Navigator.of(context).push(
-                                        MaterialPageRoute(
+                                        CupertinoPageRoute(
                                           builder: (_) {
                                             return widget.isAdmin
                                                 ? ConformDelete(
@@ -167,7 +168,8 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                           ),
                         ),
                       );
-              }),
+              },
+            ),
     );
   }
 }

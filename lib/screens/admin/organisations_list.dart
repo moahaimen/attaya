@@ -6,6 +6,7 @@ import 'package:attayairaq/screens/admin/delete.dart';
 import 'package:attayairaq/screens/orignization/organization_details.dart';
 import 'package:attayairaq/services/data_base.dart';
 import 'package:attayairaq/services/organization_srvices.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OrganizationsList extends StatelessWidget {
@@ -15,56 +16,6 @@ class OrganizationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<Organization> organizationsListw = [
-    //   Organization(
-    //     id: '0',
-    //     name: 'منظمة امل',
-    //     phoneNumber: '07721304321',
-    //     province: 'بغداد',
-    //     distributionArea: 'حي اكد-النورين',
-    //     managerName: 'محمد عباس',
-    //     description:
-    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-    //     location: Location(longitude: null, latitude: null),
-    //     managerPhoneNo: '07781273773',
-    //   ),
-    //   Organization(
-    //     id: '1',
-    //     name: 'منظمة امل',
-    //     phoneNumber: '07721304321',
-    //     province: 'بغداد',
-    //     distributionArea: 'حي اكد-النورين',
-    //     managerName: 'محمد عباس',
-    //     description:
-    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-    //     location: Location(longitude: null, latitude: null),
-    //     managerPhoneNo: '07781273773',
-    //   ),
-    //   Organization(
-    //     id: '2',
-    //     name: 'منظمة امل',
-    //     phoneNumber: '07721304321',
-    //     province: 'بغداد',
-    //     distributionArea: 'حي اكد-النورين',
-    //     managerName: 'محمد عباس',
-    //     description:
-    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-    //     location: Location(longitude: null, latitude: null),
-    //     managerPhoneNo: '07781273773',
-    //   ),
-    //   Organization(
-    //     id: '3',
-    //     name: 'منظمة امل',
-    //     phoneNumber: '07721304321',
-    //     province: 'بغداد',
-    //     distributionArea: 'حي اكد-النورين',
-    //     managerName: 'محمد عباس',
-    //     description:
-    //         "منظمة خيرية تعمل من اجل العراق والشعب العراقي تاسست سنة 2003 تقوم بتوزيع المعونات الشهرية  للعوائل",
-    //     location: Location(longitude: null, latitude: null),
-    //     managerPhoneNo: '07781273773',
-    //   ),
-    // ];
     TextStyle textStyle = TextStyle(
       fontSize: 18,
       fontFamily: 'Changa',
@@ -77,18 +28,21 @@ class OrganizationsList extends StatelessWidget {
         stream: DatabaseService('').organizations,
         builder: (context, snapshot) {
           final organizationsList = snapshot.data;
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: organizationsList == null
-                  ? Loading()
-                  : Container(
+          return organizationsList == null
+              ? Loading()
+              : Directionality(
+                  textDirection: TextDirection.rtl,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
                       // height: SizeConfig.screenHeight * 0.5,
                       child: organizationsList.isEmpty
                           ? Center(
-                              child:
-                                  Text('لايوجد منظمات حاليا', style: textStyle))
+                              child: Text(
+                                'لايوجد منظمات حاليا',
+                                style: textStyle,
+                              ),
+                            )
                           : ListView.builder(
                               itemCount: organizationsList.length,
                               itemBuilder: (BuildContext context, int i) {
@@ -124,7 +78,7 @@ class OrganizationsList extends StatelessWidget {
                                                   ),
                                                   onPressed: () {
                                                     Navigator.of(context).push(
-                                                      MaterialPageRoute(
+                                                      CupertinoPageRoute(
                                                         builder: (_) =>
                                                             ConformDelete(
                                                           deleteType: 'المنظمة',
@@ -179,7 +133,7 @@ class OrganizationsList extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               Navigator.of(context).push(
-                                                MaterialPageRoute(
+                                                CupertinoPageRoute(
                                                   builder: (_) =>
                                                       OrganizationDetails(
                                                     org: organizationsList[i],
@@ -196,8 +150,8 @@ class OrganizationsList extends StatelessWidget {
                               },
                             ),
                     ),
-            ),
-          );
+                  ),
+                );
         },
       ),
     );

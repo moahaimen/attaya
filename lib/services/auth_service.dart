@@ -10,6 +10,7 @@ import 'package:attayairaq/services/shered_Preference.dart';
 import 'package:attayairaq/wrapper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum PhoneAuthState {
@@ -146,7 +147,7 @@ class AuthService {
 
           if (family.data == null || family.data.isEmpty) {
             navigatorKey.currentState.pushReplacement(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => FamilySignup(
                   user: user,
                   phoneNo: phone,
@@ -156,7 +157,7 @@ class AuthService {
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'family');
             navigatorKey.currentState.pushReplacement(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => Wrapper(
                   child: HomeScreen(
                     user: User(
@@ -180,14 +181,14 @@ class AuthService {
 
           if (org.data == null || org.data.isEmpty) {
             navigatorKey.currentState.pushReplacement(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => OrgiziationSignup(user: user),
               ),
             );
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'organisation');
             navigatorKey.currentState.pushReplacement(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => Wrapper(
                   child: HomeScreen(
                     user: User(
@@ -211,7 +212,7 @@ class AuthService {
           if (admin.documentID == phone) {
             await SharedPrefs().setUser(phone, user.uid, 'admin');
             navigatorKey.currentState.pushReplacement(
-              MaterialPageRoute(
+              CupertinoPageRoute(
                 builder: (_) => Wrapper(
                   child: HomeScreen(
                     user: User(
@@ -245,7 +246,7 @@ class AuthService {
     try {
       SharedPrefs().deleteUser();
       navigatorKey.currentState.pushReplacement(
-        MaterialPageRoute(
+        CupertinoPageRoute(
           builder: (_) => Authenticate(),
         ),
       );

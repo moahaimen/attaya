@@ -3,6 +3,7 @@ import 'package:attayairaq/models/location.dart';
 import 'package:attayairaq/models/request.dart';
 import 'package:attayairaq/screens/shared/request_details.dart';
 import 'package:attayairaq/services/data_base.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:attayairaq/consts/consts.dart';
@@ -72,7 +73,7 @@ class AddFamilyRequests extends StatelessWidget {
                           child: InkWell(
                             onTap: () {
                               Navigator.of(context).push(
-                                MaterialPageRoute(
+                                CupertinoPageRoute(
                                   builder: (_) => RequestDetails(
                                     request: requestList[i],
                                   ),

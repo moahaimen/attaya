@@ -74,6 +74,8 @@ class OrganizationHomeScreen extends StatelessWidget {
         appBar: apBar('الخريطة', context, isNotsubScreen: true),
         body: MapScreen(
           isNotSupScreen: true,
+          isSelectLocation: false,
+          isOrg: true,
         ),
         bottomNavigationBar: OrganizationNavBar(),
       ),

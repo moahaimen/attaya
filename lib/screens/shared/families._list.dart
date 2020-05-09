@@ -9,6 +9,7 @@ import 'package:attayairaq/screens/shared/family_details.dart';
 import 'package:attayairaq/services/data_base.dart';
 import 'package:attayairaq/services/family_sevices.dart';
 import 'package:attayairaq/services/size_config.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class FamiliesList extends StatelessWidget {
@@ -106,10 +107,10 @@ class FamiliesList extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               Navigator.of(context).push(
-                                                MaterialPageRoute(
+                                                CupertinoPageRoute(
                                                   builder: (_) => isAdmin
                                                       ? ConformDelete(
-                                                          deleteType: 'المنظمة',
+                                                          deleteType: 'العائلة',
                                                           deleteFunction:
                                                               () async {
                                                             await deleteFamily(
@@ -173,7 +174,7 @@ class FamiliesList extends StatelessWidget {
                                             ),
                                             onPressed: () {
                                               Navigator.of(context).push(
-                                                MaterialPageRoute(
+                                                CupertinoPageRoute(
                                                   builder: (_) => FamilyDetails(
                                                     isAdmin: isAdmin,
                                                     familyId: familyList[i].id,
@@ -195,7 +196,7 @@ class FamiliesList extends StatelessWidget {
                           ),
                           buttonBlueShape('اضافة عائلة', context, () {
                             Navigator.of(context).push(
-                              MaterialPageRoute(
+                              CupertinoPageRoute(
                                 builder: (_) => AddFamily(
                                   isAdmin: isAdmin,
                                 ),

@@ -28,19 +28,3 @@ void main() async {
           ),
         );
 }
-
-// class MyApp extends StatelessWidget {
-//   const MyApp({Key key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return StreamProvider<PhoneAuthState>.value(
-//       value: AuthService.stateStream,
-//       child: MaterialApp(
-//         debugShowCheckedModeBanner: false,
-//         navigatorKey: navigatorKey,
-//         home: Wrapper(),
-//       ),
-//     );
-//   }
-// }

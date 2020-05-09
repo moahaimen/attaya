@@ -3,6 +3,7 @@ import 'package:attayairaq/screens/admin/add_family_requests.dart';
 import 'package:attayairaq/screens/admin/organisations_list.dart';
 import 'package:attayairaq/screens/shared/add_family.dart';
 import 'package:attayairaq/screens/shared/families._list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'delete_family_requests.dart';
@@ -37,7 +38,7 @@ class ControlPanel extends StatelessWidget {
               lable: 'اضافة عائلة',
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (_) => AddFamily(isAdmin: true),
                   ),
                 );
@@ -49,7 +50,7 @@ class ControlPanel extends StatelessWidget {
               lable: 'حذف عائلة',
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (_) => FamiliesList(isAdmin: true),
                   ),
                 );
@@ -61,7 +62,7 @@ class ControlPanel extends StatelessWidget {
               lable: 'طلبات الاضافة من الجمعيات',
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (_) => AddFamilyRequests(),
                   ),
                 );
@@ -73,7 +74,7 @@ class ControlPanel extends StatelessWidget {
               lable: 'طلبات الحذف  من الجمعيات',
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (_) => DeleteFamilyRequests(),
                   ),
                 );
@@ -85,9 +86,10 @@ class ControlPanel extends StatelessWidget {
               lable: 'حذف جمعية او فريق',
               onPressed: () {
                 Navigator.of(context).push(
-                  MaterialPageRoute(
+                  CupertinoPageRoute(
                     builder: (_) => OrganizationsList(isAdmin: true),
                   ),
+
                 );
               },
             ),

@@ -38,7 +38,12 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MapScreen(),
+                  builder: (_) => MapScreen(
+                    isNotSupScreen: false,
+                    isSelectLocation: false,
+                    isOrg: false,
+
+                  ),
                 ),
               );
             },
@@ -102,7 +107,11 @@ class FamilyNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MapScreen(isNotSupScreen: false,),
+                  builder: (_) => MapScreen(
+                    isNotSupScreen: false,
+                    isSelectLocation: false,
+                    isOrg: false,
+                  ),
                 ),
               );
             },

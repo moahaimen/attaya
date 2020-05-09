@@ -3,6 +3,7 @@ import 'package:attayairaq/functions/show_overlay.dart';
 import 'package:attayairaq/services/auth_service.dart';
 import 'package:attayairaq/services/size_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:attayairaq/screens/HomeScreen.dart';
@@ -81,7 +82,7 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
                                     type: widget.userType,
                                   );
                                   Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
+                                    CupertinoPageRoute(
                                       builder: (_) => PhoneAuthVerify(),
                                     ),
                                   );
