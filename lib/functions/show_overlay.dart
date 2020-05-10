@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/services/size_config.dart';
+
 import 'package:flutter/material.dart';
+
+import '../consts/consts.dart';
+import '../services/size_config.dart';
 
 Future<void> showOverlay({
   @required BuildContext context,
   @required String text,
 }) async {
-  final OverlayState overlayState = Overlay.of(context);
-  final OverlayEntry overlayEntry = OverlayEntry(
+  final overlayState = Overlay.of(context);
+  final overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
       bottom: 30.0,
       right: SizeConfig.screenWidth * 0.25,

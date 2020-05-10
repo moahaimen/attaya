@@ -1,10 +1,9 @@
-import 'package:attayairaq/models/organization.dart';
-import 'package:attayairaq/services/data_base.dart';
-import 'package:attayairaq/services/shered_Preference.dart';
+import '../services/data_base.dart';
+import '../models/organization.dart';
+import '../services/shered_Preference.dart';
 
 Future<void> deleteOrganization(String orgId) async {
   DatabaseService(orgId).deleteOrg();
-  await Future.delayed(Duration(seconds: 1));
 }
 
  Future<Organization> getOrganizationData() async {

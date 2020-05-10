@@ -1,22 +1,27 @@
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/functions/show_overlay.dart';
-import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/location.dart';
-import 'package:attayairaq/models/request.dart';
-import 'package:attayairaq/screens/shared/map_screen.dart';
-import 'package:attayairaq/services/family_sevices.dart';
-import 'package:attayairaq/services/organization_srvices.dart';
-import 'package:attayairaq/services/send_request.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:attayairaq/consts/consts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../models/family.dart';
+import '../../consts/consts.dart';
+import '../../models/request.dart';
+import '../../consts/loading.dart';
+import '../../models/location.dart';
+import '../../services/data_base.dart';
+import '../../services/send_request.dart';
+import '../../functions/show_overlay.dart';
+import '../../screens/shared/map_screen.dart';
+import '../../services/organization_srvices.dart';
 
 class AddFamily extends StatefulWidget {
   final bool isAdmin;
+  final LatLng location;
 
-  const AddFamily({this.isAdmin});
+  const AddFamily({
+    @required this.isAdmin,
+    this.location,
+  });
 
   @override
   _AddFamilyState createState() => _AddFamilyState();
@@ -28,12 +33,18 @@ class _AddFamilyState extends State<AddFamily> {
   bool locationIsEmpty = false;
   LatLng location;
 
-  final headOfFamilyController = TextEditingController();
-  final provinceController = TextEditingController();
-  final cityController = TextEditingController();
-  final nearPointController = TextEditingController();
-  final phoneNoController = TextEditingController();
-  final familyCountController = TextEditingController();
+  final TextEditingController headOfFamilyController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController nearPointController = TextEditingController();
+  final TextEditingController phoneNoController = TextEditingController();
+  final TextEditingController familyCountController = TextEditingController();
+
+  @override
+  void didChangeDependencies() {
+    if (widget.location != null) location = widget.location;
+    super.didChangeDependencies();
+  }
 
   @override
   void dispose() {
@@ -56,17 +67,17 @@ class _AddFamilyState extends State<AddFamily> {
           : Directionality(
               textDirection: TextDirection.rtl,
               child: Container(
-                padding: EdgeInsets.all(6.0),
+                padding: const EdgeInsets.all(6.0),
                 child: Center(
                   child: ListView(
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 10.0),
                           ),
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(
                                 left: 10, right: 10.0, top: 28, bottom: 5),
                             child: Text(
@@ -75,7 +86,7 @@ class _AddFamilyState extends State<AddFamily> {
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: Form(
                               key: _formkey,
                               child: Column(
@@ -83,7 +94,7 @@ class _AddFamilyState extends State<AddFamily> {
                                 textDirection: TextDirection.rtl,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  SizedBox(height: 30),
+                                  const SizedBox(height: 30),
                                   CrdTxtFrmFld(
                                     cntrTxt: headOfFamilyController,
                                     hinttxt: 'اسم رب الاسرة',
@@ -91,9 +102,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     smallerValue: 5,
                                     validationifText: 'الاسم قصير جدا',
                                     validationElseText: 'الاسم طويل جدا',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: phoneNoController,
                                     hinttxt: 'رقم الهاتف',
@@ -102,9 +112,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     smallerValue: 11,
                                     validationifText: 'الرقم غير صحيح',
                                     validationElseText: 'رجاءا ادخل رقم الهاتف',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: familyCountController,
                                     hinttxt: 'عدد افراد الاسرة',
@@ -113,9 +122,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     smallerValue: 1,
                                     validationifText: 'الرقم غير صحيح',
                                     validationElseText: 'رجاءا ادخل  رقم صحيح',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: provinceController,
                                     hinttxt: 'المحافظة',
@@ -124,9 +132,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     validationElseText:
                                         'اسم المحافظة كبير جدا ',
                                     validationifText: 'الاسم غير صحيح',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: cityController,
                                     hinttxt: 'المنطقة',
@@ -135,9 +142,8 @@ class _AddFamilyState extends State<AddFamily> {
                                     validationElseText:
                                         'اسم النقطة الدالة كبير جدا ',
                                     validationifText: 'ادخل النقطة الدالة',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
+                                  const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: nearPointController,
                                     hinttxt: 'اقرب نقطة دالة للمنزل',
@@ -146,16 +152,15 @@ class _AddFamilyState extends State<AddFamily> {
                                     validationElseText:
                                         'اسم النقطة الدالة كبير جدا ',
                                     validationifText: 'الاسم قصير جدا',
-                                    password: false,
                                   ),
-                                  SizedBox(height: 30),
+                                  const SizedBox(height: 30),
                                   FlatButton.icon(
                                       onPressed: () async {
                                         location =
                                             await Navigator.of(context).push(
                                           CupertinoPageRoute(
                                             builder: (c) {
-                                              return MapScreen(
+                                              return const MapScreen(
                                                 isNotSupScreen: false,
                                                 isSelectLocation: true,
                                                 isOrg: false,
@@ -163,7 +168,6 @@ class _AddFamilyState extends State<AddFamily> {
                                             },
                                           ),
                                         );
-                                        print(location);
                                       },
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',
@@ -183,10 +187,10 @@ class _AddFamilyState extends State<AddFamily> {
                                           ),
                                         )
                                       : Container(),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 30,
                                   ),
-                                  buttonBlueOldShape(
+                                  buttonBlueShape(
                                     'اضافة العائلة',
                                     context,
                                     () async {
@@ -214,7 +218,9 @@ class _AddFamilyState extends State<AddFamily> {
                                           loading = true;
                                         });
                                         if (widget.isAdmin) {
-                                          await addFamily(_family);
+                                          await DatabaseService(_family.id)
+                                              .updateFamilyData(_family);
+
                                           showOverlay(
                                               context: context,
                                               text: 'تم اضافة العائلة');

@@ -2,25 +2,27 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../HomeScreen.dart';
-import '../../services/family_sevices.dart';
-import '../../services/location_service.dart';
-import '../../services/shered_Preference.dart';
-
-import '../../consts/consts.dart';
+import '../../models/user.dart';
 import '../../models/family.dart';
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
 import '../../services/data_base.dart';
 import '../../services/size_config.dart';
-import './family_details.dart';
+import '../../services/family_sevices.dart';
+import '../../services/location_service.dart';
+import '../../screens/family/add_family.dart';
+import '../../services/shered_Preference.dart';
+import '../../screens/family/family_details.dart';
 
 class MapScreen extends StatefulWidget {
   final bool isNotSupScreen;
   final bool isSelectLocation;
   final bool isOrg;
 
-  MapScreen({
+  const MapScreen({
     @required this.isNotSupScreen,
     @required this.isSelectLocation,
     @required this.isOrg,
@@ -33,12 +35,12 @@ class _MapScreenState extends State<MapScreen> {
   GoogleMap map;
   DatabaseService database;
   String initialValue = 'بغداد، Irak';
-  Set<Marker> markers = Set();
-  Set<Polyline> roads = Set<Polyline>();
+  Set<Marker> markers = {};
+  Set<Polyline> roads = <Polyline>{};
   bool showSortingOptions = false, onlyIsNeedd = false, onlyNotNeed = false;
   String searchText;
   LatLng myLocation;
-  final searchTextController = TextEditingController();
+  final TextEditingController searchTextController = TextEditingController();
   final _controller = Completer();
 
   @override
@@ -96,39 +98,36 @@ class _MapScreenState extends State<MapScreen> {
       body: Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight,
-        child: StreamBuilder(
+        child: StreamBuilder<Position>(
           stream: Stream.fromFuture(mylocation()),
-          builder: (BuildContext context, AsyncSnapshot snapshot) {
+          builder: (context, snapshot) {
             //searchText = '';
 
             if (snapshot.data != null) {
+              final position = snapshot.data;
               roads.clear();
-              myLocation =
-                  LatLng(snapshot.data.latitude, snapshot.data.longitude);
-              return StreamBuilder(
+              myLocation = LatLng(position.latitude, position.longitude);
+              return StreamBuilder<List<Family>>(
                 stream: getFamilies(
-                  isNeed: ((!onlyIsNeedd && !onlyNotNeed) ||
-                          (onlyIsNeedd && onlyNotNeed))
-                      ? null
-                      : ((onlyIsNeedd) ? true : false),
                   name: (searchText == '') ? null : searchText,
                 ),
                 builder: (context, snap) {
-                  print(snap.data);
                   if (snap.data != null) {
                     roads.clear();
-                    List<Family> data = snap.data;
+                    final data = snap.data;
+                    if (widget.isSelectLocation) data.clear();
 
                     markers.clear();
                     for (var i = 0; i < data.length; i++) {
-                      Family f = data[i];
+                      final f = data[i];
+
                       if (onlyIsNeedd && onlyNotNeed ||
                           !onlyIsNeedd && !onlyNotNeed) {
                         addMarker(f);
                       } else if (onlyIsNeedd) {
                         if (f.isNeedHelp) addMarker(f);
                       } else if (onlyNotNeed) {
-                        if (f.isNeedHelp) addMarker(f);
+                        if (!f.isNeedHelp) addMarker(f);
                       }
                     }
                     return Stack(
@@ -138,19 +137,19 @@ class _MapScreenState extends State<MapScreen> {
                           onLongPress: (value) {
                             showDialog(
                               context: context,
-                              builder: (BuildContext context) {
+                              builder: (context) {
                                 // return object of type Dialog
-                                String title = widget.isSelectLocation
+                                final title = widget.isSelectLocation
                                     ? "تاكيد الاختيار"
                                     : 'اضافة عائلة';
                                 return Directionality(
                                   textDirection: TextDirection.rtl,
                                   child: AlertDialog(
-                                    title: new Text(
+                                    title: Text(
                                       title,
                                       style: textStyle,
                                     ),
-                                    content: new Text(
+                                    content: Text(
                                       widget.isSelectLocation
                                           ? 'هل انت متاكد من اختيا هذا الموقع؟'
                                           : 'هل تريد اضافة عائلة في هذا الموقع؟',
@@ -158,34 +157,43 @@ class _MapScreenState extends State<MapScreen> {
                                     ),
                                     actions: <Widget>[
                                       // usually buttons at the bottom of the dialog
-                                      new FlatButton(
-                                        child: new Text(
-                                          "اضافة",
-                                          style: textStyle.copyWith(
-                                              color: Colors.blue),
-                                        ),
+                                      FlatButton(
                                         onPressed: () {
-                                          print(value);
+                                          Navigator.of(context).pop();
+
                                           setState(
                                             () {
                                               if (widget.isSelectLocation) {
-                                                Navigator.of(context).pop();
                                                 Navigator.of(context)
                                                     .pop(value);
+                                              } else {
+                                                Navigator.of(context).push(
+                                                  CupertinoPageRoute(
+                                                    builder: (_) => AddFamily(
+                                                      isAdmin: !widget.isOrg,
+                                                      location: value,
+                                                    ),
+                                                  ),
+                                                );
                                               }
                                             },
                                           );
                                         },
+                                        child: Text(
+                                          "اضافة",
+                                          style: textStyle.copyWith(
+                                              color: Colors.blue),
+                                        ),
                                       ),
-                                      new FlatButton(
-                                        child: new Text(
+                                      FlatButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Text(
                                           "الغاء",
                                           style: textStyle.copyWith(
                                               color: Colors.red),
                                         ),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
                                       ),
                                     ],
                                   ),
@@ -194,9 +202,7 @@ class _MapScreenState extends State<MapScreen> {
                             );
                           },
                           polylines: roads,
-                          onMapCreated: (GoogleMapController controller) {
-                            _controller.complete(controller);
-                          },
+                          onMapCreated: _controller.complete,
                           buildingsEnabled: false,
                           mapType: MapType.normal,
                           initialCameraPosition: CameraPosition(
@@ -233,11 +239,11 @@ class _MapScreenState extends State<MapScreen> {
                                   'اربيل ، Irak',
                                   'السليمانية ، Irak',
                                 ].map(
-                                  (String value) {
-                                    return new DropdownMenuItem<String>(
+                                  (value) {
+                                    return DropdownMenuItem<String>(
                                       value: value,
-                                      child: new Text(
-                                          value.replaceAll('، Irak', '')),
+                                      child:
+                                          Text(value.replaceAll('، Irak', '')),
                                     );
                                   },
                                 ).toList(),
@@ -250,14 +256,15 @@ class _MapScreenState extends State<MapScreen> {
 
                                   if (val.isNotEmpty) {
                                     final a = await stateLocation(val);
-                                    final GoogleMapController controller =
-                                        await _controller.future;
+                                    final controller =
+                                        await _controller.future
+                                            as GoogleMapController;
                                     setState(
                                       () {
                                         controller.animateCamera(
                                           CameraUpdate.newCameraPosition(
                                             CameraPosition(
-                                              zoom: 18,
+                                              zoom: 15,
                                               target: LatLng(
                                                   a.coordinates.latitude,
                                                   a.coordinates.longitude),
@@ -272,66 +279,59 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                               Container(
                                 color: Colors.white,
-                                child: Padding(
-                                  padding: EdgeInsets.only(top: 0),
-                                  child: new TextField(
-                                    onChanged: (value) {
-                                      setState(
-                                        () async {
-                                          searchText = value;
-                                          final GoogleMapController controller =
-                                              await _controller.future;
-                                          setState(
-                                            () {
-                                              if (markers.length != 0) {
-                                                setState(
-                                                  () {
-                                                    controller.animateCamera(
-                                                      CameraUpdate
-                                                          .newCameraPosition(
-                                                        CameraPosition(
-                                                          zoom: 18,
-                                                          target: LatLng(
-                                                            markers
-                                                                .first
-                                                                .position
-                                                                .latitude,
-                                                            markers
-                                                                .first
-                                                                .position
-                                                                .longitude,
-                                                          ),
+                                child: TextField(
+                                  onChanged: (value) {
+                                    setState(
+                                      () async {
+                                        searchText = value;
+                                        final controller =
+                                            await _controller.future
+                                                as GoogleMapController;
+                                        setState(
+                                          () {
+                                            if (markers.isNotEmpty) {
+                                              setState(
+                                                () {
+                                                  controller.animateCamera(
+                                                    CameraUpdate.newCameraPosition(
+                                                      CameraPosition(
+                                                        zoom: 18,
+                                                        target: LatLng(
+                                                          markers.first.position
+                                                              .latitude,
+                                                          markers.first.position
+                                                              .longitude,
                                                         ),
                                                       ),
-                                                    );
-                                                  },
-                                                );
-                                              } 
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                    decoration: new InputDecoration(
-                                      border: new OutlineInputBorder(
-                                          borderSide: new BorderSide(
-                                              color: Colors.teal)),
-                                      hintText: 'بحث عن عائلة',
-                                      // helperText: 'Keep it short, this is just a demo.',
-                                      labelText: 'بحث',
-                                      prefixIcon: Icon(Icons.search),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            }
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.teal)),
+                                    hintText: 'بحث عن عائلة',
+                                    // helperText: 'Keep it short, this is just a demo.',
+                                    labelText: 'بحث',
+                                    prefixIcon: Icon(Icons.search),
 
-                                      suffixIcon: IconButton(
-                                        icon: Icon(Icons.sort),
-                                        onPressed: () {
-                                          setState(
-                                            () {
-                                              showSortingOptions =
-                                                  !showSortingOptions;
-                                            },
-                                          );
-                                        },
-                                      ),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(Icons.sort),
+                                      onPressed: () {
+                                        setState(
+                                          () {
+                                            showSortingOptions =
+                                                !showSortingOptions;
+                                          },
+                                        );
+                                      },
                                     ),
                                   ),
                                 ),
@@ -382,12 +382,12 @@ class _MapScreenState extends State<MapScreen> {
                       ],
                     );
                   } else {
-                    return Center(child: CircularProgressIndicator());
+                    return Loading();
                   }
                 },
               );
             } else {
-              return Center(child: CircularProgressIndicator());
+              return Loading();
             }
           },
         ),

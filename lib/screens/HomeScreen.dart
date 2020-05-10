@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/consts/costume_nav_bar.dart';
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/organization.dart';
-import 'package:attayairaq/models/user.dart';
-import 'package:attayairaq/screens/admin/control_panel.dart';
-import 'package:attayairaq/screens/family/family_account.dart';
-import 'package:attayairaq/screens/shared/map_screen.dart';
-import 'package:attayairaq/services/data_base.dart';
-
-enum UserType { admin, organisation, family, unKnown }
+import '../models/user.dart';
+import '../models/family.dart';
+import '../consts/consts.dart';
+import '../consts/loading.dart';
+import '../services/data_base.dart';
+import '../models/organization.dart';
+import '../consts/costume_nav_bar.dart';
+import '../screens/shared/map_screen.dart';
+import '../screens/admin/control_panel.dart';
+import '../screens/family/family_account.dart';
 
 class HomeScreen extends StatefulWidget {
   final User user;
@@ -26,11 +24,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
+      builder: (context, constraints) {
         return OrientationBuilder(
-          builder: (BuildContext context, Orientation orientation) {
+          builder: (context, orientation) {
             if (widget.user.userType == UserType.admin) {
-              return AdminHomeScreen();
+              return const AdminHomeScreen();
             } else if (widget.user.userType == UserType.organisation) {
               return OrganizationHomeScreen(user: widget.user);
             } else if (widget.user.userType == UserType.family) {
@@ -52,8 +50,8 @@ class AdminHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
-      body: ControlPanel(),
-      bottomNavigationBar: AdminNavBar(),
+      body: const ControlPanel(),
+      bottomNavigationBar: const AdminNavBar(),
     );
   }
 }
@@ -72,12 +70,12 @@ class OrganizationHomeScreen extends StatelessWidget {
       value: DatabaseService(user.uid).organizatioData,
       child: Scaffold(
         appBar: apBar('الخريطة', context, isNotsubScreen: true),
-        body: MapScreen(
+        body: const MapScreen(
           isNotSupScreen: true,
           isSelectLocation: false,
           isOrg: true,
         ),
-        bottomNavigationBar: OrganizationNavBar(),
+        bottomNavigationBar: const OrganizationNavBar(),
       ),
     );
   }
@@ -98,7 +96,7 @@ class FamilyHomeScreen extends StatelessWidget {
         value: DatabaseService(user.uid).familyData,
         child: FamilyAccount(),
       ),
-      bottomNavigationBar: FamilyNavBar(),
+      bottomNavigationBar: const FamilyNavBar(),
     );
   }
 }

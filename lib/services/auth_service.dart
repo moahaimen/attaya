@@ -1,17 +1,20 @@
-import 'package:attayairaq/main.dart';
 import 'dart:async';
-import 'package:attayairaq/models/user.dart';
-import 'package:attayairaq/screens/HomeScreen.dart';
-import 'package:attayairaq/screens/authentication/family_information_for_profile.dart';
-import 'package:attayairaq/screens/authentication/orginization_information_for_profile.dart';
-import 'package:attayairaq/screens/authenticate.dart';
-import 'package:attayairaq/services/data_base.dart';
-import 'package:attayairaq/services/shered_Preference.dart';
-import 'package:attayairaq/wrapper.dart';
+
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../consts/consts.dart';
+import '../main.dart';
+import '../models/user.dart';
+import '../screens/HomeScreen.dart';
+import '../screens/authentication/authenticate.dart';
+import '../screens/authentication/family_information_for_profile.dart';
+import '../screens/authentication/orginization_information_for_profile.dart';
+import '../services/data_base.dart';
+import '../services/shered_Preference.dart';
 
 enum PhoneAuthState {
   Started,
@@ -22,9 +25,34 @@ enum PhoneAuthState {
   SetProfileCompleted,
 }
 
+Future showcostumeNotife(String title) async {
+  await Future.delayed(const Duration(seconds: 1));
+
+  BotToast.showNotification(
+    title: (child) {
+      return Text(
+        title,
+        style: textStyle,
+      );
+    },
+    duration:const Duration(seconds: 3),
+  );
+  await Future.delayed(const Duration(seconds: 2));
+  navigatorKey.currentState.pushReplacement(
+    CupertinoPageRoute(
+      builder: (_) => Wrapper(
+        child: Authenticate(),
+      ),
+    ),
+  );
+}
+
 class AuthService {
-  static FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  static var _authCredential, actualCode, phone, status, userType;
+  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  static String actualCode;
+  static String phone;
+  static String status;
+  static UserType userType;
 
   User userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
@@ -34,32 +62,37 @@ class AuthService {
     return _firebaseAuth.onAuthStateChanged.map(userFromFirebaseUser);
   }
 
-  static StreamController<String> statusStream = StreamController.broadcast();
+  static StreamController<String> statusStreamController =
+      StreamController.broadcast();
   static StreamController<PhoneAuthState> phoneAuthState =
       StreamController.broadcast();
   static Stream<PhoneAuthState> stateStream = phoneAuthState.stream;
+  static Stream<String> statusStream = statusStreamController.stream;
 
-  static instantiate({String phoneNumber, UserType type}) async {
+  static Future instantiate({
+    @required String phoneNumber,
+    @required UserType type,
+  }) async {
     assert(phoneNumber != null);
     phone = phoneNumber;
     userType = type;
-    print(phone);
     startAuth();
   }
 
-  static dispose() {
-    statusStream.close();
+  static void dispose() {
+    statusStreamController.close();
     phoneAuthState.close();
   }
 
-  static startAuth() {
-    statusStream.stream
-        .listen((String status) => print("PhoneAuth: " + status));
+  static void startAuth() {
+    statusStreamController.stream.listen((status) {
+      print("PhoneAuth: $status");
+    });
     addStatus('Phone auth started');
     _firebaseAuth
         .verifyPhoneNumber(
             phoneNumber: phone.toString(),
-            timeout: Duration(seconds: 60),
+            timeout: const Duration(seconds: 60),
             verificationCompleted: verificationCompleted,
             verificationFailed: verificationFailed,
             codeSent: codeSent,
@@ -67,80 +100,88 @@ class AuthService {
         .then((value) {
       addStatus('Code sent');
     }).catchError((error) {
+      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
       addStatus(error.toString());
     });
   }
 
   static final PhoneCodeSent codeSent =
-      (String verificationId, [int forceResendingToken]) async {
+      (verificationId, [forceResendingToken]) async {
     actualCode = verificationId;
-    addStatus("\nEnter the code sent to " + phone);
+    addStatus("\nEnter the code sent to $phone");
   };
 
   static final PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
-      (String verificationId) {
+      (verificationId) {
     actualCode = verificationId;
     addStatus("\nAuto retrieval time out");
   };
 
   static final PhoneVerificationFailed verificationFailed =
-      (AuthException authException) {
-    addStatus('${authException.message}');
+      (authException) {
+    addStatus(authException.message);
     addState(PhoneAuthState.Error);
-    if (authException.message.contains('not authorized'))
+    if (authException.message.contains('not authorized')) {
       addStatus('App not authroized');
-    else if (authException.message.contains('Network'))
+    } else if (authException.message.contains('network')) {
+      showcostumeNotife('الرجاء التاكد من اتصالك بالانترنت');
       addStatus('Please check your internet connection and try again');
-    else
-      addStatus('Something has gone wrong, please try later ' +
-          authException.message);
+    } else {
+      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
+      addStatus(
+          'Something has gone wrong, please try later ${authException.message}');
+    }
   };
 
   static final PhoneVerificationCompleted verificationCompleted =
-      (AuthCredential auth) {
+      (auth) {
     addStatus('Auto retrieving verification code');
 
-    _firebaseAuth.signInWithCredential(auth).then((AuthResult value) {
+    _firebaseAuth.signInWithCredential(auth).then((value) {
       if (value.user != null) {
         addStatus(status = 'Authentication successful');
         addState(PhoneAuthState.Verified);
         onAuthenticationSuccessful(user: value.user);
       } else {
+        showcostumeNotife('الرقم الذي ادخلته غير صحيح');
+
         addStatus('Invalid code/invalid authentication');
         addState(PhoneAuthState.Failed);
       }
     }).catchError((error) {
       addState(PhoneAuthState.Error);
       addStatus('Something has gone wrong, please try later $error');
+      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
     });
   };
 
-  static void signInWithPhoneNumber({
+  static Future<void> signInWithPhoneNumber({
     String smsCode,
   }) async {
-    _authCredential = PhoneAuthProvider.getCredential(
+    final _authCredential = PhoneAuthProvider.getCredential(
         verificationId: actualCode, smsCode: smsCode);
 
     _firebaseAuth
         .signInWithCredential(_authCredential)
-        .then((AuthResult result) async {
+        .then((result) async {
       addStatus('Authentication successful');
       addState(PhoneAuthState.Verified);
       onAuthenticationSuccessful(user: result.user);
     }).catchError((error) {
+      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
       addState(PhoneAuthState.Error);
       addStatus(
           'Something has gone wrong, please try later(signInWithPhoneNumber) $error');
     });
   }
 
-  static onAuthenticationSuccessful({
+  static Future onAuthenticationSuccessful({
     @required FirebaseUser user,
   }) async {
     switch (userType) {
       case UserType.family:
         {
-          var family = await DatabaseService('')
+          final family = await DatabaseService('')
               .familiesCollection
               .document(user.uid)
               .get();
@@ -174,7 +215,7 @@ class AuthService {
         break;
       case UserType.organisation:
         {
-          var org = await DatabaseService('')
+          final org = await DatabaseService('')
               .organizationsCollection
               .document(user.uid)
               .get();
@@ -205,7 +246,7 @@ class AuthService {
         break;
       case UserType.admin:
         {
-          var admin = await Firestore.instance
+          final admin = await Firestore.instance
               .collection('admins')
               .document(phone)
               .get();
@@ -233,11 +274,10 @@ class AuthService {
   }
 
   static void addStatus(String s) {
-    statusStream.sink.add(s);
-    print(s);
+    statusStreamController.sink.add(s);
   }
 
-  static addState(PhoneAuthState state) {
+  static void addState(PhoneAuthState state) {
     print(state);
     phoneAuthState.sink.add(state);
   }

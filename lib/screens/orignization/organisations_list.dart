@@ -1,13 +1,14 @@
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/functions/send_message.dart';
-import 'package:attayairaq/models/organization.dart';
-import 'package:attayairaq/screens/admin/delete.dart';
-import 'package:attayairaq/screens/orignization/organization_details.dart';
-import 'package:attayairaq/services/data_base.dart';
-import 'package:attayairaq/services/organization_srvices.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
+import '../../services/data_base.dart';
+import '../../models/organization.dart';
+import '../../screens/admin/delete.dart';
+import '../../functions/send_message.dart';
+import '../../services/organization_srvices.dart';
+import '../../screens/orignization/organization_details.dart';
 
 class OrganizationsList extends StatelessWidget {
   final bool isAdmin;
@@ -16,12 +17,6 @@ class OrganizationsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      fontFamily: 'Changa',
-      fontWeight: FontWeight.bold,
-      color: deepTxtBlue,
-    );
     return Scaffold(
       appBar: apBar('المنظمات والجمعيات', context),
       body: StreamBuilder<List<Organization>>(
@@ -33,7 +28,7 @@ class OrganizationsList extends StatelessWidget {
               : Directionality(
                   textDirection: TextDirection.rtl,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Container(
                       // height: SizeConfig.screenHeight * 0.5,
                       child: organizationsList.isEmpty
@@ -45,17 +40,17 @@ class OrganizationsList extends StatelessWidget {
                             )
                           : ListView.builder(
                               itemCount: organizationsList.length,
-                              itemBuilder: (BuildContext context, int i) {
+                              itemBuilder: (context, i) {
                                 return Container(
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        color:
-                                            Color.fromRGBO(35, 68, 199, 0.86),
+                                        color: const Color.fromRGBO(
+                                            35, 68, 199, 0.86),
                                         width: 3),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                                  margin: EdgeInsets.all(20),
+                                  margin: const EdgeInsets.all(20),
                                   alignment: Alignment.center,
                                   child: Column(
                                     crossAxisAlignment:
@@ -115,22 +110,17 @@ class OrganizationsList extends StatelessWidget {
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
                                           FlatButton(
+                                            onPressed: () {
+                                              sendMessage(organizationsList[i]
+                                                  .phoneNumber);
+                                            },
                                             child: Text(
                                               'ارسال رسالة',
                                               style: textStyle.copyWith(
                                                   fontSize: 12),
                                             ),
-                                            onPressed: () {
-                                              sendMessage(organizationsList[i]
-                                                  .phoneNumber);
-                                            },
                                           ),
                                           FlatButton(
-                                            child: Text(
-                                              'قرائة المزيد',
-                                              style: textStyle.copyWith(
-                                                  fontSize: 12),
-                                            ),
                                             onPressed: () {
                                               Navigator.of(context).push(
                                                 CupertinoPageRoute(
@@ -141,6 +131,11 @@ class OrganizationsList extends StatelessWidget {
                                                 ),
                                               );
                                             },
+                                            child: Text(
+                                              'قرائة المزيد',
+                                              style: textStyle.copyWith(
+                                                  fontSize: 12),
+                                            ),
                                           ),
                                         ],
                                       ),

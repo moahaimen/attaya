@@ -1,14 +1,14 @@
-import 'package:attayairaq/services/data_base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:attayairaq/functions/send_message.dart';
-import 'package:attayairaq/screens/orignization/send_request_delete.dart';
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/screens/admin/delete.dart';
-import 'package:attayairaq/services/family_sevices.dart';
+import '../../models/family.dart';
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
+import '../../services/data_base.dart';
+import '../../screens/admin/delete.dart';
+import '../../functions/send_message.dart';
+import '../../services/family_sevices.dart';
+import '../../screens/orignization/send_request_delete.dart';
 
 class FamilyDetails extends StatefulWidget {
   final String familyId;
@@ -36,7 +36,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
           : StreamBuilder<Family>(
               stream: DatabaseService(widget.familyId).familyData,
               builder: (context, snapshot) {
-                final Family familyObj = snapshot.data;
+                final familyObj = snapshot.data;
                 return familyObj == null
                     ? Loading()
                     : Directionality(
@@ -46,15 +46,15 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                           child: Column(
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.all(10),
+                                padding:const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                       color:
-                                          Color(0xFF2356C7).withOpacity(0.86),
+                                          const Color(0xFF2356C7).withOpacity(0.86),
                                       width: 3),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                margin: EdgeInsets.all(20),
+                                margin:const EdgeInsets.all(20),
                                 alignment: Alignment.center,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,7 +98,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                       'ارسال رسالة للعائلة', context, () {
                                     sendMessage(familyObj.phoneNo);
                                   }),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
                                   FlatButton.icon(
@@ -114,7 +114,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                     onPressed: () {},
                                   ),
                                   _changeStateloading
-                                      ? CircularProgressIndicator()
+                                      ? const CircularProgressIndicator()
                                       : FlatButton.icon(
                                           icon: Image.asset(
                                             'assets/icons/change_status.png',
@@ -148,9 +148,9 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                                       setState(() {
                                                         _loading = true;
                                                       });
-                                                      await deleteFamily(
-                                                        familyObj.id,
-                                                      );
+                                                      await DatabaseService(
+                                                              familyObj.id)
+                                                          .deleteFamily();
                                                       Navigator.of(context)
                                                           .pop();
                                                     },

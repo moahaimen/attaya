@@ -1,7 +1,10 @@
-import 'package:attayairaq/screens/admin/organisations_list.dart';
-import 'package:attayairaq/screens/shared/families._list.dart';
-import 'package:attayairaq/screens/shared/map_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../screens/shared/map_screen.dart';
+import '../services/shered_Preference.dart';
+import '../screens/family/families._list.dart';
+import '../screens/orignization/organisations_list.dart';
+import '../screens/orignization/organization_account.dart';
 
 class AdminNavBar extends StatelessWidget {
   const AdminNavBar({Key key}) : super(key: key);
@@ -9,9 +12,9 @@ class AdminNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
-      color: Color.fromRGBO(35, 68, 199, 1),
+      color: const Color.fromRGBO(35, 68, 199, 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -24,7 +27,7 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => FamiliesList(isAdmin: true),
+                  builder: (_) => const FamiliesList(isAdmin: true),
                 ),
               );
             },
@@ -38,11 +41,10 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => MapScreen(
+                  builder: (_) => const MapScreen(
                     isNotSupScreen: false,
                     isSelectLocation: false,
                     isOrg: false,
-
                   ),
                 ),
               );
@@ -57,7 +59,7 @@ class AdminNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => OrganizationsList(
+                  builder: (_) => const OrganizationsList(
                     isAdmin: true,
                   ),
                 ),
@@ -76,12 +78,19 @@ class FamilyNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
-      color: Color.fromRGBO(35, 68, 199, 1),
+      color: const Color.fromRGBO(35, 68, 199, 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          IconButton(
+              icon: Image.asset(
+                'assets/icons/user_icon.png',
+                width: 25,
+                color: Colors.white,
+              ),
+              onPressed: null),
           IconButton(
             icon: Image.asset(
               'assets/icons/organization_icon.png',
@@ -91,26 +100,8 @@ class FamilyNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => OrganizationsList(
+                  builder: (_) => const OrganizationsList(
                     isAdmin: false,
-                  ),
-                ),
-              );
-            },
-          ),
-          IconButton(
-            icon: Image.asset(
-              'assets/icons/map_pin_1.png',
-              width: 25,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => MapScreen(
-                    isNotSupScreen: false,
-                    isSelectLocation: false,
-                    isOrg: false,
                   ),
                 ),
               );
@@ -128,12 +119,27 @@ class OrganizationNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       height: 50,
-      color: Color.fromRGBO(35, 68, 199, 1),
+      color: const Color.fromRGBO(35, 68, 199, 1),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
+          IconButton(
+            icon: Image.asset(
+              'assets/icons/user_icon.png',
+              width: 25,
+              color: Colors.white,
+            ),
+            onPressed: () async {
+              final user = await SharedPrefs().getUser();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => OrganizationAccount(uid: user.uid),
+                ),
+              );
+            },
+          ),
           IconButton(
             icon: Image.asset(
               'assets/icons/family_icon.png',
@@ -143,7 +149,7 @@ class OrganizationNavBar extends StatelessWidget {
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (_) => FamiliesList(isAdmin: false),
+                  builder: (_) => const FamiliesList(isAdmin: false),
                 ),
               );
             },

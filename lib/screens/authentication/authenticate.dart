@@ -1,8 +1,9 @@
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/screens/authentication/sign_up.dart';
-import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../../consts/consts.dart';
+import '../../services/size_config.dart';
+import '../../screens/authentication/sign_up.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -10,11 +11,9 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -22,7 +21,7 @@ class _AuthenticateState extends State<Authenticate> {
               crossAxisAlignment: CrossAxisAlignment.center,
               textDirection: TextDirection.rtl,
               children: <Widget>[
-                Padding(
+                const Padding(
                   padding: EdgeInsets.only(top: 100.0),
                 ),
                 Row(
@@ -36,7 +35,7 @@ class _AuthenticateState extends State<Authenticate> {
                     ),
                   ],
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
                   child: Text("تطبيق عطايا", style: emptyblueText),
                 ),
@@ -44,11 +43,11 @@ class _AuthenticateState extends State<Authenticate> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 20),
                       child: Column(
                         children: <Widget>[
-                          SizedBox(
+                          const SizedBox(
                             height: 15.0,
                           ),
                           SizedBox(
@@ -70,7 +69,7 @@ class _AuthenticateState extends State<Authenticate> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10.0,
                 ),
                 Padding(
@@ -78,7 +77,7 @@ class _AuthenticateState extends State<Authenticate> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
+                    children: const <Widget>[
                       Text(
                         'حول المبادرة',
                         style: navText,

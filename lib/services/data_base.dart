@@ -1,7 +1,8 @@
-import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/organization.dart';
-import 'package:attayairaq/models/request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/family.dart';
+import '../models/request.dart';
+import '../models/organization.dart';
 
 class DatabaseService {
   final String uid;
@@ -20,7 +21,7 @@ class DatabaseService {
 // family functions
   Future updateFamilyData(Family family) async {
     //this can be used to add new family or update an exsisting one
-    return await familiesCollection.document(uid).setData(
+    await familiesCollection.document(uid).setData(
       {
         'family_name': family.headOfFamily,
         'nearest_known_point': family.nearestKnownPoint,
@@ -40,7 +41,8 @@ class DatabaseService {
 
   Future deleteFamily() async {
     //this can be used to add new family or update an exsisting one
-    return await familiesCollection.document(uid).delete();
+
+    await familiesCollection.document(uid).delete();
   }
 
   List<Family> _familiesListFromSnapshot(QuerySnapshot snap) {
@@ -68,7 +70,7 @@ class DatabaseService {
 
   Future updateOrganizationData(Organization organization) async {
     //this can be used to add new organization or update an exsisting one
-    return await organizationsCollection.document(uid).setData(
+    organizationsCollection.document(uid).setData(
       {
         'name': organization.name,
         'phone_number': organization.phoneNumber,
@@ -101,8 +103,6 @@ class DatabaseService {
         .map(_organizationsListFromSnapshot);
   }
 
- 
-
   Future<DocumentSnapshot> get organizationDataSnap {
     return organizationsCollection.document(uid).get();
   }
@@ -116,7 +116,7 @@ class DatabaseService {
 
   Future deleteOrg() async {
     //this can be used to add new family or update an exsisting one
-    return await organizationsCollection.document(uid).delete();
+    await organizationsCollection.document(uid).delete();
   }
 
   // request

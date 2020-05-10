@@ -1,28 +1,21 @@
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/screens/admin/add_family_requests.dart';
-import 'package:attayairaq/screens/admin/organisations_list.dart';
-import 'package:attayairaq/screens/shared/add_family.dart';
-import 'package:attayairaq/screens/shared/families._list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'delete_family_requests.dart';
+import '../../consts/consts.dart';
+import '../../screens/family/add_family.dart';
+import '../../screens/admin/requests_list.dart';
+import '../../screens/family/families._list.dart';
+import '../../screens/orignization/organisations_list.dart';
 
 class ControlPanel extends StatelessWidget {
   const ControlPanel({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      fontFamily: 'Changa',
-      fontWeight: FontWeight.bold,
-      color: deepTxtBlue,
-    );
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Padding(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -39,7 +32,7 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (_) => AddFamily(isAdmin: true),
+                    builder: (_) => const AddFamily(isAdmin: true),
                   ),
                 );
               },
@@ -51,7 +44,7 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (_) => FamiliesList(isAdmin: true),
+                    builder: (_) => const FamiliesList(isAdmin: true),
                   ),
                 );
               },
@@ -63,7 +56,9 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (_) => AddFamilyRequests(),
+                    builder: (_) => const RequestsList(
+                      showDeleteRequests: false,
+                    ),
                   ),
                 );
               },
@@ -75,7 +70,9 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (_) => DeleteFamilyRequests(),
+                    builder: (_) => const RequestsList(
+                      showDeleteRequests: true,
+                    ),
                   ),
                 );
               },
@@ -87,9 +84,8 @@ class ControlPanel extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   CupertinoPageRoute(
-                    builder: (_) => OrganizationsList(isAdmin: true),
+                    builder: (_) => const OrganizationsList(isAdmin: true),
                   ),
-
                 );
               },
             ),
@@ -116,20 +112,20 @@ class ControlPanelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onPressed,
+      onTap: () => onPressed,
       child: Container(
         height: 70,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey.withOpacity(0.5),
           ),
-          color: Color(0xFFA5D5EB).withOpacity(0.3),
+          color: const Color(0xFFA5D5EB).withOpacity(0.3),
         ),
         child: Row(
           children: <Widget>[
             imageIcon,
-            SizedBox(
+            const SizedBox(
               width: 5,
             ),
             Text(

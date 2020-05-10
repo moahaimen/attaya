@@ -1,6 +1,6 @@
-import 'package:attayairaq/models/location.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import './location.dart';
 class Organization {
   final String id;
   final String name;
@@ -36,8 +36,8 @@ class Organization {
       managerName: doc.data['manager_name'],
       managerPhoneNo: doc.data['manager_phone_no'],
       location: Location(
-        longitude: location['longitude'],
-        latitude: location['latitude'],
+        longitude: double.parse( location['longitude'].toString()),
+        latitude:double.parse( location['latitude'].toString()),
       ),
     );
   }

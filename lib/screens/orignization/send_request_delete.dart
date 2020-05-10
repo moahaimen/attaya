@@ -1,13 +1,12 @@
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/functions/show_overlay.dart';
-import 'package:attayairaq/models/request.dart';
-import 'package:attayairaq/services/organization_srvices.dart';
-import 'package:attayairaq/services/send_request.dart';
 import 'package:flutter/material.dart';
 
-import 'package:attayairaq/consts/consts.dart';
-import 'package:uuid/uuid.dart';
-import 'package:attayairaq/models/family.dart';
+import '../../models/family.dart';
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
+import '../../models/request.dart';
+import '../../services/send_request.dart';
+import '../../functions/show_overlay.dart';
+import '../../services/organization_srvices.dart';
 
 class RequestDelete extends StatefulWidget {
   final Family family;
@@ -21,7 +20,7 @@ class RequestDelete extends StatefulWidget {
 
 class _RequestDeleteState extends State<RequestDelete> {
   bool isLoading = false;
-  final deleteReasonController = TextEditingController();
+  final TextEditingController deleteReasonController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -38,15 +37,15 @@ class _RequestDeleteState extends State<RequestDelete> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: Color(0xFF2356C7).withOpacity(0.86),
+                            color: const Color(0xFF2356C7).withOpacity(0.86),
                             width: 1.5,
                           ),
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        margin: EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
                         alignment: Alignment.center,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,7 +69,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 40,
                       ),
                       Form(
@@ -85,7 +84,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           cntrTxt: deleteReasonController,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 40,
                       ),
                       buttonRedShape('حذف العائلة', context, () async {
@@ -96,7 +95,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                         final org = await getOrganizationData();
                         await sendDeleteRequestByOrg(
                           request: Request(
-                            id: Uuid().v4(),
+                            id: org.id,
                             orgThatRequested: org.name,
                             theFamily: widget.family,
                             deleteReason: deleteReasonController.text,
@@ -107,6 +106,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           isLoading = false;
                         });
                         showOverlay(text: 'تم ارسال الطلب', context: context);
+                        Navigator.of(context).pop();
                       }),
                     ],
                   ),

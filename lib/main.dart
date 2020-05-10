@@ -1,18 +1,22 @@
-import 'package:attayairaq/screens/HomeScreen.dart';
-import 'package:attayairaq/screens/authenticate.dart';
-import 'package:attayairaq/services/shered_Preference.dart';
-import 'package:attayairaq/wrapper.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-final GlobalKey<NavigatorState> navigatorKey = new GlobalKey<NavigatorState>();
+import './screens/HomeScreen.dart';
+import './services/size_config.dart';
+import './services/shered_Preference.dart';
+import './screens/authentication/authenticate.dart';
 
-void main() async {
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final user = await SharedPrefs().getUser();
   user == null
       ? runApp(
           MaterialApp(
+            builder: BotToastInit(), //1. call BotToastInit
+            navigatorObservers: [BotToastNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
             home: Wrapper(child: Authenticate()),
@@ -20,6 +24,8 @@ void main() async {
         )
       : runApp(
           MaterialApp(
+            builder: BotToastInit(), //1. call BotToastInit
+            navigatorObservers: [BotToastNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
             home: Wrapper(
@@ -27,4 +33,15 @@ void main() async {
             ),
           ),
         );
+}
+
+class Wrapper extends StatelessWidget {
+  final Widget child;
+
+  const Wrapper({@required this.child});
+  @override
+  Widget build(BuildContext context) {
+    SizeConfig().init(context);
+    return child;
+  }
 }

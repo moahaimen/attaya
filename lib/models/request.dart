@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:attayairaq/models/family.dart';
+import './family.dart';
+import './location.dart';
 
 class Request {
   final String id;
@@ -19,7 +20,8 @@ class Request {
   });
 
   factory Request.fromDocument(DocumentSnapshot doc, String id) {
-    Map family = doc['the_Family'];
+    final Map family = doc['the_Family'];
+    final Map fLocation = family['location'];
     return Request(
       id: id,
       orgThatRequested: doc['org_that_requested'],
@@ -29,11 +31,14 @@ class Request {
         province: family['province'],
         city: family['city'],
         phoneNo: family['phone_number'],
-        timeStamp: null,
+        timeStamp: DateTime.parse(family['time_stamp']),
         isNeedHelp: family['is_need_help'],
         nearestKnownPoint: family['nearest_known_point'],
         noOfMembers: family['no_of_members'],
-        location: null,
+        location: Location(
+          longitude: double.parse(fLocation['longitude'].toString()),
+          latitude: double.parse(fLocation['latitude'].toString()),
+        ),
       ),
       deleteReason: doc['delete_reason'],
       isDeleteRequest: doc['is_delete_request'],

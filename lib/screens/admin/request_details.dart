@@ -1,9 +1,10 @@
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/functions/show_overlay.dart';
-import 'package:attayairaq/models/request.dart';
-import 'package:attayairaq/services/family_sevices.dart';
-import 'package:attayairaq/services/send_request.dart';
 import 'package:flutter/material.dart';
+
+import '../../consts/consts.dart';
+import '../../models/request.dart';
+import '../../services/data_base.dart';
+import '../../services/send_request.dart';
+import '../../functions/show_overlay.dart';
 
 class RequestDetails extends StatefulWidget {
   final Request request;
@@ -24,7 +25,7 @@ class _RequestDetailsState extends State<RequestDetails> {
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: Padding(
-          padding: EdgeInsets.all(25),
+          padding: const EdgeInsets.all(25),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,14 +34,15 @@ class _RequestDetailsState extends State<RequestDetails> {
                   'الموافقة على $type عائلة',
                   style: textStyle.copyWith(fontSize: 30),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Container(
-                  padding: EdgeInsets.all(15),
+                  padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(
                     border: Border.all(
-                        color: Color(0xFF2356C7).withOpacity(0.86), width: 2),
+                        color: const Color(0xFF2356C7).withOpacity(0.86),
+                        width: 2),
                     borderRadius: BorderRadius.circular(15),
                   ),
                   child: Column(
@@ -65,15 +67,17 @@ class _RequestDetailsState extends State<RequestDetails> {
                     ],
                   ),
                 ),
-                SizedBox(height: 30),
-                widget.request.isDeleteRequest? Text(
-                  'سبب الحذف: ${widget.request.deleteReason}',
-                  style: textStyle.copyWith(
-                    color: Colors.red,
-                    fontSize: 22,
-                  ),
-                ): Container(),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
+                widget.request.isDeleteRequest
+                    ? Text(
+                        'سبب الحذف: ${widget.request.deleteReason}',
+                        style: textStyle.copyWith(
+                          color: Colors.red,
+                          fontSize: 22,
+                        ),
+                      )
+                    : Container(),
+                const SizedBox(height: 30),
                 buttonBlueShape(
                   'الموافقة على ال$type',
                   context,
@@ -84,9 +88,11 @@ class _RequestDetailsState extends State<RequestDetails> {
                             loading = true;
                           });
                           if (widget.request.isDeleteRequest) {
-                            await deleteFamily(widget.request.theFamily.id);
+                            await DatabaseService(widget.request.theFamily.id)
+                                .deleteFamily();
                           } else {
-                            await addFamily(widget.request.theFamily);
+                            await DatabaseService(widget.request.theFamily.id)
+                                .updateFamilyData(widget.request.theFamily);
                           }
                           await deleteRequest(widget.request.id);
                           setState(() {
@@ -97,7 +103,7 @@ class _RequestDetailsState extends State<RequestDetails> {
                               text: 'تم الموافقة على الطلب', context: context);
                         },
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 buttonBlueShape(
                   'رفض ال$type',
                   context,

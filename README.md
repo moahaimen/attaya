@@ -1,16 +1,9 @@
-# attayairaq
+# App decription
 
-A new Flutter application.
+    this app was made to support organizations that help poor families by providing the location of these families.
 
-## Getting Started
+    تم عمل عذا التبيق لدعم المنظمات اللتي تقدم المساعدات للعوائل الفقيرة والمحتاجة عن طريق تزويد هذة المنظمات بموقع العوائل المحتاجة
 
-This project is a starting point for a Flutter application.
+# Informaion
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+    this app has been desigend and coded by Code For Iraq team.

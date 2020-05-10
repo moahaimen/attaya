@@ -2,7 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
-import 'package:attayairaq/models/location.dart';
+import '../models/location.dart';
 
 class Family {
   final String id; //1
@@ -43,8 +43,8 @@ class Family {
       nearestKnownPoint: doc.data['nearest_known_point'],
       noOfMembers: doc.data['no_of_members'],
       location: Location(
-        longitude: location['longitude'],
-        latitude: location['latitude'],
+        longitude: double.parse( location['longitude'].toString()),
+        latitude:double.parse( location['latitude'].toString()),
       ),
     );
   }

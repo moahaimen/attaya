@@ -1,7 +1,7 @@
-import 'package:attayairaq/consts/consts.dart';
-import 'package:attayairaq/consts/loading.dart';
 import 'package:flutter/material.dart';
 
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
 class ConformDelete extends StatefulWidget {
   final String deleteType; //المنظمة او العائلة
   final Function deleteFunction;
@@ -19,12 +19,6 @@ class _ConformDeleteState extends State<ConformDelete> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      fontFamily: 'Changa',
-      fontWeight: FontWeight.bold,
-      color: deepTxtBlue,
-    );
     return Scaffold(
       appBar: apBar('حذف ${widget.deleteType}', context),
       body: _loading
@@ -42,13 +36,13 @@ class _ConformDeleteState extends State<ConformDelete> {
                       style: textStyle.copyWith(fontSize: 30),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 40,
                     ),
                     buttonBlueShape('لا', context, () {
                       Navigator.of(context).pop();
                     }),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     buttonRedShape(

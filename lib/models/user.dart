@@ -1,4 +1,5 @@
-import 'package:attayairaq/screens/HomeScreen.dart';
+
+enum UserType { admin, organisation, family, unKnown }
 
 class User {
   final String uid;

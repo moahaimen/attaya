@@ -1,41 +1,42 @@
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/models/family.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../consts/consts.dart';
+import '../../models/family.dart';
+import '../../consts/loading.dart';
+import '../../models/location.dart';
+import '../../services/data_base.dart';
+import '../../functions/show_overlay.dart';
+import '../../screens/shared/map_screen.dart';
 
 class FamilyAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final familyData = Provider.of<Family>(context);
 
-    TextStyle textStyle = TextStyle(
-      fontSize: 18,
-      fontFamily: 'Changa',
-      fontWeight: FontWeight.bold,
-      color: Color.fromRGBO(201, 85, 85, 1),
-    );
-
     return familyData == null
         ? Loading()
         : ListView(
             children: <Widget>[
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Text(
                 familyData.headOfFamily,
                 style: textStyle.copyWith(
                   fontSize: 25,
-                  color: Color.fromRGBO(19, 15, 64, 1),
+                  color: const Color.fromRGBO(19, 15, 64, 1),
                 ),
                 textAlign: TextAlign.center,
               ),
               Container(
-                padding: EdgeInsets.all(20),
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: Color.fromRGBO(35, 68, 199, 0.86), width: 3),
+                      color: const Color.fromRGBO(35, 68, 199, 0.86), width: 3),
                   borderRadius: BorderRadius.circular(15),
                 ),
-                margin: EdgeInsets.all(20),
+                margin: const EdgeInsets.all(20),
                 alignment: Alignment.center,
                 child: Column(
                   children: <Widget>[
@@ -43,37 +44,37 @@ class FamilyAccount extends StatelessWidget {
                       'رب الاسرة: ${familyData.headOfFamily}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'رقم التواصل: ${familyData.phoneNo}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'عدد افراد العائلة: ${familyData.noOfMembers} اشخاص',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'المحافظة: ${familyData.province}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'المنطقة: ${familyData.city}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'اقرب نقطة دالة: ${familyData.nearestKnownPoint}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Text(
                       'حالة العائلة: ${familyData.isNeedHelp ? 'تطلعب مساعدة' : 'لا  تطلب مساعدة'}',
                       style: textStyle,
                     ),
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -82,18 +83,15 @@ class FamilyAccount extends StatelessWidget {
                             'assets/icons/edit_icon.png',
                             width: 25,
                           ),
-                          onPressed: () {},
-                        ),
-                        FlatButton.icon(
-                          icon: Image.asset(
-                            'assets/icons/change_status.png',
-                            width: 25,
-                          ),
-                          label: Text(
-                            'تغيير حالة العائلة',
-                            style: textStyle.copyWith(fontSize: 12),
-                          ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => EditFamilyAccount(
+                                  familyData: familyData,
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -102,5 +100,247 @@ class FamilyAccount extends StatelessWidget {
               )
             ],
           );
+  }
+}
+
+class EditFamilyAccount extends StatefulWidget {
+  final Family familyData;
+  const EditFamilyAccount({@required this.familyData});
+
+  @override
+  _EditFamilyAccountState createState() => _EditFamilyAccountState();
+}
+
+class _EditFamilyAccountState extends State<EditFamilyAccount> {
+  final _formkey = GlobalKey<FormState>();
+  bool loading = false;
+  bool locationIsEmpty = false;
+  bool dataLoaded = false;
+
+  LatLng location;
+
+  TextEditingController headOfFamilyController;
+  TextEditingController provinceController;
+  TextEditingController cityController;
+  TextEditingController nearPointController;
+  TextEditingController phoneNoController;
+  TextEditingController familyCountController;
+
+  @override
+  void didChangeDependencies() {
+    if (!dataLoaded) {
+      headOfFamilyController =
+          TextEditingController(text: widget.familyData.headOfFamily);
+      cityController = TextEditingController(text: widget.familyData.city);
+      provinceController =
+          TextEditingController(text: widget.familyData.province);
+      nearPointController =
+          TextEditingController(text: widget.familyData.nearestKnownPoint);
+      familyCountController =
+          TextEditingController(text: widget.familyData.noOfMembers.toString());
+      phoneNoController =
+          TextEditingController(text: widget.familyData.phoneNo);
+
+      location = LatLng(widget.familyData.location.latitude,
+          widget.familyData.location.longitude);
+    }
+
+    dataLoaded = true;
+
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    familyCountController.dispose();
+    cityController.dispose();
+    headOfFamilyController.dispose();
+    nearPointController.dispose();
+    phoneNoController.dispose();
+    provinceController.dispose();
+
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: apBar('تعديل معلومات العائلة', context),
+      body: loading
+          ? Loading()
+          : Directionality(
+              textDirection: TextDirection.rtl,
+              child: Container(
+                padding: const EdgeInsets.all(6.0),
+                child: Center(
+                  child: ListView(
+                    children: <Widget>[
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Form(
+                              key: _formkey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                textDirection: TextDirection.rtl,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  const SizedBox(height: 30),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: headOfFamilyController,
+                                    hinttxt: 'اسم رب الاسرة',
+                                    largerElseValue: 22,
+                                    smallerValue: 5,
+                                    validationifText: 'الاسم قصير جدا',
+                                    validationElseText: 'الاسم طويل جدا',
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: phoneNoController,
+                                    hinttxt: 'رقم الهاتف',
+                                    isNumber: true,
+                                    largerElseValue: 12,
+                                    smallerValue: 11,
+                                    validationifText: 'الرقم غير صحيح',
+                                    validationElseText: 'رجاءا ادخل رقم الهاتف',
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: familyCountController,
+                                    hinttxt: 'عدد افراد الاسرة',
+                                    isNumber: true,
+                                    largerElseValue: 2,
+                                    smallerValue: 1,
+                                    validationifText: 'الرقم غير صحيح',
+                                    validationElseText: 'رجاءا ادخل  رقم صحيح',
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: provinceController,
+                                    hinttxt: 'المحافظة',
+                                    largerElseValue: 12,
+                                    smallerValue: 4,
+                                    validationElseText:
+                                        'اسم المحافظة كبير جدا ',
+                                    validationifText: 'الاسم غير صحيح',
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: cityController,
+                                    hinttxt: 'المنطقة',
+                                    largerElseValue: 22,
+                                    smallerValue: 4,
+                                    validationElseText:
+                                        'اسم النقطة الدالة كبير جدا ',
+                                    validationifText: 'ادخل النقطة الدالة',
+                                  ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: nearPointController,
+                                    hinttxt: 'اقرب نقطة دالة للمنزل',
+                                    largerElseValue: 22,
+                                    smallerValue: 5,
+                                    validationElseText:
+                                        'اسم النقطة الدالة كبير جدا ',
+                                    validationifText: 'الاسم قصير جدا',
+                                  ),
+                                  const SizedBox(height: 30),
+                                  FlatButton.icon(
+                                    onPressed: () async {
+                                      location =
+                                          await Navigator.of(context).push(
+                                        CupertinoPageRoute(
+                                          builder: (c) {
+                                            return const MapScreen(
+                                              isNotSupScreen: false,
+                                              isSelectLocation: true,
+                                              isOrg: false,
+                                            );
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    icon: Image.asset(
+                                      'assets/icons/map_pin_1.png',
+                                      color: Colors.red,
+                                    ),
+                                    label: Text(
+                                      location == null
+                                          ? 'تحديد على الخريطة'
+                                          : 'تحديد مرة اخرى',
+                                      style: textStyle,
+                                    ),
+                                  ),
+                                  locationIsEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'الرجاء تحديد الموقع',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        )
+                                      : Container(),
+                                  const SizedBox(
+                                    height: 30,
+                                  ),
+                                  buttonBlueShape(
+                                    'تحديث المعلومات',
+                                    context,
+                                    () async {
+                                      if (_formkey.currentState.validate()) {
+                                        final _family = Family(
+                                          id: widget.familyData.id,
+                                          headOfFamily:
+                                              headOfFamilyController.text,
+                                          province: provinceController.text,
+                                          city: cityController.text,
+                                          phoneNo: phoneNoController.text,
+                                          location: Location(
+                                            longitude: location.longitude,
+                                            latitude: location.latitude,
+                                          ),
+                                          timeStamp: DateTime.now(),
+                                          isNeedHelp:
+                                              widget.familyData.isNeedHelp,
+                                          noOfMembers: int.parse(
+                                              familyCountController.text),
+                                          nearestKnownPoint:
+                                              nearPointController.text,
+                                        );
+                                        setState(() {
+                                          loading = true;
+                                        });
+
+                                        await DatabaseService(_family.id)
+                                            .updateFamilyData(_family);
+
+                                        showOverlay(
+                                            context: context,
+                                            text: 'تم تحديث معلومات العائلة');
+
+                                        Navigator.of(context).pop();
+                                      } else if (location == null) {
+                                        setState(() {
+                                          locationIsEmpty = true;
+                                        });
+                                      }
+                                    },
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+    );
   }
 }

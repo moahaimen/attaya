@@ -1,5 +1,6 @@
-import 'package:attayairaq/models/request.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/request.dart';
 
 CollectionReference requestsCollection =
     Firestore.instance.collection('requests');

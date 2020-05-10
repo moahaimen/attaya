@@ -1,8 +1,9 @@
-import 'package:attayairaq/functions/send_message.dart';
-import 'package:attayairaq/models/organization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:attayairaq/consts/consts.dart';
+
+import '../../consts/consts.dart';
+import '../../models/organization.dart';
+import '../../functions/send_message.dart';
 
 class OrganizationDetails extends StatefulWidget {
   final Organization org;
@@ -20,19 +21,19 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
       appBar: apBar('معلومات المنظمة', context),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.all(6.0),
+          padding: const EdgeInsets.all(6.0),
           child: Center(
             child: ListView(
               children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Padding(
+                    const Padding(
                       padding: EdgeInsets.only(top: 10.0),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 20),
                       child: Column(
                         children: <Widget>[
                           Container(
@@ -40,10 +41,10 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                             height: 250,
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                side: BorderSide(color: Colors.blue, width: 1),
+                                side: const BorderSide(color: Colors.blue),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
-                              margin: EdgeInsets.symmetric(
+                              margin: const EdgeInsets.symmetric(
                                   vertical: 55, horizontal: 30),
                               child: Column(
 //                                  mainAxisAlignment: MainAxisAlignment.end,
@@ -101,7 +102,7 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                       SizedBox(
                         height: 50,
                         width: 280,
-                        child: buttonBlueOldShape(
+                        child: buttonBlueShape(
                           'ارسال رسالة للمنظمة',
                           context,
                           () {
@@ -109,16 +110,16 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.only(
                             left: 10, right: 10.0, top: 28, bottom: 5),
                         child: Text(
                           "نبذه عن المنظمة",
                           style: TextStyle(
-                            color: const Color(0xFF130f40),
+                            color: Color(0xFF130f40),
                             fontWeight: FontWeight.bold,
                             fontSize: 26.0,
                             fontFamily: 'Changa',
@@ -126,14 +127,14 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(
+                        padding: const EdgeInsets.only(
                             left: 10, right: 10.0, top: 28, bottom: 5),
                         child: Text(
                           widget.org.description,
                           textAlign: TextAlign.center,
                           textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                            color: const Color(0xFFC95555),
+                          style: const TextStyle(
+                            color: Color(0xFFC95555),
                             fontWeight: FontWeight.bold,
                             fontSize: 18.0,
                             fontFamily: 'Changa',

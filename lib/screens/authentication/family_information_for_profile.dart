@@ -1,18 +1,19 @@
-import 'package:attayairaq/consts/loading.dart';
-import 'package:attayairaq/models/family.dart';
-import 'package:attayairaq/models/location.dart';
-import 'package:attayairaq/models/user.dart';
-import 'package:attayairaq/screens/HomeScreen.dart';
-import 'package:attayairaq/screens/shared/map_screen.dart';
-import 'package:attayairaq/services/data_base.dart';
-import 'package:attayairaq/services/shered_Preference.dart';
-import 'package:attayairaq/services/size_config.dart';
-import 'package:attayairaq/wrapper.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:attayairaq/consts/consts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../main.dart';
+import '../../models/user.dart';
+import '../../models/family.dart';
+import '../../consts/consts.dart';
+import '../../consts/loading.dart';
+import '../../models/location.dart';
+import '../../services/data_base.dart';
+import '../../screens/HomeScreen.dart';
+import '../../services/size_config.dart';
+import '../../screens/shared/map_screen.dart';
+import '../../services/shered_Preference.dart';
 
 class FamilySignup extends StatefulWidget {
   final FirebaseUser user;
@@ -28,11 +29,12 @@ class _FamilySignupState extends State<FamilySignup> {
   bool loading = false;
   LatLng location;
 
-  final familyCountController = TextEditingController();
-  final cityController = TextEditingController();
-  final nearPointController = TextEditingController();
-  final provinceController = TextEditingController();
-  final fullFamilyaNameController = TextEditingController();
+  final TextEditingController familyCountController = TextEditingController();
+  final TextEditingController cityController = TextEditingController();
+  final TextEditingController nearPointController = TextEditingController();
+  final TextEditingController provinceController = TextEditingController();
+  final TextEditingController fullFamilyaNameController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -57,13 +59,13 @@ class _FamilySignupState extends State<FamilySignup> {
                 child: Container(
                   width: SizeConfig.screenWidth * 1,
                   height: SizeConfig.screenHeight * 1,
-                  padding: EdgeInsets.all(6.0),
+                  padding: const EdgeInsets.all(6.0),
                   child: ListView(
                     children: <Widget>[
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Padding(
+                          const Padding(
                             padding: EdgeInsets.only(top: 10.0),
                           ),
                           Row(
@@ -72,14 +74,14 @@ class _FamilySignupState extends State<FamilySignup> {
                               Column(
                                 children: <Widget>[
                                   Padding(
-                                    padding: EdgeInsets.only(bottom: 15),
+                                    padding: const EdgeInsets.only(bottom: 15),
                                     child: Image.asset(
                                       "assets/icons/family_icon.png",
                                       //color: const Color(0xFF2356C7),
                                       height: 150.0,
                                     ),
                                   ),
-                                  Text(
+                                  const Text(
                                     "اكمال تسجيل معلومات العائلة",
                                     style: emptyTallRedText,
                                   ),
@@ -88,7 +90,7 @@ class _FamilySignupState extends State<FamilySignup> {
                             ],
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 40),
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
                             child: Form(
                               key: _formkey,
                               child: Column(
@@ -96,94 +98,72 @@ class _FamilySignupState extends State<FamilySignup> {
                                 textDirection: TextDirection.rtl,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  SizedBox(height: 30),
-                                  SizedBox(
-                                    height: 60.0,
-                                    child: CrdTxtFrmFld(
-                                      cntrTxt: fullFamilyaNameController,
-                                      hinttxt: 'اسم رب العائلة: الاسم الثلاثي',
-                                      largerElseValue: 30,
-                                      smallerValue: 11,
-                                      validationifText:
-                                          'يرجى ادخال الاسم الثلاثي بالكامل',
-                                      validationElseText: 'الاسم طويل جدا',
-                                      isBlue: false,
-                                      isNumber: false,
-                                      password: false,
-                                    ),
+                                  const SizedBox(height: 30),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: fullFamilyaNameController,
+                                    hinttxt: 'اسم رب العائلة: الاسم الثلاثي',
+                                    largerElseValue: 30,
+                                    smallerValue: 11,
+                                    validationifText:
+                                        'يرجى ادخال الاسم الثلاثي بالكامل',
+                                    validationElseText: 'الاسم طويل جدا',
+                                    isBlue: false,
+                                    isNumber: false,
+                                    password: false,
                                   ),
-                                  SizedBox(height: 4),
-                                  SizedBox(
-                                    height: 60.0,
-                                    child: CrdTxtFrmFld(
-                                      cntrTxt: familyCountController,
-                                      hinttxt: 'عدد افراد العائلة',
-                                      largerElseValue: 5,
-                                      smallerValue: 0,
-                                      validationifText: 'عدد الافراد كبير جدا ',
-                                      validationElseText: 'اكتب عدد الافراد',
-                                      isBlue: false,
-                                      isNumber: true,
-                                      password: false,
-                                    ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: familyCountController,
+                                    hinttxt: 'عدد افراد الاسرة',
+                                    isNumber: true,
+                                    largerElseValue: 2,
+                                    smallerValue: 1,
+                                    validationifText: 'الرقم غير صحيح',
+                                    validationElseText: 'رجاءا ادخل  رقم صحيح',
+                                    isBlue: false,
                                   ),
-                                  SizedBox(height: 4),
-                                  SizedBox(
-                                    height: 60.0,
-                                    child: CrdTxtFrmFld(
-                                      cntrTxt: provinceController,
-                                      hinttxt: 'المحافظة',
-                                      largerElseValue: 12,
-                                      smallerValue: 3,
-                                      validationifText: 'اسم المحافظة كبير جد',
-                                      validationElseText: 'ادخل اسم المحافظة',
-                                      isBlue: false,
-                                      isNumber: false,
-                                      password: false,
-                                    ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: provinceController,
+                                    hinttxt: 'المحافظة',
+                                    largerElseValue: 12,
+                                    smallerValue: 3,
+                                    validationifText: 'اسم المحافظة كبير جد',
+                                    validationElseText: 'ادخل اسم المحافظة',
+                                    isBlue: false,
                                   ),
-                                  SizedBox(height: 4),
-                                  SizedBox(
-                                    height: 60.0,
-                                    child: CrdTxtFrmFld(
-                                      cntrTxt: cityController,
-                                      hinttxt: 'المنطقة',
-                                      largerElseValue: 22,
-                                      smallerValue: 3,
-                                      validationifText: 'اسم المنطقة كبير جدا ',
-                                      validationElseText: 'ادخل المنطقة',
-                                      password: false,
-                                      isBlue: false,
-                                      isNumber: false,
-                                    ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: cityController,
+                                    hinttxt: 'المنطقة',
+                                    largerElseValue: 22,
+                                    smallerValue: 3,
+                                    validationifText: 'اسم المنطقة كبير جدا ',
+                                    validationElseText: 'ادخل المنطقة',
+                                    isBlue: false,
                                   ),
-                                  SizedBox(height: 4),
-                                  SizedBox(
-                                    height: 60.0,
-                                    child: CrdTxtFrmFld(
-                                      cntrTxt: nearPointController,
-                                      hinttxt: 'اقرب نقطة دالة للمنزل',
-                                      largerElseValue: 22,
-                                      smallerValue: 3,
-                                      validationifText:
-                                          'اسم النقطة دالة  للمنزل كبير جدا',
-                                      validationElseText:
-                                          ' ادخل النقطة  دالة للمنزل',
-                                      password: false,
-                                      isBlue: false,
-                                      isNumber: false,
-                                    ),
+                                  const SizedBox(height: 4),
+                                  CrdTxtFrmFld(
+                                    cntrTxt: nearPointController,
+                                    hinttxt: 'اقرب نقطة دالة للمنزل',
+                                    largerElseValue: 22,
+                                    smallerValue: 3,
+                                    validationifText:
+                                        'اسم النقطة دالة  للمنزل كبير جدا',
+                                    validationElseText:
+                                        ' ادخل النقطة  دالة للمنزل',
+                                    isBlue: false,
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     height: 20,
                                   ),
-                                  SizedBox(height: 30),
+                                  const SizedBox(height: 30),
                                   FlatButton.icon(
                                     onPressed: () async {
                                       location =
                                           await Navigator.of(context).push(
                                         CupertinoPageRoute(
-                                          builder: (c) => MapScreen(
+                                          builder: (c) => const MapScreen(
                                             isNotSupScreen: false,
                                             isSelectLocation: true,
                                             isOrg: false,
@@ -211,7 +191,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                           () async {
                                             if (_formkey.currentState
                                                 .validate()) {
-                                              final Family newFamily = Family(
+                                              final newFamily = Family(
                                                 id: widget.user.uid,
                                                 headOfFamily:
                                                     fullFamilyaNameController
@@ -219,7 +199,8 @@ class _FamilySignupState extends State<FamilySignup> {
                                                 province:
                                                     provinceController.text,
                                                 city: cityController.text,
-                                                phoneNo: widget.phoneNo,
+                                                phoneNo:
+                                                    widget.phoneNo.substring(4),
                                                 location: Location(
                                                   longitude: location.longitude,
                                                   latitude: location.latitude,
@@ -244,7 +225,6 @@ class _FamilySignupState extends State<FamilySignup> {
                                                 widget.user.uid,
                                                 'family',
                                               );
-                                              print('ctx');
                                               Navigator.of(context)
                                                   .pushReplacement(
                                                 CupertinoPageRoute(
