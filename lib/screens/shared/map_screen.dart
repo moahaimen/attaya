@@ -217,121 +217,67 @@ class _MapScreenState extends State<MapScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              DropdownButton<String>(
-                                items: <String>[
-                                  'بغداد، Irak',
-                                  'بصرة، Irak',
-                                  'القادسية، Irak',
-                                  'ميسان، Irak',
-                                  'واسط، Irak',
-                                  'كربلاء ، Irak',
-                                  'النجف ، Irak',
-                                  'القادسية ، Irak',
-                                  'المثنى ، Irak',
-                                  'ذي قار ، Irak',
-                                  'بابل ، Irak',
-                                  'الانبار ، Irak',
-                                  'نينوى ، Irak',
-                                  'صلاح الدين ، Irak',
-                                  'ديالى ، Irak',
-                                  'كركوك ، Irak',
-                                  'دهوك ، Irak',
-                                  'اربيل ، Irak',
-                                  'السليمانية ، Irak',
-                                ].map(
-                                  (value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child:
-                                          Text(value.replaceAll('، Irak', '')),
-                                    );
-                                  },
-                                ).toList(),
-                                onChanged: (val) async {
-                                  setState(
-                                    () {
-                                      initialValue = val;
-                                    },
-                                  );
-
-                                  if (val.isNotEmpty) {
-                                    final a = await stateLocation(val);
-                                    final controller =
-                                        await _controller.future
-                                            as GoogleMapController;
-                                    setState(
-                                      () {
-                                        controller.animateCamera(
-                                          CameraUpdate.newCameraPosition(
-                                            CameraPosition(
-                                              zoom: 15,
-                                              target: LatLng(
-                                                  a.coordinates.latitude,
-                                                  a.coordinates.longitude),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  }
-                                },
-                                value: initialValue,
-                              ),
-                              Container(
-                                color: Colors.white,
-                                child: TextField(
-                                  onChanged: (value) {
-                                    setState(
-                                      () async {
-                                        searchText = value;
-                                        final controller =
-                                            await _controller.future
-                                                as GoogleMapController;
-                                        setState(
-                                          () {
-                                            if (markers.isNotEmpty) {
-                                              setState(
-                                                () {
-                                                  controller.animateCamera(
-                                                    CameraUpdate.newCameraPosition(
-                                                      CameraPosition(
-                                                        zoom: 18,
-                                                        target: LatLng(
-                                                          markers.first.position
-                                                              .latitude,
-                                                          markers.first.position
-                                                              .longitude,
+                              Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Container(
+                                  color: Colors.white,
+                                  child: TextField(
+                                    onChanged: (value) {
+                                      setState(
+                                        () async {
+                                          searchText = value;
+                                          final controller = await _controller
+                                              .future as GoogleMapController;
+                                          setState(
+                                            () {
+                                              if (markers.isNotEmpty) {
+                                                setState(
+                                                  () {
+                                                    controller.animateCamera(
+                                                      CameraUpdate
+                                                          .newCameraPosition(
+                                                        CameraPosition(
+                                                          zoom: 18,
+                                                          target: LatLng(
+                                                            markers.first.position
+                                                                .latitude,
+                                                            markers.first.position
+                                                                .longitude,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                                  decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderSide:
-                                            BorderSide(color: Colors.teal)),
-                                    hintText: 'بحث عن عائلة',
-                                    // helperText: 'Keep it short, this is just a demo.',
-                                    labelText: 'بحث',
-                                    prefixIcon: Icon(Icons.search),
+                                                    );
+                                                  },
+                                                );
+                                              }
+                                            },
+                                          );
+                                        },
+                                      );
+                                    },
+                                    
+                                    autofocus: false,
+                                    decoration: InputDecoration(
+                                      
+                                      border: OutlineInputBorder(
+                                          borderSide:
+                                              BorderSide(color: Colors.teal)),
+                                      hintText: 'بحث عن عائلة',
+                                      // helperText: 'Keep it short, this is just a demo.',
+                                      labelText: 'بحث عن عائلة',
+                                      prefixIcon: Icon(Icons.search),
 
-                                    suffixIcon: IconButton(
-                                      icon: Icon(Icons.sort),
-                                      onPressed: () {
-                                        setState(
-                                          () {
-                                            showSortingOptions =
-                                                !showSortingOptions;
-                                          },
-                                        );
-                                      },
+                                      suffixIcon: IconButton(
+                                        icon: Icon(Icons.sort),
+                                        onPressed: () {
+                                          setState(
+                                            () {
+                                              showSortingOptions =
+                                                  !showSortingOptions;
+                                            },
+                                          );
+                                        },
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -340,9 +286,110 @@ class _MapScreenState extends State<MapScreen> {
                                   ? Card(
                                       child: Column(
                                         children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.all(10.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  'المحافظة',
+                                                  style: textStyle.copyWith(
+                                                      fontSize: 15),
+                                                ),
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey[300],
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            30),
+                                                  ),
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          left: 30,
+                                                          right: 30,
+                                                          top: 5,
+                                                          bottom: 5),
+                                                  child: DropdownButton<String>(
+                                                    items: <String>[
+                                                      'بغداد، Irak',
+                                                      'بصرة، Irak',
+                                                      'القادسية، Irak',
+                                                      'ميسان، Irak',
+                                                      'واسط، Irak',
+                                                      'كربلاء ، Irak',
+                                                      'النجف ، Irak',
+                                                      'القادسية ، Irak',
+                                                      'المثنى ، Irak',
+                                                      'ذي قار ، Irak',
+                                                      'بابل ، Irak',
+                                                      'الانبار ، Irak',
+                                                      'نينوى ، Irak',
+                                                      'صلاح الدين ، Irak',
+                                                      'ديالى ، Irak',
+                                                      'كركوك ، Irak',
+                                                      'دهوك ، Irak',
+                                                      'اربيل ، Irak',
+                                                      'السليمانية ، Irak',
+                                                    ].map(
+                                                      (value) {
+                                                        return DropdownMenuItem<
+                                                            String>(
+                                                          value: value,
+                                                          child: Text(
+                                                              value.replaceAll(
+                                                                  '، Irak',
+                                                                  '')),
+                                                        );
+                                                      },
+                                                    ).toList(),
+                                                    isDense: true,
+                                                    underline: Container(),
+                                                    onChanged: (val) async {
+                                                      setState(
+                                                        () {
+                                                          initialValue = val;
+                                                        },
+                                                      );
+
+                                                      if (val.isNotEmpty) {
+                                                        final a =
+                                                            await stateLocation(
+                                                                val);
+                                                        final controller =
+                                                            await _controller
+                                                                    .future
+                                                                as GoogleMapController;
+                                                        setState(
+                                                          () {
+                                                            controller
+                                                                .animateCamera(
+                                                              CameraUpdate
+                                                                  .newCameraPosition(
+                                                                CameraPosition(
+                                                                  zoom: 13,
+                                                                  target: LatLng(
+                                                                      a.coordinates
+                                                                          .latitude,
+                                                                      a.coordinates
+                                                                          .longitude),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                        );
+                                                      }
+                                                    },
+                                                    value: initialValue,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                           CheckboxListTile(
                                             title: Text(
-                                              'العوائل المحتاجة.',
+                                              'العوائل المحتاجة',
                                               style: textStyle.copyWith(
                                                 fontSize: 15,
                                               ),
@@ -358,7 +405,7 @@ class _MapScreenState extends State<MapScreen> {
                                           ),
                                           CheckboxListTile(
                                             title: Text(
-                                              'العوائل غير المحتاجة.',
+                                              'العوائل غير المحتاجة',
                                               style: textStyle.copyWith(
                                                 fontSize: 15,
                                               ),
@@ -376,9 +423,26 @@ class _MapScreenState extends State<MapScreen> {
                                       ),
                                     )
                                   : Container(),
+                              const Spacer(),
+                              Center(
+                                child: SizedBox(
+                                  width: SizeConfig.screenWidth * 0.7,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      widget.isSelectLocation
+                                          ? 'يمكنك اختيار الموقع عن طريق الضغط مطولا على الموقع اللذي تريدة'
+                                          : 'اضغط مطولا اعلى اي موقع تريدة لاضافة عائلة في هذا الموقع',
+                                      // textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.center,
+                                      style: textStyle.copyWith(fontSize: 13),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     );
                   } else {

@@ -9,6 +9,7 @@ import '../../services/data_base.dart';
 import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
+import '../../screens/shared/disease_prevention.dart';
 
 class OrganizationAccount extends StatelessWidget {
   final String uid;
@@ -102,10 +103,17 @@ class OrganizationAccount extends StatelessWidget {
                             ),
                           ),
                           FlatButton(
-                            onPressed: () {},
-                            child: Text(
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                CupertinoPageRoute(
+                                  builder: (_) =>
+                                      const About(isAboutApp: false),
+                                ),
+                              );
+                            },
+                            child: const Text(
                               'حول المبادرة',
-                              style: textStyle.copyWith(color: Colors.black),
+                              style: navText,
                             ),
                           ),
                         ],
@@ -207,8 +215,8 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
                               padding: EdgeInsets.only(top: 10.0),
                             ),
                             Row(
-                              children:const <Widget>[
-                                 Padding(
+                              children: const <Widget>[
+                                Padding(
                                   padding: EdgeInsets.only(left: 85, right: 50),
                                 ),
                               ],
@@ -360,10 +368,15 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
                                               setState(() {
                                                 loading = true;
                                               });
-
-                                              await DatabaseService(
-                                                      widget.orgData.id)
-                                                  .updateOrganizationData(org);
+                                              try {
+                                                await DatabaseService(
+                                                        widget.orgData.id)
+                                                    .updateOrganizationData(
+                                                        org);
+                                              } catch (e) {
+                                                await showCostumeDatabaseErrorNotif(
+                                                    e);
+                                              }
 
                                               Navigator.of(context).pop();
                                             }

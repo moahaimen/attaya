@@ -25,7 +25,7 @@ enum PhoneAuthState {
   SetProfileCompleted,
 }
 
-Future showcostumeNotife(String title) async {
+Future showCostumeAuthErrorNotif(String title) async {
   await Future.delayed(const Duration(seconds: 1));
 
   BotToast.showNotification(
@@ -85,9 +85,6 @@ class AuthService {
   }
 
   static void startAuth() {
-    statusStreamController.stream.listen((status) {
-      print("PhoneAuth: $status");
-    });
     addStatus('Phone auth started');
     _firebaseAuth
         .verifyPhoneNumber(
@@ -100,7 +97,7 @@ class AuthService {
         .then((value) {
       addStatus('Code sent');
     }).catchError((error) {
-      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
       addStatus(error.toString());
     });
   }
@@ -124,10 +121,10 @@ class AuthService {
     if (authException.message.contains('not authorized')) {
       addStatus('App not authroized');
     } else if (authException.message.contains('network')) {
-      showcostumeNotife('الرجاء التاكد من اتصالك بالانترنت');
+      showCostumeAuthErrorNotif('الرجاء التاكد من اتصالك بالانترنت');
       addStatus('Please check your internet connection and try again');
     } else {
-      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
       addStatus(
           'Something has gone wrong, please try later ${authException.message}');
     }
@@ -143,7 +140,7 @@ class AuthService {
         addState(PhoneAuthState.Verified);
         onAuthenticationSuccessful(user: value.user);
       } else {
-        showcostumeNotife('الرقم الذي ادخلته غير صحيح');
+        showCostumeAuthErrorNotif('الرقم الذي ادخلته غير صحيح');
 
         addStatus('Invalid code/invalid authentication');
         addState(PhoneAuthState.Failed);
@@ -151,7 +148,7 @@ class AuthService {
     }).catchError((error) {
       addState(PhoneAuthState.Error);
       addStatus('Something has gone wrong, please try later $error');
-      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
     });
   };
 
@@ -168,7 +165,7 @@ class AuthService {
       addState(PhoneAuthState.Verified);
       onAuthenticationSuccessful(user: result.user);
     }).catchError((error) {
-      showcostumeNotife('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
       addState(PhoneAuthState.Error);
       addStatus(
           'Something has gone wrong, please try later(signInWithPhoneNumber) $error');
@@ -278,7 +275,6 @@ class AuthService {
   }
 
   static void addState(PhoneAuthState state) {
-    print(state);
     phoneAuthState.sink.add(state);
   }
 

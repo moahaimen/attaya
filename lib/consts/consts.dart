@@ -86,7 +86,7 @@ Card buttonBlueShape(
       child: RaisedButton(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: const Color(0xFF2356C7),
-        onPressed: () => function,
+        onPressed: () => function(),
         child: Text(
           titleOfButton,
           textAlign: TextAlign.center,
@@ -110,7 +110,7 @@ Card buttonRedShape(
         elevation: 10.0,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         color: const Color(0xFFC95555),
-        onPressed: () => function,
+        onPressed: () => function(),
         child: Text(
           titleOfButton,
           textAlign: TextAlign.center,

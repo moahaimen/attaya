@@ -5,7 +5,8 @@ import '../services/data_base.dart';
 
 
 Future<void> changeFamilyState(Family family) async {
-  await DatabaseService(family.id).updateFamilyData(
+  if(await connected()) {
+    await DatabaseService(family.id).updateFamilyData(
     Family(
       id: family.id,
       headOfFamily: family.headOfFamily,
@@ -19,9 +20,14 @@ Future<void> changeFamilyState(Family family) async {
       nearestKnownPoint: family.nearestKnownPoint,
     ),
   );
+  }else{
+      throw('عذرا، حدث خطا غير معروف');
+
+  }
 }
 
 Stream<List<Family>> getFamilies({String name}) {
+  
   final data = Firestore.instance.collection("families")
   .where('family_name', isEqualTo: name);
   return data.snapshots().map((snaps) {

@@ -24,8 +24,6 @@ class RequestsList extends StatelessWidget {
           requestList.removeWhere(
             (r) => showDeleteRequests ? !r.isDeleteRequest : r.isDeleteRequest,
           );
-
-          // print(requestList[0].theFamily.location.longitude);
           return requestList == null
               ? Loading()
               : requestList.isEmpty

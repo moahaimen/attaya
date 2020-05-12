@@ -14,6 +14,7 @@ import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
+import '../../screens/authentication/authenticate.dart';
 
 class OrgiziationSignup extends StatefulWidget {
   final FirebaseUser user;
@@ -241,7 +242,8 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                               setState(() {
                                                 loading = true;
                                               });
-
+                                              try {
+                                                
                                               await DatabaseService(
                                                       widget.user.uid)
                                                   .updateOrganizationData(
@@ -267,6 +269,18 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                   ),
                                                 ),
                                               );
+                                              } catch (e) {
+                                                 await showCostumeDatabaseErrorNotif(
+                                                    e);
+                                                    Navigator.of(context)
+                                                  .pushReplacement(
+                                                CupertinoPageRoute(
+                                                  builder: (_) => Wrapper(
+                                                    child: Authenticate(),
+                                                  ),
+                                                ),
+                                              );
+                                              }
                                             }
                                           },
                                         ),

@@ -4,9 +4,9 @@ import '../../models/family.dart';
 import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../models/request.dart';
+import '../../services/data_base.dart';
 import '../../services/send_request.dart';
 import '../../functions/show_overlay.dart';
-import '../../services/organization_srvices.dart';
 
 class RequestDelete extends StatefulWidget {
   final Family family;
@@ -91,8 +91,8 @@ class _RequestDeleteState extends State<RequestDelete> {
                         setState(() {
                           isLoading = true;
                         });
-
-                        final org = await getOrganizationData();
+                        final org =
+                            await DatabaseService('').getOrganizationData();
                         await sendDeleteRequestByOrg(
                           request: Request(
                             id: org.id,

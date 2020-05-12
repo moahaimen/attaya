@@ -46,15 +46,15 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                           child: Column(
                             children: <Widget>[
                               Container(
-                                padding:const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      color:
-                                          const Color(0xFF2356C7).withOpacity(0.86),
+                                      color: const Color(0xFF2356C7)
+                                          .withOpacity(0.86),
                                       width: 3),
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                margin:const EdgeInsets.all(20),
+                                margin: const EdgeInsets.all(20),
                                 alignment: Alignment.center,
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,10 +128,16 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                             setState(() {
                                               _changeStateloading = true;
                                             });
-                                            await changeFamilyState(familyObj);
-                                            setState(() {
-                                              _changeStateloading = false;
-                                            });
+                                            try {
+                                              await changeFamilyState(
+                                                  familyObj);
+                                              setState(() {
+                                                _changeStateloading = false;
+                                              });
+                                            } catch (e) {
+                                              await showCostumeDatabaseErrorNotif(
+                                                  e);
+                                            }
                                           },
                                         ),
                                   buttonRedShape(
@@ -148,9 +154,14 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                                       setState(() {
                                                         _loading = true;
                                                       });
-                                                      await DatabaseService(
-                                                              familyObj.id)
-                                                          .deleteFamily();
+                                                      try {
+                                                        await DatabaseService(
+                                                                familyObj.id)
+                                                            .deleteFamily();
+                                                      } catch (e) {
+                                                        await showCostumeDatabaseErrorNotif(
+                                                            e);
+                                                      }
                                                       Navigator.of(context)
                                                           .pop();
                                                     },

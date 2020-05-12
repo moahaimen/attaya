@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../consts/consts.dart';
 import '../../services/size_config.dart';
 import '../../screens/authentication/sign_up.dart';
+import '../../screens/shared/disease_prevention.dart';
 
 class Authenticate extends StatefulWidget {
   @override
@@ -77,14 +78,32 @@ class _AuthenticateState extends State<Authenticate> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    children: const <Widget>[
-                      Text(
-                        'حول المبادرة',
-                        style: navText,
+                    children: <Widget>[
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (_) => const About(isAboutApp: false),
+                            ),
+                          );
+                        },
+                        child:const Text(
+                          'حول المبادرة',
+                          style: navText,
+                        ),
                       ),
-                      Text(
-                        'حول التطبيق',
-                        style: navText,
+                      FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            CupertinoPageRoute(
+                              builder: (_) => const About(isAboutApp: true),
+                            ),
+                          );
+                        },
+                        child:const Text(
+                          'حول التطبيق',
+                          style: navText,
+                        ),
                       ),
                     ],
                   ),

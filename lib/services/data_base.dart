@@ -1,8 +1,43 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:flutter/material.dart';
 
 import '../models/family.dart';
+import '../consts/consts.dart';
 import '../models/request.dart';
 import '../models/organization.dart';
+import '../services/shered_Preference.dart';
+
+Future<void> showCostumeDatabaseErrorNotif(String title) async {
+  await Future.delayed(const Duration(seconds: 1));
+  BotToast.showNotification(
+    title: (child) {
+      return Text(
+        title,
+        textDirection: TextDirection.rtl,
+        style: textStyle,
+      );
+    },
+    subtitle: (child) {
+      return Text(
+        'ملاحظة: تاكد من اتصالك بالانترنت',
+        textDirection: TextDirection.rtl,
+        style: textStyle.copyWith(fontSize: 14, fontWeight: FontWeight.normal),
+      );
+    },
+    duration: const Duration(seconds: 3),
+  );
+  await Future.delayed(const Duration(seconds: 2));
+}
+
+Future<bool> connected() async {
+  var connectivityResult = await (Connectivity().checkConnectivity());
+  if (connectivityResult == ConnectivityResult.none) {
+    return false;
+  }
+  return true;
+}
 
 class DatabaseService {
   final String uid;
@@ -21,28 +56,35 @@ class DatabaseService {
 // family functions
   Future updateFamilyData(Family family) async {
     //this can be used to add new family or update an exsisting one
-    await familiesCollection.document(uid).setData(
-      {
-        'family_name': family.headOfFamily,
-        'nearest_known_point': family.nearestKnownPoint,
-        'location': {
-          'longitude': family.location.longitude,
-          'latitude': family.location.latitude,
+    if (await connected()) {
+      await familiesCollection.document(uid).setData(
+        {
+          'family_name': family.headOfFamily,
+          'nearest_known_point': family.nearestKnownPoint,
+          'location': {
+            'longitude': family.location.longitude,
+            'latitude': family.location.latitude,
+          },
+          'phone_number': family.phoneNo,
+          'city': family.city,
+          'time_stamp': family.timeStamp.toIso8601String(),
+          'is_need_help': family.isNeedHelp,
+          'no_of_members': family.noOfMembers,
+          'province': family.province,
         },
-        'phone_number': family.phoneNo,
-        'city': family.city,
-        'time_stamp': family.timeStamp.toIso8601String(),
-        'is_need_help': family.isNeedHelp,
-        'no_of_members': family.noOfMembers,
-        'province': family.province,
-      },
-    );
+      );
+    } else {
+      throw ('عذرا، حدث خطا غير معروف');
+    }
   }
 
   Future deleteFamily() async {
     //this can be used to add new family or update an exsisting one
-
-    await familiesCollection.document(uid).delete();
+    if (await connected()) {
+      await familiesCollection.document(uid).delete();
+    } else {
+      throw ('عذرا، حدث خطا غير معروف');
+    }
   }
 
   List<Family> _familiesListFromSnapshot(QuerySnapshot snap) {
@@ -70,21 +112,25 @@ class DatabaseService {
 
   Future updateOrganizationData(Organization organization) async {
     //this can be used to add new organization or update an exsisting one
-    organizationsCollection.document(uid).setData(
-      {
-        'name': organization.name,
-        'phone_number': organization.phoneNumber,
-        'province': organization.province,
-        'distribution_area': organization.distributionArea,
-        'manager_name': organization.managerName,
-        'manager_phone_no': organization.managerPhoneNo,
-        'description': organization.description,
-        'location': {
-          'latitude': 100,
-          'longitude': 200,
+    if (await connected()) {
+      organizationsCollection.document(uid).setData(
+        {
+          'name': organization.name,
+          'phone_number': organization.phoneNumber,
+          'province': organization.province,
+          'distribution_area': organization.distributionArea,
+          'manager_name': organization.managerName,
+          'manager_phone_no': organization.managerPhoneNo,
+          'description': organization.description,
+          'location': {
+            'latitude': 100,
+            'longitude': 200,
+          },
         },
-      },
-    );
+      );
+    } else {
+      throw ('عذرا، حدث خطا غير معروف');
+    }
   }
 
   List<Organization> _organizationsListFromSnapshot(QuerySnapshot snap) {
@@ -113,10 +159,20 @@ class DatabaseService {
         .snapshots()
         .map(_organizationDataFromSnapshot);
   }
+   Future<Organization> getOrganizationData() async {
+    final user = await SharedPrefs().getUser();
+    final orgDoc = await DatabaseService(user.uid).organizationDataSnap;
+    final org = Organization.fromDocument(orgDoc, orgDoc.documentID);
+    return org;
+  }
 
   Future deleteOrg() async {
     //this can be used to add new family or update an exsisting one
-    await organizationsCollection.document(uid).delete();
+    if (await connected()) {
+      await organizationsCollection.document(uid).delete();
+    } else {
+      throw ('عذرا، حدث خطا غير معروف');
+    }
   }
 
   // request

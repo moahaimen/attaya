@@ -12,7 +12,6 @@ import '../../services/data_base.dart';
 import '../../services/send_request.dart';
 import '../../functions/show_overlay.dart';
 import '../../screens/shared/map_screen.dart';
-import '../../services/organization_srvices.dart';
 
 class AddFamily extends StatefulWidget {
   final bool isAdmin;
@@ -217,30 +216,38 @@ class _AddFamilyState extends State<AddFamily> {
                                         setState(() {
                                           loading = true;
                                         });
-                                        if (widget.isAdmin) {
-                                          await DatabaseService(_family.id)
-                                              .updateFamilyData(_family);
+                                        try {
+                                          if (widget.isAdmin) {
+                                            await DatabaseService(_family.id)
+                                                .updateFamilyData(_family);
 
-                                          showOverlay(
-                                              context: context,
-                                              text: 'تم اضافة العائلة');
-                                        } else {
-                                          final org =
-                                              await getOrganizationData();
+                                            showOverlay(
+                                                context: context,
+                                                text: 'تم اضافة العائلة');
+                                          } else {
+                                            final org =
+                                                await DatabaseService('')
+                                                    .getOrganizationData();
 
-                                          await requestAddFamily(
-                                            Request(
-                                              id: Uuid().v4(),
-                                              orgThatRequested: org.name,
-                                              deleteReason: null,
-                                              theFamily: _family,
-                                              isDeleteRequest: false,
-                                            ),
-                                          );
-                                          showOverlay(
-                                              context: context,
-                                              text: 'تم ارسال طلب الى الادمن');
+                                            await requestAddFamily(
+                                              Request(
+                                                id: Uuid().v4(),
+                                                orgThatRequested: org.name,
+                                                deleteReason: null,
+                                                theFamily: _family,
+                                                isDeleteRequest: false,
+                                              ),
+                                            );
+                                            showOverlay(
+                                                context: context,
+                                                text:
+                                                    'تم ارسال طلب الى الادمن');
+                                          }
+                                        } catch (e) {
+                                          await showCostumeDatabaseErrorNotif(
+                                              e);
                                         }
+
                                         Navigator.of(context).pop();
                                       } else if (location == null) {
                                         setState(() {

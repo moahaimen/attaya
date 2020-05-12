@@ -314,13 +314,17 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                         setState(() {
                                           loading = true;
                                         });
+                                        try {
+                                          await DatabaseService(_family.id)
+                                              .updateFamilyData(_family);
 
-                                        await DatabaseService(_family.id)
-                                            .updateFamilyData(_family);
-
-                                        showOverlay(
-                                            context: context,
-                                            text: 'تم تحديث معلومات العائلة');
+                                          showOverlay(
+                                              context: context,
+                                              text: 'تم تحديث معلومات العائلة');
+                                        } catch (e) {
+                                          await showCostumeDatabaseErrorNotif(
+                                              e);
+                                        }
 
                                         Navigator.of(context).pop();
                                       } else if (location == null) {

@@ -112,7 +112,7 @@ class ControlPanelButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onPressed,
+      onTap: onPressed,
       child: Container(
         height: 70,
         padding: const EdgeInsets.all(10),

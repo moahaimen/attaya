@@ -14,6 +14,7 @@ import '../../screens/HomeScreen.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
+import '../../screens/authentication/authenticate.dart';
 
 class FamilySignup extends StatefulWidget {
   final FirebaseUser user;
@@ -180,6 +181,9 @@ class _FamilySignupState extends State<FamilySignup> {
                                       style: textStyle,
                                     ),
                                   ),
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
@@ -215,31 +219,45 @@ class _FamilySignupState extends State<FamilySignup> {
                                               setState(() {
                                                 loading = true;
                                               });
-
-                                              await DatabaseService(
-                                                      widget.user.uid)
-                                                  .updateFamilyData(newFamily);
-                                              // navige to the home page
-                                              await SharedPrefs().setUser(
-                                                widget.phoneNo,
-                                                widget.user.uid,
-                                                'family',
-                                              );
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                CupertinoPageRoute(
-                                                  builder: (_) => Wrapper(
-                                                    child: HomeScreen(
-                                                      user: User(
-                                                        uid: widget.user.uid,
-                                                        phoneNo: widget.phoneNo,
-                                                        userType:
-                                                            UserType.family,
+                                              try {
+                                                await DatabaseService(
+                                                        widget.user.uid)
+                                                    .updateFamilyData(
+                                                        newFamily);
+                                                // navige to the home page
+                                                await SharedPrefs().setUser(
+                                                  widget.phoneNo,
+                                                  widget.user.uid,
+                                                  'family',
+                                                );
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                  CupertinoPageRoute(
+                                                    builder: (_) => Wrapper(
+                                                      child: HomeScreen(
+                                                        user: User(
+                                                          uid: widget.user.uid,
+                                                          phoneNo:
+                                                              widget.phoneNo,
+                                                          userType:
+                                                              UserType.family,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              );
+                                                );
+                                              } catch (e) {
+                                                await showCostumeDatabaseErrorNotif(
+                                                    e);
+                                                Navigator.of(context)
+                                                    .pushReplacement(
+                                                  CupertinoPageRoute(
+                                                    builder: (_) => Wrapper(
+                                                      child: Authenticate(),
+                                                    ),
+                                                  ),
+                                                );
+                                              }
                                             }
                                           },
                                         ),

@@ -85,10 +85,15 @@ class FamiliesList extends StatelessWidget {
                                                                   'العائلة',
                                                               deleteFunction:
                                                                   () async {
-                                                                await DatabaseService(
-                                                                        familyList[i]
-                                                                            .id)
-                                                                    .deleteFamily();
+                                                                try {
+                                                                  await DatabaseService(
+                                                                          familyList[i]
+                                                                              .id)
+                                                                      .deleteFamily();
+                                                                } catch (e) {
+                                                                  await showCostumeDatabaseErrorNotif(
+                                                                      e);
+                                                                }
                                                               },
                                                             )
                                                           : RequestDelete(

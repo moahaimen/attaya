@@ -17,7 +17,7 @@ linter:
     public_member_api_docs: false
     lines_longer_than_80_chars: false
     prefer_const_constructors: true
-    avoid_print/: true
+    avoid_print: true
     avoid_catches_without_on_clauses: false
     
 

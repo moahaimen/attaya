@@ -7,7 +7,6 @@ import '../../services/data_base.dart';
 import '../../models/organization.dart';
 import '../../screens/admin/delete.dart';
 import '../../functions/send_message.dart';
-import '../../services/organization_srvices.dart';
 import '../../screens/orignization/organization_details.dart';
 
 class OrganizationsList extends StatelessWidget {
@@ -79,11 +78,16 @@ class OrganizationsList extends StatelessWidget {
                                                           deleteType: 'المنظمة',
                                                           deleteFunction:
                                                               () async {
-                                                            await deleteOrganization(
-                                                              organizationsList[
-                                                                      i]
-                                                                  .id,
-                                                            );
+                                                            try {
+                                                              await DatabaseService(
+                                                                organizationsList[
+                                                                        i]
+                                                                    .id,
+                                                              ).deleteOrg();
+                                                            } catch (e) {
+                                                              await showCostumeDatabaseErrorNotif(
+                                                                  e);
+                                                            }
                                                           },
                                                         ),
                                                       ),

@@ -87,20 +87,25 @@ class _RequestDetailsState extends State<RequestDetails> {
                           setState(() {
                             loading = true;
                           });
-                          if (widget.request.isDeleteRequest) {
-                            await DatabaseService(widget.request.theFamily.id)
-                                .deleteFamily();
-                          } else {
-                            await DatabaseService(widget.request.theFamily.id)
-                                .updateFamilyData(widget.request.theFamily);
+                          try {
+                            if (widget.request.isDeleteRequest) {
+                              await DatabaseService(widget.request.theFamily.id)
+                                  .deleteFamily();
+                            } else {
+                              await DatabaseService(widget.request.theFamily.id)
+                                  .updateFamilyData(widget.request.theFamily);
+                            }
+                            await deleteRequest(widget.request.id);
+                            setState(() {
+                              loading = false;
+                            });
+                            showOverlay(
+                                text: 'تم الموافقة على الطلب',
+                                context: context);
+                          } catch (e) {
+                            await showCostumeDatabaseErrorNotif(e);
                           }
-                          await deleteRequest(widget.request.id);
-                          setState(() {
-                            loading = false;
-                          });
                           Navigator.of(context).pop();
-                          showOverlay(
-                              text: 'تم الموافقة على الطلب', context: context);
                         },
                 ),
                 const SizedBox(height: 30),
