@@ -21,9 +21,11 @@ class RequestsList extends StatelessWidget {
         stream: DatabaseService('').requests,
         builder: (context, snapshot) {
           final requestList = snapshot.data;
-          requestList.removeWhere(
+          if(requestList != null) {
+            requestList.removeWhere(
             (r) => showDeleteRequests ? !r.isDeleteRequest : r.isDeleteRequest,
           );
+          }
           return requestList == null
               ? Loading()
               : requestList.isEmpty
