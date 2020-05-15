@@ -10,6 +10,7 @@ import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../functions/show_overlay.dart';
 import '../../screens/shared/map_screen.dart';
+import '../../functions/check_location_permission.dart';
 
 class FamilyAccount extends StatelessWidget {
   @override
@@ -17,7 +18,7 @@ class FamilyAccount extends StatelessWidget {
     final familyData = Provider.of<Family>(context);
 
     return familyData == null
-        ? Loading()
+        ? const Loading()
         : ListView(
             children: <Widget>[
               const SizedBox(height: 25),
@@ -167,7 +168,7 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
     return Scaffold(
       appBar: apBar('تعديل معلومات العائلة', context),
       body: loading
-          ? Loading()
+          ? const Loading()
           : Directionality(
               textDirection: TextDirection.rtl,
               child: Container(
@@ -252,17 +253,17 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
                                     onPressed: () async {
-                                      location =
-                                          await Navigator.of(context).push(
-                                        CupertinoPageRoute(
-                                          builder: (c) {
-                                            return const MapScreen(
-                                              isNotSupScreen: false,
-                                              isSelectLocation: true,
-                                              isOrg: false,
-                                            );
-                                          },
-                                        ),
+                                      checkLocationPermision(
+                                        navigateToMap: () async {
+                                          location =
+                                              await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => const MapScreen(
+                                                isSelectLocation: true,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                     icon: Image.asset(

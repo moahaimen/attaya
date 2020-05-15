@@ -10,6 +10,7 @@ import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../screens/shared/disease_prevention.dart';
+import '../../functions/check_location_permission.dart';
 
 class OrganizationAccount extends StatelessWidget {
   final String uid;
@@ -25,7 +26,7 @@ class OrganizationAccount extends StatelessWidget {
           builder: (context, snapshot) {
             final org = snapshot.data;
             if (org == null) {
-              return Loading();
+              return const Loading();
             } else {
               return Directionality(
                 textDirection: TextDirection.rtl,
@@ -111,9 +112,9 @@ class OrganizationAccount extends StatelessWidget {
                                 ),
                               );
                             },
-                            child: const Text(
+                            child: Text(
                               'حول المبادرة',
-                              style: navText,
+                              style: textStyle,
                             ),
                           ),
                         ],
@@ -197,7 +198,7 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
     return Scaffold(
       appBar: apBar('تعديل معلومات المنظمة', context),
       body: loading
-          ? Loading()
+          ? const Loading()
           : SafeArea(
               child: Directionality(
                 textDirection: TextDirection.rtl,
@@ -310,15 +311,19 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
                                       const SizedBox(height: 30),
                                       FlatButton.icon(
                                         onPressed: () async {
-                                          location =
-                                              await Navigator.of(context).push(
-                                            CupertinoPageRoute(
-                                              builder: (c) => const MapScreen(
-                                                isNotSupScreen: false,
-                                                isSelectLocation: true,
-                                                isOrg: false,
-                                              ),
-                                            ),
+                                          checkLocationPermision(
+                                            navigateToMap: () async {
+                                              location =
+                                                  await Navigator.of(context)
+                                                      .push(
+                                                MaterialPageRoute(
+                                                  builder: (_) =>
+                                                      const MapScreen(
+                                                    isSelectLocation: true,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           );
                                         },
                                         icon: Image.asset(

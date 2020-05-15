@@ -56,7 +56,7 @@ class _OrganizationDetailsState extends State<OrganizationDetails> {
                                       widget.org.name,
                                       textAlign: TextAlign.right,
                                       textDirection: TextDirection.rtl,
-                                      style: DeepBlueText,
+                                      style: textStyle.copyWith(fontSize: 20),
                                     ),
                                   ),
                                   Padding(

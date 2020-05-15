@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../screens/shared/map_screen.dart';
 import '../services/shered_Preference.dart';
 import '../screens/family/families._list.dart';
+import '../functions/check_location_permission.dart';
 import '../screens/orignization/organisations_list.dart';
 import '../screens/orignization/organization_account.dart';
 
@@ -39,12 +40,10 @@ class AdminNavBar extends StatelessWidget {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => const MapScreen(
-                    isNotSupScreen: false,
-                    isSelectLocation: false,
-                    isOrg: false,
+              checkLocationPermision(
+                navigateToMap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => const MapScreen(),
                   ),
                 ),
               );

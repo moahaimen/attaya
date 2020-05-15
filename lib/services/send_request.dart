@@ -7,7 +7,7 @@ CollectionReference requestsCollection =
     Firestore.instance.collection('requests');
 
 Future<void> deleteRequest(String requestId) async {
-  //delete the request from the list by Admin
+  //to delete the request from the list by Admin
   await requestsCollection.document(requestId).delete();
 }
 

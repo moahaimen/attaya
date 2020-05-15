@@ -6,8 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../models/user.dart';
-import '../../models/family.dart';
 import '../../consts/consts.dart';
+import '../../models/family.dart';
 import '../../consts/loading.dart';
 import '../../services/data_base.dart';
 import '../../services/size_config.dart';
@@ -16,16 +16,17 @@ import '../../services/location_service.dart';
 import '../../screens/family/add_family.dart';
 import '../../services/shered_Preference.dart';
 import '../../screens/family/family_details.dart';
+import '../../functions/check_location_permission.dart';
 
 class MapScreen extends StatefulWidget {
-  final bool isNotSupScreen;
+  final LatLng findOnMap;
   final bool isSelectLocation;
   final bool isOrg;
 
   const MapScreen({
-    @required this.isNotSupScreen,
-    @required this.isSelectLocation,
-    @required this.isOrg,
+    this.findOnMap,
+    this.isSelectLocation = false,
+    this.isOrg = false,
   });
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -93,6 +94,8 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var currentFocus = FocusScope.of(context);
+
     return Scaffold(
       appBar: widget.isOrg ? null : apBar('الخريطة', context),
       body: Container(
@@ -101,12 +104,11 @@ class _MapScreenState extends State<MapScreen> {
         child: StreamBuilder<Position>(
           stream: Stream.fromFuture(mylocation()),
           builder: (context, snapshot) {
-            //searchText = '';
-
             if (snapshot.data != null) {
               final position = snapshot.data;
               roads.clear();
               myLocation = LatLng(position.latitude, position.longitude);
+
               return StreamBuilder<List<Family>>(
                 stream: getFamilies(
                   name: (searchText == '') ? null : searchText,
@@ -201,14 +203,21 @@ class _MapScreenState extends State<MapScreen> {
                               },
                             );
                           },
+                          onTap: (argument) {
+                            if (!currentFocus.hasPrimaryFocus) {
+                              // currentFocus..requestFocus(FocusNode());
+                              currentFocus.unfocus();
+                            }
+                          },
                           polylines: roads,
                           onMapCreated: _controller.complete,
                           buildingsEnabled: false,
                           mapType: MapType.normal,
                           initialCameraPosition: CameraPosition(
                             zoom: 15,
-                            target: myLocation,
+                            target: widget.findOnMap ?? myLocation,
                           ),
+                          myLocationButtonEnabled: true,
                           markers: markers,
                         ),
                         Container(
@@ -239,9 +248,13 @@ class _MapScreenState extends State<MapScreen> {
                                                         CameraPosition(
                                                           zoom: 18,
                                                           target: LatLng(
-                                                            markers.first.position
+                                                            markers
+                                                                .first
+                                                                .position
                                                                 .latitude,
-                                                            markers.first.position
+                                                            markers
+                                                                .first
+                                                                .position
                                                                 .longitude,
                                                           ),
                                                         ),
@@ -255,18 +268,16 @@ class _MapScreenState extends State<MapScreen> {
                                         },
                                       );
                                     },
-                                    
-                                    autofocus: false,
+                                    showCursor: true,
                                     decoration: InputDecoration(
-                                      
                                       border: OutlineInputBorder(
-                                          borderSide:
-                                              BorderSide(color: Colors.teal)),
+                                        borderSide:
+                                            BorderSide(color: Colors.teal),
+                                      ),
                                       hintText: 'بحث عن عائلة',
-                                      // helperText: 'Keep it short, this is just a demo.',
                                       labelText: 'بحث عن عائلة',
+                                      isDense: true,
                                       prefixIcon: Icon(Icons.search),
-
                                       suffixIcon: IconButton(
                                         icon: Icon(Icons.sort),
                                         onPressed: () {
@@ -396,6 +407,11 @@ class _MapScreenState extends State<MapScreen> {
                                             ),
                                             value: onlyIsNeedd,
                                             onChanged: (value) {
+                                              if (!currentFocus
+                                                  .hasPrimaryFocus) {
+                                                currentFocus.unfocus();
+                                              }
+
                                               setState(
                                                 () {
                                                   onlyIsNeedd = value;
@@ -412,6 +428,10 @@ class _MapScreenState extends State<MapScreen> {
                                             ),
                                             value: onlyNotNeed,
                                             onChanged: (value) {
+                                              if (!currentFocus
+                                                  .hasPrimaryFocus) {
+                                                currentFocus.unfocus();
+                                              }
                                               setState(
                                                 () {
                                                   onlyNotNeed = value;
@@ -424,21 +444,22 @@ class _MapScreenState extends State<MapScreen> {
                                     )
                                   : Container(),
                               const Spacer(),
-                              Center(
-                                child: SizedBox(
-                                  width: SizeConfig.screenWidth * 0.7,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      widget.isSelectLocation
-                                          ? 'يمكنك اختيار الموقع عن طريق الضغط مطولا على الموقع اللذي تريدة'
-                                          : 'اضغط مطولا اعلى اي موقع تريدة لاضافة عائلة في هذا الموقع',
-                                      // textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.center,
-                                      style: textStyle.copyWith(fontSize: 13),
-                                    ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth * 0.7,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    widget.isSelectLocation
+                                        ? 'يمكنك اختيار الموقع عن طريق الضغط مطولا على الموقع اللذي تريدة'
+                                        : 'اضغط مطولا اعلى اي موقع تريدة لاضافة عائلة في هذا الموقع',
+                                    // textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.center,
+                                    style: textStyle.copyWith(fontSize: 13),
                                   ),
                                 ),
+                              ),
+                              const SizedBox(
+                                height: 45,
                               ),
                             ],
                           ),
@@ -446,12 +467,13 @@ class _MapScreenState extends State<MapScreen> {
                       ],
                     );
                   } else {
-                    return Loading();
+                    return const Loading();
                   }
                 },
               );
             } else {
-              return Loading();
+              checkLocationPermision(navigateToMap: () {});
+              return const Loading();
             }
           },
         ),

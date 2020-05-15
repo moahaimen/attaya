@@ -8,6 +8,9 @@ Future<Position> mylocation() async {
   return position;
 }
 
+
+//this func. will get the address of the province 
+//by providing the name of the province with this form{بغداد, Irak}
  Future<Address> stateLocation(String query) async {
   final addresses = await Geocoder.local.findAddressesFromQuery(query);
   return addresses.first;

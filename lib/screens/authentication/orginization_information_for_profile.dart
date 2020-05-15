@@ -14,6 +14,7 @@ import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
+import '../../functions/check_location_permission.dart';
 import '../../screens/authentication/authenticate.dart';
 
 class OrgiziationSignup extends StatefulWidget {
@@ -60,7 +61,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
     // for initiliaze size config
     return Scaffold(
       body: loading
-          ? Loading()
+          ? const Loading()
           : SafeArea(
               child: Directionality(
                 textDirection: TextDirection.rtl,
@@ -69,181 +70,176 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                   height: SizeConfig.screenHeight * 1,
                   padding: const EdgeInsets.all(6.0),
                   child: Center(
-                    child: ListView(
-                      children: <Widget>[
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            const Padding(
-                              padding: EdgeInsets.only(top: 10.0),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          const Padding(
+                            padding: EdgeInsets.only(top: 10.0),
+                          ),
+                          Row(
+                            children: const <Widget>[
+                              Padding(
+                                padding: EdgeInsets.only(left: 85, right: 50),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 10, right: 10.0, top: 28, bottom: 5),
+                            child: Text(
+                              "اكمال تسجيل المعلومات",
+                              style: emptyRedText.copyWith(fontSize: 23.0),
                             ),
-                            Row(
-                              children: const <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.only(left: 85, right: 50),
-                                ),
-                              ],
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.only(
-                                  left: 10, right: 10.0, top: 28, bottom: 5),
-                              child: Text("اكمال تسجيل المعلومات",
-                                  style: emptyTallRedText),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 20),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Form(
                               child: Form(
-                                child: Form(
-                                  key: _formkey,
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    textDirection: TextDirection.rtl,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      const SizedBox(height: 30),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: orgName,
-                                        hinttxt:
-                                            'اسم المنظمة او الفريق التطوعي',
-                                        largerElseValue: 30,
-                                        smallerValue: 3,
-                                        validationifText:
-                                            'يرجى ادخال الاسم بالكامل',
-                                        validationElseText: 'الاسم طويل جدا',
-                                        isBlue: false,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: managerNameController,
-                                        hinttxt: 'اسم المدير الثلاثي',
-                                        largerElseValue: 50,
-                                        smallerValue: 3,
-                                        validationifText: 'الاسم طويل جدا',
-                                        validationElseText: 'الاسم قصير جدا',
-                                        isBlue: false,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: managerPhoneNoController,
-                                        hinttxt:
-                                            'رقم مدير المنظمة او الفريق التطوعي',
-                                        largerElseValue: 12,
-                                        smallerValue: 11,
-                                        validationifText: 'الرقم صغير ',
-                                        validationElseText:
-                                            'رقم الهاتف غير صحيح. يجب ان يتكون من 11 رقم',
-                                        isBlue: false,
-                                        isNumber: true,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: phoneNumberController,
-                                        hinttxt:
-                                            'رقم التواصل مع المنظمة او الفريق التطوعي',
-                                        largerElseValue: 12,
-                                        smallerValue: 11,
-                                        validationifText: 'الرقم صغير جدا',
-                                        validationElseText:
-                                            'ادخل الرقم غير صحيح',
-                                        isBlue: false,
-                                        isNumber: true,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: provinceController,
-                                        hinttxt: 'المحافظة',
-                                        largerElseValue: 11,
-                                        smallerValue: 4,
-                                        validationifText:
-                                            'اسم المحافظة قصير جدت',
-                                        validationElseText:
-                                            'يرجى ادخال اسم صحيح',
-                                        isBlue: false,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: distributionAreaController,
-                                        hinttxt: 'اماكن التوزيع داخل المحافظة',
-                                        largerElseValue: 100,
-                                        smallerValue: 4,
-                                        validationifText: "الاسم قصير جدا",
-                                        validationElseText: 'الاسم طويل جدا',
-                                        isBlue: false,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: descriptionController,
-                                        hinttxt: 'وصف قصير عن المنظمة',
-                                        largerElseValue: 1000,
-                                        smallerValue: 5,
-                                        validationifText: 'الوصف قصير جدا',
-                                        validationElseText:
-                                            ' يجب ان يكون الوصف اقل من 20 كلمة',
-                                        isBlue: false,
-                                      ),
-                                      const SizedBox(height: 30),
-                                      FlatButton.icon(
-                                        onPressed: () async {
-                                          location =
-                                              await Navigator.of(context).push(
-                                            CupertinoPageRoute(
-                                              builder: (c) => const MapScreen(
-                                                isNotSupScreen: false,
-                                                isSelectLocation: true,
-                                                isOrg: false,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                        icon: Image.asset(
-                                          'assets/icons/map_pin_1.png',
-                                          color: Colors.red,
-                                        ),
-                                        label: Text(
-                                          'تحديد على الخريطة',
-                                          style: textStyle,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      SizedBox(
-                                        width: SizeConfig.screenWidth * 0.7,
-                                        child: buttonRedShape(
-                                          'انشاء الحساب',
-                                          context,
-                                          () async {
-                                            if (_formkey.currentState
-                                                .validate()) {
-                                              final newOrg = Organization(
-                                                id: widget.user.uid,
-                                                name: orgName.text,
-                                                managerName:
-                                                    managerNameController.text,
-                                                province:
-                                                    provinceController.text,
-                                                description:
-                                                    descriptionController.text,
-                                                distributionArea:
-                                                    distributionAreaController
-                                                        .text,
-                                                managerPhoneNo:
-                                                    managerPhoneNoController
-                                                        .text,
-                                                phoneNumber:
-                                                    phoneNumberController.text,
-                                                location: Location(
-                                                  longitude: location.longitude,
-                                                  latitude: location.latitude,
+                                key: _formkey,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  textDirection: TextDirection.rtl,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    const SizedBox(height: 30),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: orgName,
+                                      hinttxt: 'اسم المنظمة او الفريق التطوعي',
+                                      largerElseValue: 30,
+                                      smallerValue: 3,
+                                      validationifText:
+                                          'يرجى ادخال الاسم بالكامل',
+                                      validationElseText: 'الاسم طويل جدا',
+                                      isBlue: false,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: managerNameController,
+                                      hinttxt: 'اسم المدير الثلاثي',
+                                      largerElseValue: 50,
+                                      smallerValue: 3,
+                                      validationifText: 'الاسم طويل جدا',
+                                      validationElseText: 'الاسم قصير جدا',
+                                      isBlue: false,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: managerPhoneNoController,
+                                      hinttxt:
+                                          'رقم مدير المنظمة او الفريق التطوعي',
+                                      largerElseValue: 12,
+                                      smallerValue: 11,
+                                      validationifText: 'الرقم صغير ',
+                                      validationElseText:
+                                          'رقم الهاتف غير صحيح. يجب ان يتكون من 11 رقم',
+                                      isBlue: false,
+                                      isNumber: true,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: phoneNumberController,
+                                      hinttxt:
+                                          'رقم التواصل مع المنظمة او الفريق التطوعي',
+                                      largerElseValue: 12,
+                                      smallerValue: 11,
+                                      validationifText: 'الرقم صغير جدا',
+                                      validationElseText: 'ادخل الرقم غير صحيح',
+                                      isBlue: false,
+                                      isNumber: true,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: provinceController,
+                                      hinttxt: 'المحافظة',
+                                      largerElseValue: 11,
+                                      smallerValue: 4,
+                                      validationifText: 'اسم المحافظة قصير جدت',
+                                      validationElseText: 'يرجى ادخال اسم صحيح',
+                                      isBlue: false,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: distributionAreaController,
+                                      hinttxt: 'اماكن التوزيع داخل المحافظة',
+                                      largerElseValue: 100,
+                                      smallerValue: 4,
+                                      validationifText: "الاسم قصير جدا",
+                                      validationElseText: 'الاسم طويل جدا',
+                                      isBlue: false,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    CrdTxtFrmFld(
+                                      cntrTxt: descriptionController,
+                                      hinttxt: 'وصف قصير عن المنظمة',
+                                      largerElseValue: 1000,
+                                      smallerValue: 5,
+                                      validationifText: 'الوصف قصير جدا',
+                                      validationElseText:
+                                          ' يجب ان يكون الوصف اقل من 20 كلمة',
+                                      isBlue: false,
+                                    ),
+                                    const SizedBox(height: 30),
+                                    FlatButton.icon(
+                                      onPressed: () async {
+                                        checkLocationPermision(
+                                          navigateToMap: () async {
+                                            location =
+                                                await Navigator.of(context)
+                                                    .push(
+                                              MaterialPageRoute(
+                                                builder: (_) => const MapScreen(
+                                                  isSelectLocation: true,
                                                 ),
-                                              );
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              try {
-                                                
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                      icon: Image.asset(
+                                        'assets/icons/map_pin_1.png',
+                                        color: Colors.red,
+                                      ),
+                                      label: Text(
+                                        'تحديد على الخريطة',
+                                        style: textStyle,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth * 0.7,
+                                      child: buttonRedShape(
+                                        'انشاء الحساب',
+                                        context,
+                                        () async {
+                                          if (_formkey.currentState
+                                              .validate()) {
+                                            final newOrg = Organization(
+                                              id: widget.user.uid,
+                                              name: orgName.text,
+                                              managerName:
+                                                  managerNameController.text,
+                                              province: provinceController.text,
+                                              description:
+                                                  descriptionController.text,
+                                              distributionArea:
+                                                  distributionAreaController
+                                                      .text,
+                                              managerPhoneNo:
+                                                  managerPhoneNoController.text,
+                                              phoneNumber:
+                                                  phoneNumberController.text,
+                                              location: Location(
+                                                longitude: location.longitude,
+                                                latitude: location.latitude,
+                                              ),
+                                            );
+                                            setState(() {
+                                              loading = true;
+                                            });
+                                            try {
                                               await DatabaseService(
                                                       widget.user.uid)
                                                   .updateOrganizationData(
@@ -269,10 +265,10 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                   ),
                                                 ),
                                               );
-                                              } catch (e) {
-                                                 await showCostumeDatabaseErrorNotif(
-                                                    e);
-                                                    Navigator.of(context)
+                                            } catch (e) {
+                                              await showCostumeDatabaseErrorNotif(
+                                                  e);
+                                              Navigator.of(context)
                                                   .pushReplacement(
                                                 CupertinoPageRoute(
                                                   builder: (_) => Wrapper(
@@ -280,19 +276,18 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                   ),
                                                 ),
                                               );
-                                              }
                                             }
-                                          },
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                          }
+                                        },
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
               return FamilyHomeScreen(user: widget.user);
             }
 
-            return Loading();
+            return const Loading();
           },
         );
       },
@@ -70,11 +70,7 @@ class OrganizationHomeScreen extends StatelessWidget {
       value: DatabaseService(user.uid).organizatioData,
       child: Scaffold(
         appBar: apBar('الخريطة', context, isNotsubScreen: true),
-        body: const MapScreen(
-          isNotSupScreen: true,
-          isSelectLocation: false,
-          isOrg: true,
-        ),
+        body: const MapScreen(isOrg: true),
         bottomNavigationBar: const OrganizationNavBar(),
       ),
     );

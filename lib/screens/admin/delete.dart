@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../consts/consts.dart';
 import '../../consts/loading.dart';
+
 class ConformDelete extends StatefulWidget {
   final String deleteType; //المنظمة او العائلة
   final Function deleteFunction;
@@ -22,7 +23,7 @@ class _ConformDeleteState extends State<ConformDelete> {
     return Scaffold(
       appBar: apBar('حذف ${widget.deleteType}', context),
       body: _loading
-          ? Loading()
+          ? const Loading()
           : Directionality(
               textDirection: TextDirection.rtl,
               child: Padding(

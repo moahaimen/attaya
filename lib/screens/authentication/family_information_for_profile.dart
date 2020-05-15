@@ -14,6 +14,7 @@ import '../../screens/HomeScreen.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
+import '../../functions/check_location_permission.dart';
 import '../../screens/authentication/authenticate.dart';
 
 class FamilySignup extends StatefulWidget {
@@ -53,7 +54,7 @@ class _FamilySignupState extends State<FamilySignup> {
     SizeConfig().init(context);
     return Scaffold(
       body: loading
-          ? Loading()
+          ? const Loading()
           : SafeArea(
               child: Directionality(
                 textDirection: TextDirection.rtl,
@@ -82,9 +83,10 @@ class _FamilySignupState extends State<FamilySignup> {
                                       height: 150.0,
                                     ),
                                   ),
-                                  const Text(
+                                  Text(
                                     "اكمال تسجيل معلومات العائلة",
-                                    style: emptyTallRedText,
+                                    style:
+                                        emptyRedText.copyWith(fontSize: 23.0),
                                   ),
                                 ],
                               )
@@ -160,16 +162,18 @@ class _FamilySignupState extends State<FamilySignup> {
                                   ),
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
-                                    onPressed: () async {
-                                      location =
-                                          await Navigator.of(context).push(
-                                        CupertinoPageRoute(
-                                          builder: (c) => const MapScreen(
-                                            isNotSupScreen: false,
-                                            isSelectLocation: true,
-                                            isOrg: false,
-                                          ),
-                                        ),
+                                    onPressed: () {
+                                      checkLocationPermision(
+                                        navigateToMap: () async {
+                                          location =
+                                              await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => const MapScreen(
+                                                isSelectLocation: true,
+                                              ),
+                                            ),
+                                          );
+                                        },
                                       );
                                     },
                                     icon: Image.asset(

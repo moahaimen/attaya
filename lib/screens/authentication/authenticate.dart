@@ -23,52 +23,45 @@ class _AuthenticateState extends State<Authenticate> {
               textDirection: TextDirection.rtl,
               children: <Widget>[
                 const Padding(
-                  padding: EdgeInsets.only(top: 100.0),
+                  padding: EdgeInsets.only(top: 40.0),
                 ),
-                Row(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 85),
-                      child: Image.asset(
-                        "assets/icons/logo_icon.png",
-                        height: 250.0,
-                      ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 85),
+                    child: Image.asset(
+                      "assets/icons/logo_icon.png",
+                      height: 250.0,
                     ),
-                  ],
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 40),
                   child: Text("تطبيق عطايا", style: emptyblueText),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 20),
-                      child: Column(
-                        children: <Widget>[
-                          const SizedBox(
-                            height: 15.0,
-                          ),
-                          SizedBox(
-                            width: SizeConfig.screenWidth * 0.7,
-                            child: buttonRedShape(
-                              'التسجيل',
-                              context,
-                              () {
-                                Navigator.of(context).push(
-                                  CupertinoPageRoute(
-                                    builder: (_) => SignUp(),
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        ],
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    children: <Widget>[
+                      const SizedBox(
+                        height: 15.0,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        width: SizeConfig.screenWidth * 0.7,
+                        child: buttonRedShape(
+                          'التسجيل',
+                          context,
+                          () {
+                            Navigator.of(context).push(
+                              CupertinoPageRoute(
+                                builder: (_) => SignUp(),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -87,9 +80,9 @@ class _AuthenticateState extends State<Authenticate> {
                             ),
                           );
                         },
-                        child:const Text(
+                        child: Text(
                           'حول المبادرة',
-                          style: navText,
+                          style: textStyle.copyWith(fontSize: 14.0),
                         ),
                       ),
                       FlatButton(
@@ -100,9 +93,9 @@ class _AuthenticateState extends State<Authenticate> {
                             ),
                           );
                         },
-                        child:const Text(
+                        child: Text(
                           'حول التطبيق',
-                          style: navText,
+                          style: textStyle.copyWith(fontSize: 14.0),
                         ),
                       ),
                     ],

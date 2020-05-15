@@ -3,25 +3,13 @@ import 'package:flutter/material.dart';
 
 import '../services/auth_service.dart';
 
-const headerWhiteText = TextStyle(
-  fontSize: 24.0,
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
+TextStyle textStyle = const TextStyle(
+  fontSize: 18,
   fontFamily: 'Changa',
+  fontWeight: FontWeight.bold,
+  color: Color(0xFF130f40),
 );
 
-const headerTextblue = TextStyle(
-  fontSize: 24.0,
-  color: Colors.blue,
-  fontWeight: FontWeight.bold,
-);
-
-const DeepBlueText = TextStyle(
-  color: deepTxtBlue,
-  fontWeight: FontWeight.bold,
-  fontSize: 20.0,
-  fontFamily: 'Changa',
-);
 const cardBorderTextstyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
@@ -29,11 +17,6 @@ const cardBorderTextstyle = TextStyle(
   fontFamily: 'Changa',
 );
 
-const buttonWhiteText = TextStyle(
-    fontSize: 20.0,
-    fontFamily: 'Changa',
-    fontWeight: FontWeight.w800,
-    color: Colors.white);
 const emptyblueText = TextStyle(
   fontSize: 34.0,
   fontFamily: 'Changa',
@@ -63,22 +46,11 @@ const emptyRedText = TextStyle(
   color: Color(0xFFC95555),
 );
 
-const emptyTallRedText = TextStyle(
-  fontSize: 23.0,
-  fontFamily: 'Changa',
-  fontWeight: FontWeight.w900,
-  color: Color(0xFFC95555),
-);
-
-const navText = TextStyle(
-  fontSize: 14.0,
-  fontFamily: 'Changa',
-  fontWeight: FontWeight.w800,
-);
-
-// ignore: non_constant_identifier_names
 Card buttonBlueShape(
-    String titleOfButton, BuildContext context, Function function) {
+  String titleOfButton,
+  BuildContext context,
+  Function function,
+) {
   return Card(
     child: Container(
       height: 50.0,
@@ -90,7 +62,12 @@ Card buttonBlueShape(
         child: Text(
           titleOfButton,
           textAlign: TextAlign.center,
-          style: buttonWhiteText,
+          style: const TextStyle(
+            fontSize: 20.0,
+            fontFamily: 'Changa',
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
         ),
       ),
     ),
@@ -114,60 +91,17 @@ Card buttonRedShape(
         child: Text(
           titleOfButton,
           textAlign: TextAlign.center,
-          style: buttonWhiteText,
+          style: const TextStyle(
+            fontSize: 20.0,
+            fontFamily: 'Changa',
+            fontWeight: FontWeight.w800,
+            color: Colors.white,
+          ),
         ),
       ),
     ),
   );
 }
-
-//Form Fields Constants
-
-const shadowTxtBlueFillFld = Color(0xffDDDDDD);
-const txtFldStyle = Color(0xffA5D5EB);
-const deepTxtBlue = Color(0xFF130f40);
-
-const kTxtInptDecrtion = InputDecoration(
-    filled: true,
-    fillColor: shadowTxtBlueFillFld,
-    border: OutlineInputBorder(
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-      borderSide: BorderSide.none,
-    ));
-
-const txtHintstyle = TextStyle(
-  color: txtFldStyle,
-  fontWeight: FontWeight.bold,
-  fontSize: 22.0,
-  fontFamily: 'Changa',
-);
-const aboutTextstyle = TextStyle(
-  color: Colors.black,
-  fontWeight: FontWeight.bold,
-  fontSize: 18.0,
-  fontFamily: 'Changa',
-);
-
-TextStyle textStyle = const TextStyle(
-  fontSize: 18,
-  fontFamily: 'Changa',
-  fontWeight: FontWeight.bold,
-  color: deepTxtBlue,
-);
-
-const deepBlueTextStyle = TextStyle(
-  color: deepTxtBlue,
-  fontWeight: FontWeight.bold,
-  fontSize: 20.0,
-  fontFamily: 'Changa',
-);
-
-const txtWritingFldForm = TextStyle(
-  color: txtFldStyle,
-  fontWeight: FontWeight.bold,
-  fontSize: 22.0,
-  fontFamily: 'Changa',
-);
 
 final OutlineInputBorder outlineInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(15),
@@ -256,7 +190,12 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
     title: Text(
       ttl,
       textAlign: TextAlign.center,
-      style: headerWhiteText,
+      style: const TextStyle(
+        fontSize: 24.0,
+        color: Colors.white,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Changa',
+      ),
     ),
     backgroundColor: const Color(0xFF2356C7),
     elevation: 5,
@@ -281,19 +220,3 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
     ],
   );
 }
-
-const smallCarText = TextStyle(
-  fontSize: 10.0,
-  fontFamily: 'Changa',
-  fontWeight: FontWeight.w800,
-);
-
-const headerText = TextStyle(
-  fontSize: 24.0,
-  color: Colors.white,
-  fontWeight: FontWeight.bold,
-);
-
-// ignore: non_constant_identifier_names
-
-//Form Fields Constants

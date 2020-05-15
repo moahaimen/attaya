@@ -6,15 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../consts/consts.dart';
 import '../main.dart';
 import '../models/user.dart';
+import '../consts/consts.dart';
+import '../services/data_base.dart';
 import '../screens/HomeScreen.dart';
+import '../services/shered_Preference.dart';
 import '../screens/authentication/authenticate.dart';
+import '../functions/check_location_permission.dart';
 import '../screens/authentication/family_information_for_profile.dart';
 import '../screens/authentication/orginization_information_for_profile.dart';
-import '../services/data_base.dart';
-import '../services/shered_Preference.dart';
 
 enum PhoneAuthState {
   Started,
@@ -26,6 +27,8 @@ enum PhoneAuthState {
 }
 
 Future showCostumeAuthErrorNotif(String title) async {
+  //this will show in-app notification in case of some auth error
+  //and will forward the user bake to auth screen(first screen)
   await Future.delayed(const Duration(seconds: 1));
 
   BotToast.showNotification(
@@ -35,7 +38,7 @@ Future showCostumeAuthErrorNotif(String title) async {
         style: textStyle,
       );
     },
-    duration:const Duration(seconds: 3),
+    duration: const Duration(seconds: 3),
   );
   await Future.delayed(const Duration(seconds: 2));
   navigatorKey.currentState.pushReplacement(
@@ -54,6 +57,7 @@ class AuthService {
   static String status;
   static UserType userType;
 
+//confert firebase user to user model
   User userFromFirebaseUser(FirebaseUser user) {
     return user != null ? User(uid: user.uid) : null;
   }
@@ -62,12 +66,12 @@ class AuthService {
     return _firebaseAuth.onAuthStateChanged.map(userFromFirebaseUser);
   }
 
+  ///these[statusStreamController,phoneAuthState] are for troubleshooting
+//and don't effect on the app if deleted
   static StreamController<String> statusStreamController =
       StreamController.broadcast();
   static StreamController<PhoneAuthState> phoneAuthState =
       StreamController.broadcast();
-  static Stream<PhoneAuthState> stateStream = phoneAuthState.stream;
-  static Stream<String> statusStream = statusStreamController.stream;
 
   static Future instantiate({
     @required String phoneNumber,
@@ -114,8 +118,7 @@ class AuthService {
     addStatus("\nAuto retrieval time out");
   };
 
-  static final PhoneVerificationFailed verificationFailed =
-      (authException) {
+  static final PhoneVerificationFailed verificationFailed = (authException) {
     addStatus(authException.message);
     addState(PhoneAuthState.Error);
     if (authException.message.contains('not authorized')) {
@@ -130,8 +133,7 @@ class AuthService {
     }
   };
 
-  static final PhoneVerificationCompleted verificationCompleted =
-      (auth) {
+  static final PhoneVerificationCompleted verificationCompleted = (auth) {
     addStatus('Auto retrieving verification code');
 
     _firebaseAuth.signInWithCredential(auth).then((value) {
@@ -152,15 +154,15 @@ class AuthService {
     });
   };
 
+//if the app does'nt authenticate automatically the the user have to
+//put the code himeself then this function dose the job to authenticate the user
   static Future<void> signInWithPhoneNumber({
     String smsCode,
   }) async {
     final _authCredential = PhoneAuthProvider.getCredential(
         verificationId: actualCode, smsCode: smsCode);
 
-    _firebaseAuth
-        .signInWithCredential(_authCredential)
-        .then((result) async {
+    _firebaseAuth.signInWithCredential(_authCredential).then((result) async {
       addStatus('Authentication successful');
       addState(PhoneAuthState.Verified);
       onAuthenticationSuccessful(user: result.user);
@@ -225,14 +227,16 @@ class AuthService {
             );
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'organisation');
-            navigatorKey.currentState.pushReplacement(
-              CupertinoPageRoute(
-                builder: (_) => Wrapper(
-                  child: HomeScreen(
-                    user: User(
-                        uid: user.uid,
-                        phoneNo: phone,
-                        userType: UserType.organisation),
+            checkLocationPermision(
+              navigateToMap: () => navigatorKey.currentState.pushReplacement(
+                CupertinoPageRoute(
+                  builder: (_) => Wrapper(
+                    child: HomeScreen(
+                      user: User(
+                          uid: user.uid,
+                          phoneNo: phone,
+                          userType: UserType.organisation),
+                    ),
                   ),
                 ),
               ),
@@ -289,7 +293,6 @@ class AuthService {
 
       return await _firebaseAuth.signOut();
     } catch (e) {
-      print(e);
       return null;
     }
   }

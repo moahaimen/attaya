@@ -12,6 +12,7 @@ import '../../services/data_base.dart';
 import '../../services/send_request.dart';
 import '../../functions/show_overlay.dart';
 import '../../screens/shared/map_screen.dart';
+import '../../functions/check_location_permission.dart';
 
 class AddFamily extends StatefulWidget {
   final bool isAdmin;
@@ -62,7 +63,7 @@ class _AddFamilyState extends State<AddFamily> {
     return Scaffold(
       appBar: apBar('معلومات العائلة', context),
       body: loading
-          ? Loading()
+          ? const Loading()
           : Directionality(
               textDirection: TextDirection.rtl,
               child: Container(
@@ -146,7 +147,7 @@ class _AddFamilyState extends State<AddFamily> {
                                   CrdTxtFrmFld(
                                     cntrTxt: nearPointController,
                                     hinttxt: 'اقرب نقطة دالة للمنزل',
-                                    largerElseValue: 22,
+                                    largerElseValue: 100,
                                     smallerValue: 5,
                                     validationElseText:
                                         'اسم النقطة الدالة كبير جدا ',
@@ -155,17 +156,16 @@ class _AddFamilyState extends State<AddFamily> {
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
                                       onPressed: () async {
-                                        location =
-                                            await Navigator.of(context).push(
-                                          CupertinoPageRoute(
-                                            builder: (c) {
-                                              return const MapScreen(
-                                                isNotSupScreen: false,
+                                        checkLocationPermision(
+                                          navigateToMap: () async {
+                                            location = await Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (_) => const MapScreen(
                                                 isSelectLocation: true,
-                                                isOrg: false,
-                                              );
-                                            },
-                                          ),
+                                              ),
+                                            ),
+                                          );
+                                          },
                                         );
                                       },
                                       icon: Image.asset(

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../models/family.dart';
 import '../../consts/consts.dart';
@@ -8,6 +9,8 @@ import '../../services/data_base.dart';
 import '../../screens/admin/delete.dart';
 import '../../functions/send_message.dart';
 import '../../services/family_sevices.dart';
+import '../../screens/shared/map_screen.dart';
+import '../../functions/check_location_permission.dart';
 import '../../screens/orignization/send_request_delete.dart';
 
 class FamilyDetails extends StatefulWidget {
@@ -32,13 +35,13 @@ class _FamilyDetailsState extends State<FamilyDetails> {
     return Scaffold(
       appBar: apBar('معلومات العائلة', context),
       body: _loading
-          ? Loading()
+          ? const Loading()
           : StreamBuilder<Family>(
               stream: DatabaseService(widget.familyId).familyData,
               builder: (context, snapshot) {
                 final familyObj = snapshot.data;
                 return familyObj == null
-                    ? Loading()
+                    ? const Loading()
                     : Directionality(
                         textDirection: TextDirection.rtl,
                         child: Padding(
@@ -111,7 +114,21 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                       'تحديد على الخريطة',
                                       style: textStyle,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      checkLocationPermision(
+                                        navigateToMap: () =>
+                                            Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => MapScreen(
+                                              findOnMap: LatLng(
+                                                familyObj.location.latitude,
+                                                familyObj.location.longitude,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
                                   ),
                                   _changeStateloading
                                       ? const CircularProgressIndicator()

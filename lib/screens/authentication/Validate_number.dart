@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/user.dart';
 import '../../consts/consts.dart';
+import '../../consts/loading.dart';
 import '../../services/size_config.dart';
 import '../../services/auth_service.dart';
 
@@ -112,6 +113,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   FocusNode focusNode5 = FocusNode();
   FocusNode focusNode6 = FocusNode();
   String code = "";
+  bool loading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -181,11 +183,29 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           child: buttonBlueShape(
             'تاكيد',
             context,
-            () {
-              AuthService.signInWithPhoneNumber(smsCode: code);
-            },
+            loading
+                ? null
+                : () async {
+                    setState(() {
+                      loading = true;
+                    });
+                    try {
+                      await AuthService.signInWithPhoneNumber(smsCode: code);
+                    } catch (e) {
+                      showCostumeAuthErrorNotif(e);
+                    }
+                  },
           ),
         ),
+        const SizedBox(height: 20.0),
+
+        loading
+            ? const SizedBox(
+                width: 50,
+                height: 50,
+                child: Loading(),
+              )
+            : Container(),
       ],
     );
   }
@@ -226,7 +246,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           },
           maxLengthEnforced: false,
           textAlign: TextAlign.center,
-          cursorColor: Colors.white,
+          cursorColor: Colors.black,
           keyboardType: TextInputType.number,
           style: TextStyle(
             fontSize: 20.0,

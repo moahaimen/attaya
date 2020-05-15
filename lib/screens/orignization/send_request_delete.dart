@@ -28,7 +28,7 @@ class _RequestDeleteState extends State<RequestDelete> {
     return Scaffold(
       appBar: apBar('حذف عائلة', context),
       body: isLoading
-          ? Loading()
+          ? const Loading()
           : SingleChildScrollView(
               child: Directionality(
                 textDirection: TextDirection.rtl,

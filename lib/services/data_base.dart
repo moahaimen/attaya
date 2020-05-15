@@ -10,6 +10,7 @@ import '../models/organization.dart';
 import '../services/shered_Preference.dart';
 
 Future<void> showCostumeDatabaseErrorNotif(String title) async {
+  //this func. will show in-app notification if there is no internet
   await Future.delayed(const Duration(seconds: 1));
   BotToast.showNotification(
     title: (child) {
@@ -32,6 +33,7 @@ Future<void> showCostumeDatabaseErrorNotif(String title) async {
 }
 
 Future<bool> connected() async {
+  //This will check if there is an internet connection
   var connectivityResult = await (Connectivity().checkConnectivity());
   if (connectivityResult == ConnectivityResult.none) {
     return false;
@@ -79,7 +81,7 @@ class DatabaseService {
   }
 
   Future deleteFamily() async {
-    //this can be used to add new family or update an exsisting one
+    //this can be used to delete family and only can be used by the admin
     if (await connected()) {
       await familiesCollection.document(uid).delete();
     } else {
@@ -159,7 +161,8 @@ class DatabaseService {
         .snapshots()
         .map(_organizationDataFromSnapshot);
   }
-   Future<Organization> getOrganizationData() async {
+
+  Future<Organization> getOrganizationData() async {
     final user = await SharedPrefs().getUser();
     final orgDoc = await DatabaseService(user.uid).organizationDataSnap;
     final org = Organization.fromDocument(orgDoc, orgDoc.documentID);
@@ -167,7 +170,7 @@ class DatabaseService {
   }
 
   Future deleteOrg() async {
-    //this can be used to add new family or update an exsisting one
+    //this can be used to delete organization and only can be used by the admin
     if (await connected()) {
       await organizationsCollection.document(uid).delete();
     } else {

@@ -23,7 +23,7 @@ class OrganizationsList extends StatelessWidget {
         builder: (context, snapshot) {
           final organizationsList = snapshot.data;
           return organizationsList == null
-              ? Loading()
+              ? const Loading()
               : Directionality(
                   textDirection: TextDirection.rtl,
                   child: Padding(
