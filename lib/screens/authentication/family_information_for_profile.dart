@@ -29,6 +29,7 @@ class FamilySignup extends StatefulWidget {
 class _FamilySignupState extends State<FamilySignup> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  bool locationIsEmpty = false;
   LatLng location;
 
   final TextEditingController familyCountController = TextEditingController();
@@ -185,6 +186,14 @@ class _FamilySignupState extends State<FamilySignup> {
                                       style: textStyle,
                                     ),
                                   ),
+                                  locationIsEmpty
+                                      ? Center(
+                                          child: Text(
+                                            'الرجاء تحديد الموقع',
+                                            style: TextStyle(color: Colors.red),
+                                          ),
+                                        )
+                                      : Container(),
                                   const SizedBox(
                                     height: 20,
                                   ),
@@ -198,7 +207,8 @@ class _FamilySignupState extends State<FamilySignup> {
                                           context,
                                           () async {
                                             if (_formkey.currentState
-                                                .validate()) {
+                                                    .validate() &&
+                                                location != null) {
                                               final newFamily = Family(
                                                 id: widget.user.uid,
                                                 headOfFamily:
@@ -208,7 +218,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                                     provinceController.text,
                                                 city: cityController.text,
                                                 phoneNo:
-                                                    widget.phoneNo.substring(4),
+                                                    widget.phoneNo.replaceAll('+964','0'),
                                                 location: Location(
                                                   longitude: location.longitude,
                                                   latitude: location.latitude,
@@ -262,6 +272,10 @@ class _FamilySignupState extends State<FamilySignup> {
                                                   ),
                                                 );
                                               }
+                                            } else if (location == null) {
+                                              setState(() {
+                                                locationIsEmpty = true;
+                                              });
                                             }
                                           },
                                         ),

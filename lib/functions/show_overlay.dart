@@ -12,7 +12,7 @@ Future<void> showOverlay({
   final overlayState = Overlay.of(context);
   final overlayEntry = OverlayEntry(
     builder: (context) => Positioned(
-      bottom: 30.0,
+      bottom: 50.0,
       right: SizeConfig.screenWidth * 0.25,
       width: SizeConfig.screenWidth * 0.5,
       child: Material(
@@ -23,11 +23,12 @@ Future<void> showOverlay({
             borderRadius: BorderRadius.circular(30),
             color: Colors.grey.withOpacity(0.6),
           ),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(8),
           child: Center(
             child: Text(
               text,
               textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
               style: textStyle.copyWith(
                 color: Colors.black,
                 fontSize: 15,

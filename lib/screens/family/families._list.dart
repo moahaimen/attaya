@@ -62,8 +62,8 @@ class FamiliesList extends StatelessWidget {
                                               ? 100
                                               : 30,
                                           top: 20,
-                                          left: 20,
-                                          right: 20,
+                                          left: 10,
+                                          right: 10,
                                         ),
                                         alignment: Alignment.center,
                                         child: Column(
@@ -78,10 +78,10 @@ class FamiliesList extends StatelessWidget {
                                                 SizedBox(
                                                   width:
                                                       SizeConfig.screenWidth *
-                                                          0.5,
+                                                          0.6,
                                                   child: Text(
                                                     familyList[i].headOfFamily,
-                                                    style: textStyle.copyWith(),
+                                                    style: textStyle.copyWith(fontSize: 23),
                                                   ),
                                                 ),
                                                 IconButton(
@@ -140,7 +140,7 @@ class FamiliesList extends StatelessWidget {
                                               style: textStyle,
                                             ),
                                             Text(
-                                              'حالة العائلة: ${familyList[i].isNeedHelp ? 'تطلعب مساعدة' : 'لا  تطلب مساعدة'}',
+                                              'حالة العائلة: ${familyList[i].isNeedHelp ? 'تطلب مساعدة' : 'لا  تطلب مساعدة'}',
                                               style: textStyle,
                                             ),
                                             Row(

@@ -1,4 +1,4 @@
-# App decription
+# App description
 
     This app was made to support organizations that help poor families by providing the location of these families.
 

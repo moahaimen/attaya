@@ -80,6 +80,27 @@ class DatabaseService {
     }
   }
 
+  Future<void> changeFamilyState(Family family) async {
+    if (await connected()) {
+      await updateFamilyData(
+        Family(
+          id: family.id,
+          headOfFamily: family.headOfFamily,
+          province: family.province,
+          city: family.city,
+          phoneNo: family.phoneNo,
+          location: family.location,
+          timeStamp: family.timeStamp,
+          isNeedHelp: !family.isNeedHelp,
+          noOfMembers: family.noOfMembers,
+          nearestKnownPoint: family.nearestKnownPoint,
+        ),
+      );
+    } else {
+      throw ('عذرا، حدث خطا غير معروف');
+    }
+  }
+
   Future deleteFamily() async {
     //this can be used to delete family and only can be used by the admin
     if (await connected()) {

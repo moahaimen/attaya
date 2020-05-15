@@ -5,6 +5,7 @@ import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../models/request.dart';
 import '../../services/data_base.dart';
+import '../../services/size_config.dart';
 import '../../screens/admin/request_details.dart';
 
 class RequestsList extends StatelessWidget {
@@ -55,6 +56,7 @@ class RequestsList extends StatelessWidget {
                               },
                               child: Container(
                                 height: 60,
+
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: const Color(0xFF2356C7)
@@ -67,24 +69,30 @@ class RequestsList extends StatelessWidget {
                                 padding: const EdgeInsets.all(10),
                                 child: Row(
                                   children: <Widget>[
-                                    RichText(
-                                      text: TextSpan(
-                                        text:
-                                            '${requestList[i].orgThatRequested}  ',
-                                        style: textStyle.copyWith(
-                                          color: const Color(0xFF2356C7),
-                                        ),
-                                        children: [
-                                          TextSpan(
-                                            text: requestList[i].isDeleteRequest
-                                                ? 'قامت بطلب حذف عائلة'
-                                                : 'قامت بطلب اضافة عائلة',
+                                    SizedBox(
+                                      width: SizeConfig.screenWidth * 0.75,
+                                      child: FittedBox(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            text:
+                                                '${requestList[i].orgThatRequested}  ',
                                             style: textStyle.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 15,
+                                              color: const Color(0xFF2356C7),
                                             ),
+                                            children: [
+                                              TextSpan(
+                                                text: requestList[i]
+                                                        .isDeleteRequest
+                                                    ? 'قامت بطلب حذف عائلة'
+                                                    : 'قامت بطلب اضافة عائلة',
+                                                style: textStyle.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: 15,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                     const Spacer(),

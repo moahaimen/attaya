@@ -5,6 +5,7 @@ import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../services/data_base.dart';
 import '../../models/organization.dart';
+import '../../services/size_config.dart';
 import '../../screens/admin/delete.dart';
 import '../../functions/send_message.dart';
 import '../../screens/orignization/organization_details.dart';
@@ -59,10 +60,13 @@ class OrganizationsList extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: <Widget>[
-                                          Text(
-                                            organizationsList[i].name,
-                                            style: textStyle.copyWith(
-                                                fontSize: 30),
+                                          SizedBox(
+                                            width: SizeConfig.screenWidth * 0.6,
+                                            child: Text(
+                                              organizationsList[i].name,
+                                              style: textStyle.copyWith(
+                                                  fontSize: 23),
+                                            ),
                                           ),
                                           isAdmin
                                               ? IconButton(

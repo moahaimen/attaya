@@ -251,7 +251,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600,
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       );

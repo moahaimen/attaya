@@ -32,6 +32,7 @@ class OrgiziationSignup extends StatefulWidget {
 class _OrgiziationSignupState extends State<OrgiziationSignup> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
+  bool locationIsEmpty = false;
   LatLng location;
 
   final TextEditingController orgName = TextEditingController();
@@ -205,6 +206,15 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                         style: textStyle,
                                       ),
                                     ),
+                                    locationIsEmpty
+                                        ? Center(
+                                            child: Text(
+                                              'الرجاء تحديد الموقع',
+                                              style:
+                                                  TextStyle(color: Colors.red),
+                                            ),
+                                          )
+                                        : Container(),
                                     const SizedBox(
                                       height: 20,
                                     ),
@@ -215,7 +225,8 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                         context,
                                         () async {
                                           if (_formkey.currentState
-                                              .validate()) {
+                                                  .validate() &&
+                                              location != null) {
                                             final newOrg = Organization(
                                               id: widget.user.uid,
                                               name: orgName.text,
@@ -277,6 +288,10 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                                 ),
                                               );
                                             }
+                                          } else if (location == null) {
+                                            setState(() {
+                                              locationIsEmpty = true;
+                                            });
                                           }
                                         },
                                       ),
