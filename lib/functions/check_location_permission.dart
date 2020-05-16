@@ -20,9 +20,9 @@ Future checkLocationPermision({
   } else {
     await location.requestPermission();
     if (!await location.serviceEnabled() || Platform.isAndroid) {
-      var isGranted = await location.requestService();
+      var isServiceGranted = await location.requestService();
 
-      if (await location.hasPermission() == PermissionStatus.granted) {
+      if (await location.hasPermission() == PermissionStatus.granted && isServiceGranted) {
         navigateToMap();
       } else {
         BotToast.showNotification(
