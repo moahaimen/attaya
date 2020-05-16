@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../consts/consts.dart';
 import '../../services/size_config.dart';
+import '../../screens/shared/about.dart';
 import '../../screens/authentication/sign_up.dart';
-import '../../screens/shared/disease_prevention.dart';
 
 class Authenticate extends StatefulWidget {
   @override

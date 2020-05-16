@@ -89,7 +89,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                         style: textStyle,
                                       ),
                                       Text(
-                                        'حالة العائلة: ${familyObj.isNeedHelp ? 'تطلعب مساعدة' : 'لا  تطلب مساعدة'}',
+                                        'حالة العائلة: ${familyObj.isNeedHelp ? 'تطلب مساعدة' : 'لا  تطلب مساعدة'}',
                                         style: textStyle,
                                       ),
                                     ],

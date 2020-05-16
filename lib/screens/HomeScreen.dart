@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -66,12 +67,15 @@ class OrganizationHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamProvider<Organization>.value(
-      value: DatabaseService(user.uid).organizatioData,
-      child: Scaffold(
-        appBar: apBar('الخريطة', context, isNotsubScreen: true),
-        body: const MapScreen(isOrg: true),
-        bottomNavigationBar: const OrganizationNavBar(),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: StreamProvider<Organization>.value(
+        value: DatabaseService(user.uid).organizatioData,
+        child: Scaffold(
+          appBar: apBar('الخريطة', context, isNotsubScreen: true),
+          body: const MapScreen(isOrg: true),
+          bottomNavigationBar: const OrganizationNavBar(),
+        ),
       ),
     );
   }
@@ -86,13 +90,41 @@ class FamilyHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
-      body: StreamProvider<Family>.value(
-        value: DatabaseService(user.uid).familyData,
-        child: FamilyAccount(),
+    return WillPopScope(
+      onWillPop: () async => showDialog<bool>(
+        context: context,
+        builder: (c) => AlertDialog(
+          title: Text(
+            'هل تريد الخروج من التطبيق؟',
+            textDirection: TextDirection.rtl,
+            style: textStyle,
+          ),
+          actions: [
+            FlatButton(
+              child: Text(
+                'لا',
+                style: textStyle,
+              ),
+              onPressed: () => Navigator.pop(c, false),
+            ),
+            FlatButton(
+              child: Text(
+                'نعم',
+                style: textStyle,
+              ),
+              onPressed: SystemNavigator.pop,
+            ),
+          ],
+        ),
       ),
-      bottomNavigationBar: const FamilyNavBar(),
+      child: Scaffold(
+        appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
+        body: StreamProvider<Family>.value(
+          value: DatabaseService(user.uid).familyData,
+          child: FamilyAccount(),
+        ),
+        bottomNavigationBar: const FamilyNavBar(),
+      ),
     );
   }
 }

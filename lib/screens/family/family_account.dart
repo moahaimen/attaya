@@ -72,7 +72,7 @@ class FamilyAccount extends StatelessWidget {
                     ),
                     const SizedBox(height: 25),
                     Text(
-                      'حالة العائلة: ${familyData.isNeedHelp ? 'تطلعب مساعدة' : 'لا  تطلب مساعدة'}',
+                      'حالة العائلة: ${familyData.isNeedHelp ? 'تطلب مساعدة' : 'لا  تطلب مساعدة'}',
                       style: textStyle,
                     ),
                     const SizedBox(height: 25),

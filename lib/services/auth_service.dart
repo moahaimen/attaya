@@ -251,7 +251,7 @@ class AuthService {
               .collection('admins')
               .document(phone)
               .get();
-          if (admin.documentID == phone) {
+          if (admin.data != null && admin.data.isNotEmpty) {
             await SharedPrefs().setUser(phone, user.uid, 'admin');
             navigatorKey.currentState.pushReplacement(
               CupertinoPageRoute(
@@ -266,6 +266,8 @@ class AuthService {
                 ),
               ),
             );
+          } else {
+            showCostumeAuthErrorNotif('عذرا انت لست ادمن');
           }
         }
 

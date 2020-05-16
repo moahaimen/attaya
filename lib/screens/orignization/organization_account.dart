@@ -8,8 +8,8 @@ import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../models/organization.dart';
 import '../../services/size_config.dart';
+import '../../screens/shared/about.dart';
 import '../../screens/shared/map_screen.dart';
-import '../../screens/shared/disease_prevention.dart';
 import '../../functions/check_location_permission.dart';
 
 class OrganizationAccount extends StatelessWidget {

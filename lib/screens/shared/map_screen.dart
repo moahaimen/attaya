@@ -439,7 +439,7 @@ class _MapScreenState extends State<MapScreen> {
                                 child: Text(
                                   widget.isSelectLocation
                                       ? 'اضغط مطولا على الموقع اللذي تريدة لتحديده'
-                                      : 'اضغط مطولا اعلى اي موقع تريدة لاضافة عائلة في هذا الموقع',
+                                      : 'اضغط مطولا اعلى اي موقع تريده لاضافة عائلة في هذا الموقع',
                                   textAlign: TextAlign.center,
                                   style: textStyle.copyWith(fontSize: 10),
                                 ),

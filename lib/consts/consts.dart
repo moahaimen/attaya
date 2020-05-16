@@ -209,7 +209,33 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
       isNotsubScreen
           ? FlatButton(
               onPressed: () {
-                AuthService().signOut();
+                showDialog(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    title: Text(
+                      'هل انت متاكد من تسجيل الخروج',
+                      textDirection: TextDirection.rtl,
+                      style: textStyle,
+                    ),
+                    actions: [
+                      FlatButton(
+                        child: Text(
+                          'لا',
+                          style: textStyle.copyWith(color: Colors.greenAccent),
+                        ),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                      FlatButton(
+                        child: Text(
+                          'نعم',
+                          
+                          style: textStyle.copyWith(color: Colors.red),
+                        ),
+                        onPressed: AuthService().signOut,
+                      ),
+                    ],
+                  ),
+                );
               },
               child: Text(
                 'تسجيل الخروج',
