@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
@@ -9,6 +8,7 @@ import '../consts/loading.dart';
 import '../services/data_base.dart';
 import '../models/organization.dart';
 import '../consts/costume_nav_bar.dart';
+import '../functions/confirm_exit.dart';
 import '../screens/shared/map_screen.dart';
 import '../screens/admin/control_panel.dart';
 import '../screens/family/family_account.dart';
@@ -49,10 +49,14 @@ class AdminHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
-      body: const ControlPanel(),
-      bottomNavigationBar: const AdminNavBar(),
+    return WillPopScope(
+      onWillPop: () async => showDialog<bool>(
+          context: context, builder: (c) => conformExit(context)),
+      child: Scaffold(
+        appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
+        body: const ControlPanel(),
+        bottomNavigationBar: const AdminNavBar(),
+      ),
     );
   }
 }
@@ -68,7 +72,8 @@ class OrganizationHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => showDialog<bool>(
+          context: context, builder: (c) => conformExit(context)),
       child: StreamProvider<Organization>.value(
         value: DatabaseService(user.uid).organizatioData,
         child: Scaffold(
@@ -92,31 +97,7 @@ class FamilyHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => showDialog<bool>(
-        context: context,
-        builder: (c) => AlertDialog(
-          title: Text(
-            'هل تريد الخروج من التطبيق؟',
-            textDirection: TextDirection.rtl,
-            style: textStyle,
-          ),
-          actions: [
-            FlatButton(
-              child: Text(
-                'لا',
-                style: textStyle,
-              ),
-              onPressed: () => Navigator.pop(c, false),
-            ),
-            FlatButton(
-              child: Text(
-                'نعم',
-                style: textStyle,
-              ),
-              onPressed: SystemNavigator.pop,
-            ),
-          ],
-        ),
-      ),
+          context: context, builder: (c) => conformExit(context)),
       child: Scaffold(
         appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
         body: StreamProvider<Family>.value(
