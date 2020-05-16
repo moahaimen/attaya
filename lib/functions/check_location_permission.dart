@@ -22,7 +22,7 @@ Future checkLocationPermision({
     if (!await location.serviceEnabled() || Platform.isAndroid) {
       var isGranted = await location.requestService();
 
-      if (isGranted) {
+      if (await location.hasPermission() == PermissionStatus.granted) {
         navigateToMap();
       } else {
         BotToast.showNotification(
