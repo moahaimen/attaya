@@ -34,7 +34,18 @@ class About extends StatelessWidget {
                   isAboutApp ? 'حول التطبيق' : "Code For IRAQ",
                   style: textStyle.copyWith(fontSize: 40),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 20),
+                !isAboutApp
+                    ? SizedBox(
+                        width: 200,
+                        height: 200,
+                        child: Image.asset(
+                          'assets/icons/code_for_iraq.png',
+                          fit: BoxFit.cover,
+                        ),
+                      )
+                    : Container(),
+                SizedBox(height: isAboutApp ? 80 : 40),
                 isAboutApp
                     ? Text(
                         ' التطبيق يهدف الى مساعدة الفرق التطوعية والجمعيات الخيرية والحملات الإنسانية'

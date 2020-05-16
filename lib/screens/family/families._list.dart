@@ -81,7 +81,8 @@ class FamiliesList extends StatelessWidget {
                                                           0.6,
                                                   child: Text(
                                                     familyList[i].headOfFamily,
-                                                    style: textStyle.copyWith(fontSize: 23),
+                                                    style: textStyle.copyWith(
+                                                        fontSize: 23),
                                                   ),
                                                 ),
                                                 IconButton(
