@@ -16,7 +16,7 @@ Future<void> main() async {
       ? runApp(
           MaterialApp(
             showSemanticsDebugger: false,
-            builder: BotToastInit(), //1. call BotToastInit
+            builder: BotToastInit(),
             navigatorObservers: [BotToastNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,
@@ -25,8 +25,7 @@ Future<void> main() async {
         )
       : runApp(
           MaterialApp(
-            
-            builder: BotToastInit(), //1. call BotToastInit
+            builder: BotToastInit(),
             navigatorObservers: [BotToastNavigatorObserver()],
             debugShowCheckedModeBanner: false,
             navigatorKey: navigatorKey,

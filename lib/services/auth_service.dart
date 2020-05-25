@@ -186,17 +186,18 @@ class AuthService {
               .get();
 
           if (family.data == null || family.data.isEmpty) {
-            navigatorKey.currentState.pushReplacement(
+            navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (_) => FamilySignup(
                   user: user,
                   phoneNo: phone,
                 ),
               ),
+              (v) => false,
             );
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'family');
-            navigatorKey.currentState.pushReplacement(
+            navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (_) => Wrapper(
                   child: HomeScreen(
@@ -207,6 +208,7 @@ class AuthService {
                   ),
                 ),
               ),
+              (v) => false,
             );
           }
         }
@@ -220,15 +222,16 @@ class AuthService {
               .get();
 
           if (org.data == null || org.data.isEmpty) {
-            navigatorKey.currentState.pushReplacement(
+            navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (_) => OrgiziationSignup(user: user),
               ),
+              (route) => false,
             );
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'organisation');
             checkLocationPermision(
-              navigateToMap: () => navigatorKey.currentState.pushReplacement(
+              navigateToMap: () => navigatorKey.currentState.pushAndRemoveUntil(
                 CupertinoPageRoute(
                   builder: (_) => Wrapper(
                     child: HomeScreen(
@@ -239,6 +242,7 @@ class AuthService {
                     ),
                   ),
                 ),
+                (route) => false,
               ),
             );
           }
@@ -253,7 +257,7 @@ class AuthService {
               .get();
           if (admin.data != null && admin.data.isNotEmpty) {
             await SharedPrefs().setUser(phone, user.uid, 'admin');
-            navigatorKey.currentState.pushReplacement(
+            navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
                 builder: (_) => Wrapper(
                   child: HomeScreen(
@@ -265,6 +269,7 @@ class AuthService {
                   ),
                 ),
               ),
+              (v) => false,
             );
           } else {
             showCostumeAuthErrorNotif('عذرا انت لست ادمن');

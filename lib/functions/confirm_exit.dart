@@ -22,7 +22,10 @@ Widget conformExit(BuildContext c) => AlertDialog(
             'نعم',
             style: textStyle,
           ),
-          onPressed: SystemNavigator.pop,
+          onPressed: () {
+            Navigator.pop(c, false);
+            Navigator.pop(c, false);
+          },
         ),
       ],
     );
