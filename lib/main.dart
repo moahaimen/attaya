@@ -5,44 +5,33 @@ import './screens/HomeScreen.dart';
 import './services/size_config.dart';
 import './services/shered_Preference.dart';
 import './screens/authentication/authenticate.dart';
+import './models/user.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+User _user;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  final user = await SharedPrefs().getUser();
-  user == null
-      ? runApp(
-          MaterialApp(
-            showSemanticsDebugger: false,
-            builder: BotToastInit(),
-            navigatorObservers: [BotToastNavigatorObserver()],
-            debugShowCheckedModeBanner: false,
-            navigatorKey: navigatorKey,
-            home: Wrapper(child: Authenticate()),
-          ),
-        )
-      : runApp(
-          MaterialApp(
-            builder: BotToastInit(),
-            navigatorObservers: [BotToastNavigatorObserver()],
-            debugShowCheckedModeBanner: false,
-            navigatorKey: navigatorKey,
-            home: Wrapper(
-              child: HomeScreen(user: user),
-            ),
-          ),
-        );
+  _user = await SharedPrefs().getUser();
+  runApp(
+    MaterialApp(
+        showSemanticsDebugger: false,
+        builder: BotToastInit(),
+        navigatorObservers: [BotToastNavigatorObserver()],
+        debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
+        home: Wrapper(isLogedIn: _user == null ? false : true)),
+  );
 }
 
 class Wrapper extends StatelessWidget {
-  final Widget child;
+  final bool isLogedIn;
 
-  const Wrapper({@required this.child});
+  const Wrapper({@required this.isLogedIn});
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return child;
+    return isLogedIn ? HomeScreen() : Authenticate();
   }
 }

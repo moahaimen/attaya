@@ -5,12 +5,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../main.dart';
 import '../models/user.dart';
 import '../consts/consts.dart';
 import '../services/data_base.dart';
-import '../screens/HomeScreen.dart';
 import '../services/shered_Preference.dart';
 import '../screens/authentication/authenticate.dart';
 import '../functions/check_location_permission.dart';
@@ -43,9 +43,7 @@ Future showCostumeAuthErrorNotif(String title) async {
   await Future.delayed(const Duration(seconds: 2));
   navigatorKey.currentState.pushReplacement(
     CupertinoPageRoute(
-      builder: (_) => Wrapper(
-        child: Authenticate(),
-      ),
+      builder: (_) => const Wrapper(isLogedIn: false),
     ),
   );
 }
@@ -127,7 +125,8 @@ class AuthService {
       showCostumeAuthErrorNotif('الرجاء التاكد من اتصالك بالانترنت');
       addStatus('Please check your internet connection and try again');
     } else {
-      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif(
+          '${authException.message}\n خطا ما، الرجاء المحاولة لاحقا');
       addStatus(
           'Something has gone wrong, please try later ${authException.message}');
     }
@@ -150,7 +149,7 @@ class AuthService {
     }).catchError((error) {
       addState(PhoneAuthState.Error);
       addStatus('Something has gone wrong, please try later $error');
-      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
+      showCostumeAuthErrorNotif('$error\nحدث خطا ما، الرجاء المحاولة لاحقا');
     });
   };
 
@@ -167,7 +166,13 @@ class AuthService {
       addState(PhoneAuthState.Verified);
       onAuthenticationSuccessful(user: result.user);
     }).catchError((error) {
-      showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
+      if (error is PlatformException) {
+        if (error.code == 'ERROR_INVALID_VERIFICATION_CODE') {
+          showCostumeAuthErrorNotif('رقم التاكيد اللذي ادخلته غير صحيح');
+        }
+      } else {
+        showCostumeAuthErrorNotif('حدث خطا ما، الرجاء المحاولة لاحقا');
+      }
       addState(PhoneAuthState.Error);
       addStatus(
           'Something has gone wrong, please try later(signInWithPhoneNumber) $error');
@@ -199,14 +204,7 @@ class AuthService {
             await SharedPrefs().setUser(phone, user.uid, 'family');
             navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
-                builder: (_) => Wrapper(
-                  child: HomeScreen(
-                    user: User(
-                        uid: user.uid,
-                        phoneNo: phone,
-                        userType: UserType.family),
-                  ),
-                ),
+                builder: (_) => const Wrapper(isLogedIn: true),
               ),
               (v) => false,
             );
@@ -233,14 +231,7 @@ class AuthService {
             checkLocationPermision(
               navigateToMap: () => navigatorKey.currentState.pushAndRemoveUntil(
                 CupertinoPageRoute(
-                  builder: (_) => Wrapper(
-                    child: HomeScreen(
-                      user: User(
-                          uid: user.uid,
-                          phoneNo: phone,
-                          userType: UserType.organisation),
-                    ),
-                  ),
+                  builder: (_) => const Wrapper(isLogedIn: true),
                 ),
                 (route) => false,
               ),
@@ -259,15 +250,7 @@ class AuthService {
             await SharedPrefs().setUser(phone, user.uid, 'admin');
             navigatorKey.currentState.pushAndRemoveUntil(
               CupertinoPageRoute(
-                builder: (_) => Wrapper(
-                  child: HomeScreen(
-                    user: User(
-                      uid: user.uid,
-                      phoneNo: phone,
-                      userType: UserType.admin,
-                    ),
-                  ),
-                ),
+                builder: (_) => const Wrapper(isLogedIn: true),
               ),
               (v) => false,
             );

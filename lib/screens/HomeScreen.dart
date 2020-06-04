@@ -8,15 +8,12 @@ import '../consts/loading.dart';
 import '../services/data_base.dart';
 import '../models/organization.dart';
 import '../consts/costume_nav_bar.dart';
-import '../functions/confirm_exit.dart';
 import '../screens/shared/map_screen.dart';
+import '../services/shered_Preference.dart';
 import '../screens/admin/control_panel.dart';
 import '../screens/family/family_account.dart';
 
 class HomeScreen extends StatefulWidget {
-  final User user;
-
-  const HomeScreen({this.user});
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -24,19 +21,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return OrientationBuilder(
-          builder: (context, orientation) {
-            if (widget.user.userType == UserType.admin) {
-              return const AdminHomeScreen();
-            } else if (widget.user.userType == UserType.organisation) {
-              return OrganizationHomeScreen(user: widget.user);
-            } else if (widget.user.userType == UserType.family) {
-              return FamilyHomeScreen(user: widget.user);
-            }
+    return FutureBuilder<User>(
+      future: SharedPrefs().getUser(),
+      builder: (context, snapshot) {
+        var user = snapshot.data;
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return OrientationBuilder(
+              builder: (context, orientation) {
+                if (user == null) return const Loading();
+                if (user.userType == UserType.admin) {
+                  return const AdminHomeScreen();
+                } else if (user.userType == UserType.organisation) {
+                  return OrganizationHomeScreen(user: user);
+                } else if (user.userType == UserType.family) {
+                  return FamilyHomeScreen(user: user);
+                }
 
-            return const Loading();
+                return const Loading();
+              },
+            );
           },
         );
       },
@@ -49,14 +53,10 @@ class AdminHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => showDialog<bool>(
-          context: context, builder: (c) => conformExit(context)),
-      child: Scaffold(
-        appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
-        body: const ControlPanel(),
-        bottomNavigationBar: const AdminNavBar(),
-      ),
+    return Scaffold(
+      appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
+      body: const ControlPanel(),
+      bottomNavigationBar: const AdminNavBar(),
     );
   }
 }
@@ -71,16 +71,12 @@ class OrganizationHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => showDialog<bool>(
-          context: context, builder: (c) => conformExit(context)),
-      child: StreamProvider<Organization>.value(
-        value: DatabaseService(user.uid).organizatioData,
-        child: Scaffold(
-          appBar: apBar('الخريطة', context, isNotsubScreen: true),
-          body: const MapScreen(isOrg: true),
-          bottomNavigationBar: const OrganizationNavBar(),
-        ),
+    return StreamProvider<Organization>.value(
+      value: DatabaseService(user.uid).organizatioData,
+      child: Scaffold(
+        appBar: apBar('الخريطة', context, isNotsubScreen: true),
+        body: const MapScreen(isOrg: true),
+        bottomNavigationBar: const OrganizationNavBar(),
       ),
     );
   }
@@ -95,17 +91,13 @@ class FamilyHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => showDialog<bool>(
-          context: context, builder: (c) => conformExit(context)),
-      child: Scaffold(
-        appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
-        body: StreamProvider<Family>.value(
-          value: DatabaseService(user.uid).familyData,
-          child: FamilyAccount(),
-        ),
-        bottomNavigationBar: const FamilyNavBar(),
+    return Scaffold(
+      appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
+      body: StreamProvider<Family>.value(
+        value: DatabaseService(user.uid).familyData,
+        child: FamilyAccount(),
       ),
+      bottomNavigationBar: const FamilyNavBar(),
     );
   }
 }

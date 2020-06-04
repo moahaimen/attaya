@@ -4,18 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../models/user.dart';
 import '../../models/family.dart';
 import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../models/location.dart';
 import '../../services/data_base.dart';
-import '../../screens/HomeScreen.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
 import '../../functions/check_location_permission.dart';
-import '../../screens/authentication/authenticate.dart';
 
 class FamilySignup extends StatefulWidget {
   final FirebaseUser user;
@@ -205,79 +202,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                         child: buttonRedShape(
                                           'انشاء الحساب',
                                           context,
-                                          () async {
-                                            if (_formkey.currentState
-                                                    .validate() &&
-                                                location != null) {
-                                              final newFamily = Family(
-                                                id: widget.user.uid,
-                                                headOfFamily:
-                                                    fullFamilyaNameController
-                                                        .text,
-                                                province:
-                                                    provinceController.text,
-                                                city: cityController.text,
-                                                phoneNo:
-                                                    widget.phoneNo.replaceAll('+964','0'),
-                                                location: Location(
-                                                  longitude: location.longitude,
-                                                  latitude: location.latitude,
-                                                ),
-                                                timeStamp: DateTime.now(),
-                                                isNeedHelp: true,
-                                                noOfMembers: int.parse(
-                                                    familyCountController.text),
-                                                nearestKnownPoint:
-                                                    nearPointController.text,
-                                              );
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              try {
-                                                await DatabaseService(
-                                                        widget.user.uid)
-                                                    .updateFamilyData(
-                                                        newFamily);
-                                                // navige to the home page
-                                                await SharedPrefs().setUser(
-                                                  widget.phoneNo,
-                                                  widget.user.uid,
-                                                  'family',
-                                                );
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                  CupertinoPageRoute(
-                                                    builder: (_) => Wrapper(
-                                                      child: HomeScreen(
-                                                        user: User(
-                                                          uid: widget.user.uid,
-                                                          phoneNo:
-                                                              widget.phoneNo,
-                                                          userType:
-                                                              UserType.family,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                );
-                                              } catch (e) {
-                                                await showCostumeDatabaseErrorNotif(
-                                                    e);
-                                                Navigator.of(context)
-                                                    .pushReplacement(
-                                                  CupertinoPageRoute(
-                                                    builder: (_) => Wrapper(
-                                                      child: Authenticate(),
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                            } else if (location == null) {
-                                              setState(() {
-                                                locationIsEmpty = true;
-                                              });
-                                            }
-                                          },
+                                          submmitNewAccount,
                                         ),
                                       ),
                                     ],
@@ -294,5 +219,53 @@ class _FamilySignupState extends State<FamilySignup> {
               ),
             ),
     );
+  }
+
+  void submmitNewAccount() async {
+    if (_formkey.currentState.validate() && location != null) {
+      final newFamily = Family(
+        id: widget.user.uid,
+        headOfFamily: fullFamilyaNameController.text,
+        province: provinceController.text,
+        city: cityController.text,
+        phoneNo: widget.phoneNo.replaceAll('+964', '0'),
+        location: Location(
+          longitude: location.longitude,
+          latitude: location.latitude,
+        ),
+        timeStamp: DateTime.now(),
+        isNeedHelp: true,
+        noOfMembers: int.parse(familyCountController.text),
+        nearestKnownPoint: nearPointController.text,
+      );
+      setState(() {
+        loading = true;
+      });
+      try {
+        await DatabaseService(widget.user.uid).updateFamilyData(newFamily);
+        // navige to the home page
+        await SharedPrefs().setUser(
+          widget.phoneNo,
+          widget.user.uid,
+          'family',
+        );
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(
+            builder: (_) => const Wrapper(isLogedIn: true),
+          ),
+        );
+      } catch (e) {
+        await showCostumeDatabaseErrorNotif(e);
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(
+            builder: (_) => const Wrapper(isLogedIn: false),
+          ),
+        );
+      }
+    } else if (location == null) {
+      setState(() {
+        locationIsEmpty = true;
+      });
+    }
   }
 }

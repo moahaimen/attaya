@@ -63,25 +63,7 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
                         child: buttonBlueShape(
                           'تسجيل الدخول',
                           context,
-                          () async {
-                            if (_formkey.currentState.validate()) {
-                              _formkey.currentState.save();
-                              final number =
-                                  '+964${_phoneController.text.substring(1)}';
-
-                              await AuthService.instantiate(
-                                phoneNumber: number,
-                                type: widget.userType,
-                              );
-                              Navigator.of(context).pushReplacement(
-                                CupertinoPageRoute(
-                                  builder: (_) => PhoneAuthVerify(
-                                    phoneNumber: _phoneController.text,
-                                  ),
-                                ),
-                              );
-                            }
-                          },
+                          submmitSignIn,
                         ),
                       )
                     ],
@@ -93,6 +75,25 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
         ),
       ),
     );
+  }
+
+  void submmitSignIn() async {
+    if (_formkey.currentState.validate()) {
+      _formkey.currentState.save();
+      final number = '+964${_phoneController.text.substring(1)}';
+
+      await AuthService.instantiate(
+        phoneNumber: number,
+        type: widget.userType,
+      );
+      Navigator.of(context).pushReplacement(
+        CupertinoPageRoute(
+          builder: (_) => PhoneAuthVerify(
+            phoneNumber: _phoneController.text,
+          ),
+        ),
+      );
+    }
   }
 }
 
@@ -112,7 +113,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   FocusNode focusNode4 = FocusNode();
   FocusNode focusNode5 = FocusNode();
   FocusNode focusNode6 = FocusNode();
-  String code = "";
+  String code = "000000";
   bool loading = false;
 
   @override
@@ -198,7 +199,6 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           ),
         ),
         const SizedBox(height: 20.0),
-
         loading
             ? const SizedBox(
                 width: 50,
@@ -220,29 +220,34 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           autofocus: key.contains("1") ? true : false,
           focusNode: focusNode,
           onChanged: (value) {
-            if (value.length == 1) {
-              code += value;
-              switch (code.length) {
-                case 1:
-                  FocusScope.of(context).requestFocus(focusNode2);
+            // if (value.length == 1) {
+
+            if (value.isNotEmpty) {
+              switch (key) {
+                case '1':
+                  code = code.replaceRange(0, 1, value);
                   break;
-                case 2:
-                  FocusScope.of(context).requestFocus(focusNode3);
+                case '2':
+                  code = code.replaceRange(1, 2, value);
                   break;
-                case 3:
-                  FocusScope.of(context).requestFocus(focusNode4);
+                case '3':
+                  code = code.replaceRange(2, 3, value);
                   break;
-                case 4:
-                  FocusScope.of(context).requestFocus(focusNode5);
+                case '4':
+                  code = code.replaceRange(3, 4, value);
                   break;
-                case 5:
-                  FocusScope.of(context).requestFocus(focusNode6);
+                case '5':
+                   code = code.replaceRange(4, 5, value);
+                  break;
+                case '6':
+                   code = code.replaceRange(5, 6, value);
                   break;
                 default:
-                  FocusScope.of(context).requestFocus(FocusNode());
-                  break;
               }
+
+              FocusScope.of(context).nextFocus();
             }
+            // }
           },
           maxLengthEnforced: false,
           textAlign: TextAlign.center,

@@ -4,18 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../main.dart';
-import '../../models/user.dart';
 import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../models/location.dart';
 import '../../services/data_base.dart';
-import '../../screens/HomeScreen.dart';
 import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/map_screen.dart';
 import '../../services/shered_Preference.dart';
 import '../../functions/check_location_permission.dart';
-import '../../screens/authentication/authenticate.dart';
 
 class OrgiziationSignup extends StatefulWidget {
   final FirebaseUser user;
@@ -99,7 +96,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                               child: Form(
                                 key: _formkey,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   textDirection: TextDirection.rtl,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -223,77 +220,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                       child: buttonRedShape(
                                         'انشاء الحساب',
                                         context,
-                                        () async {
-                                          if (_formkey.currentState
-                                                  .validate() &&
-                                              location != null) {
-                                            final newOrg = Organization(
-                                              id: widget.user.uid,
-                                              name: orgName.text,
-                                              managerName:
-                                                  managerNameController.text,
-                                              province: provinceController.text,
-                                              description:
-                                                  descriptionController.text,
-                                              distributionArea:
-                                                  distributionAreaController
-                                                      .text,
-                                              managerPhoneNo:
-                                                  managerPhoneNoController.text,
-                                              phoneNumber:
-                                                  phoneNumberController.text,
-                                              location: Location(
-                                                longitude: location.longitude,
-                                                latitude: location.latitude,
-                                              ),
-                                            );
-                                            setState(() {
-                                              loading = true;
-                                            });
-                                            try {
-                                              await DatabaseService(
-                                                      widget.user.uid)
-                                                  .updateOrganizationData(
-                                                      newOrg);
-
-                                              await SharedPrefs().setUser(
-                                                widget.phoneNo,
-                                                widget.user.uid,
-                                                'organisation',
-                                              );
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                CupertinoPageRoute(
-                                                  builder: (_) => Wrapper(
-                                                    child: HomeScreen(
-                                                      user: User(
-                                                        uid: widget.user.uid,
-                                                        phoneNo: widget.phoneNo,
-                                                        userType: UserType
-                                                            .organisation,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            } catch (e) {
-                                              await showCostumeDatabaseErrorNotif(
-                                                  e);
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                CupertinoPageRoute(
-                                                  builder: (_) => Wrapper(
-                                                    child: Authenticate(),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                          } else if (location == null) {
-                                            setState(() {
-                                              locationIsEmpty = true;
-                                            });
-                                          }
-                                        },
+                                        submmitNewAccount,
                                       ),
                                     )
                                   ],
@@ -309,5 +236,52 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
               ),
             ),
     );
+  }
+
+  void submmitNewAccount() async {
+    if (_formkey.currentState.validate() && location != null) {
+      final newOrg = Organization(
+        id: widget.user.uid,
+        name: orgName.text,
+        managerName: managerNameController.text,
+        province: provinceController.text,
+        description: descriptionController.text,
+        distributionArea: distributionAreaController.text,
+        managerPhoneNo: managerPhoneNoController.text,
+        phoneNumber: phoneNumberController.text,
+        location: Location(
+          longitude: location.longitude,
+          latitude: location.latitude,
+        ),
+      );
+      setState(() {
+        loading = true;
+      });
+      try {
+        await DatabaseService(widget.user.uid).updateOrganizationData(newOrg);
+
+        await SharedPrefs().setUser(
+          widget.phoneNo,
+          widget.user.uid,
+          'organisation',
+        );
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(
+            builder: (_) => const Wrapper(isLogedIn: true),
+          ),
+        );
+      } catch (e) {
+        await showCostumeDatabaseErrorNotif(e);
+        Navigator.of(context).pushReplacement(
+          CupertinoPageRoute(
+            builder: (_) => const Wrapper(isLogedIn: false),
+          ),
+        );
+      }
+    } else if (location == null) {
+      setState(() {
+        locationIsEmpty = true;
+      });
+    }
   }
 }
