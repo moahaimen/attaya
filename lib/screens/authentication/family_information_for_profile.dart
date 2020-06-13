@@ -24,6 +24,8 @@ class FamilySignup extends StatefulWidget {
 }
 
 class _FamilySignupState extends State<FamilySignup> {
+  var _muhafazat =["بغداد","البصرة","المثنى","اربيل","السليمانية","القادسية","الانبار","النجف","بابل","ديالى","دهوك","ذي قار","صلاح الدين","كربلاء","كركوك","ميسان","نينوى","واسط"];
+  var _currentItemSelected="بغداد";
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
   bool locationIsEmpty = false;
@@ -124,15 +126,64 @@ class _FamilySignupState extends State<FamilySignup> {
                                     isBlue: false,
                                   ),
                                   const SizedBox(height: 4),
-                                  CrdTxtFrmFld(
-                                    cntrTxt: provinceController,
-                                    hinttxt: 'المحافظة',
-                                    largerElseValue: 12,
-                                    smallerValue: 3,
-                                    validationifText: 'اسم المحافظة كبير جد',
-                                    validationElseText: 'ادخل اسم المحافظة',
-                                    isBlue: false,
+                                  Container(
+
+                                    width: double.infinity,
+                                    child: Card(
+
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      ),
+                                      elevation: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: ButtonTheme(
+                                          alignedDropdown: true,
+
+
+                                          child: DropdownButton<String>(
+
+                                            style: const TextStyle(
+                                              fontSize: 16.0,
+                                              fontFamily: 'Changa',
+                                              fontWeight: FontWeight.w800,
+                                              color:const Color(0xffDC9292),
+                                            ),
+                                            isExpanded: true,
+                                            items: _muhafazat.map(( String dropDownStringItem){
+                                              return DropdownMenuItem<String>(
+                                                value: dropDownStringItem,
+                                                child: SizedBox(width:200,
+                                                    child: Text(dropDownStringItem, textAlign: TextAlign.right)),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String newValueSelected){
+                                              setState(() {
+                                                this._currentItemSelected = newValueSelected;
+                                              });
+                                            },
+                                            hint:Text('اختر اسم محافظتك',
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                fontFamily: 'Changa',
+                                                fontWeight: FontWeight.w800,
+                                                color:const Color(0xffDC9292),
+                                              ),),
+                                            value: _currentItemSelected,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
+//                                  CrdTxtFrmFld(
+//                                    cntrTxt: provinceController,
+//                                    hinttxt: 'المحافظة',
+//                                    largerElseValue: 12,
+//                                    smallerValue: 3,
+//                                    validationifText: 'اسم المحافظة كبير جد',
+//                                    validationElseText: 'ادخل اسم المحافظة',
+//                                    isBlue: false,
+//                                  ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: cityController,
