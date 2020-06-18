@@ -24,8 +24,18 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
   Widget build(BuildContext context) {
     const title = 'تسجيل الدخول';
     return Scaffold(
-      appBar: apBar(
-          widget.userType == UserType.admin ? 'مرحبا بك' : title, context),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () {
+            FocusScope.of(context).unfocus();
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -35,38 +45,47 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
                 vertical: SizeConfig.screenHeight * 0.2,
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 textDirection: TextDirection.rtl,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    // height: 60.0,
-                    child: Form(
-                      key: _formkey,
-                      child: CrdTxtFrmFld(
-                        cntrTxt: _phoneController,
-                        hinttxt: 'رقم الهاتف',
-                        largerElseValue: 12,
-                        smallerValue: 11,
-                        validationifText: 'رقم الهاتف غير صحيح ادخل 11 رقما',
-                        validationElseText: 'رقم الهاتف كبير جدا',
-                      ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Image.asset(
+                      "assets/icons/sign_in.png",
+                      color: Colors.blue[900],
+                      height: 140.0,
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SizedBox(
-                        width: SizeConfig.screenWidth * 0.7,
-                        child: buttonBlueShape(
-                          'تسجيل الدخول',
-                          context,
-                          submmitSignIn,
-                        ),
-                      )
-                    ],
+                  Text(
+                    widget.userType == UserType.admin ? 'مرحبا بك' : title,
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      color: Colors.blue[900],
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Changa',
+                    ),
+                  ),
+                  const SizedBox(height: 65),
+                  Form(
+                    key: _formkey,
+                    child: CrdTxtFrmFld(
+                      cntrTxt: _phoneController,
+                      hinttxt: 'رقم الهاتف',
+                      largerElseValue: 12,
+                      smallerValue: 11,
+                      validationifText: 'رقم الهاتف غير صحيح ادخل 11 رقما',
+                      validationElseText: 'رقم الهاتف كبير جدا',
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  SizedBox(
+                    width: SizeConfig.screenWidth * 0.7,
+                    child: buttonBlueShape(
+                      'تسجيل الدخول',
+                      context,
+                      submmitSignIn,
+                    ),
                   )
                 ],
               ),
@@ -237,10 +256,10 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
                   code = code.replaceRange(3, 4, value);
                   break;
                 case '5':
-                   code = code.replaceRange(4, 5, value);
+                  code = code.replaceRange(4, 5, value);
                   break;
                 case '6':
-                   code = code.replaceRange(5, 6, value);
+                  code = code.replaceRange(5, 6, value);
                   break;
                 default:
               }

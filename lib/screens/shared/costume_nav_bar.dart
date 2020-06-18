@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../screens/shared/map_screen.dart';
-import '../services/shered_Preference.dart';
-import '../screens/family/families._list.dart';
-import '../functions/check_location_permission.dart';
-import '../screens/orignization/organisations_list.dart';
-import '../screens/orignization/organization_account.dart';
+import '../../screens/shared/map_screen.dart';
+import '../../services/shered_Preference.dart';
+import '../../screens/family/families._list.dart';
+import '../../functions/check_location_permission.dart';
+import '../../screens/orignization/organisations_list.dart';
+import '../../screens/orignization/organization_account.dart';
 
 class AdminNavBar extends StatelessWidget {
   const AdminNavBar({Key key}) : super(key: key);

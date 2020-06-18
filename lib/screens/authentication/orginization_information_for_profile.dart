@@ -10,9 +10,9 @@ import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../models/organization.dart';
 import '../../services/size_config.dart';
-import '../../screens/shared/map_screen.dart';
+import '../../functions/show_overlay.dart';
 import '../../services/shered_Preference.dart';
-import '../../functions/check_location_permission.dart';
+import '../shared/costume_province_dropdwon.dart';
 
 class OrgiziationSignup extends StatefulWidget {
   final FirebaseUser user;
@@ -30,14 +30,13 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
   bool locationIsEmpty = false;
-  LatLng location;
-
+  LatLng _location;
+  String _selectedProvince = '';
   final TextEditingController orgName = TextEditingController();
   final TextEditingController managerNameController = TextEditingController();
   final TextEditingController managerPhoneNoController =
       TextEditingController();
   final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController provinceController = TextEditingController();
   final TextEditingController distributionAreaController =
       TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
@@ -48,7 +47,6 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
     managerNameController.dispose();
     managerPhoneNoController.dispose();
     phoneNumberController.dispose();
-    provinceController.dispose();
     distributionAreaController.dispose();
     descriptionController.dispose();
     super.dispose();
@@ -147,14 +145,11 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                       isNumber: true,
                                     ),
                                     const SizedBox(height: 4),
-                                    CrdTxtFrmFld(
-                                      cntrTxt: provinceController,
-                                      hinttxt: 'المحافظة',
-                                      largerElseValue: 11,
-                                      smallerValue: 4,
-                                      validationifText: 'اسم المحافظة قصير جدت',
-                                      validationElseText: 'يرجى ادخال اسم صحيح',
-                                      isBlue: false,
+                                    SelectProvinceDropDwon(
+                                      initialValue: _selectedProvince,
+                                      onSelectedProvince: (newValue) =>
+                                          setState(() =>
+                                              _selectedProvince = newValue),
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
@@ -179,21 +174,14 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 30),
                                     FlatButton.icon(
-                                      onPressed: () async {
-                                        checkLocationPermision(
-                                          navigateToMap: () async {
-                                            location =
-                                                await Navigator.of(context)
-                                                    .push(
-                                              MaterialPageRoute(
-                                                builder: (_) => const MapScreen(
-                                                  isSelectLocation: true,
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                      },
+                                      onPressed: () => onSelectLocation(
+                                        context,
+                                        newLocation: (location) {
+                                          setState(() {
+                                            _location = location;
+                                          });
+                                        },
+                                      ),
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',
                                         color: Colors.red,
@@ -212,9 +200,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                             ),
                                           )
                                         : Container(),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
+                                    const SizedBox(height: 20),
                                     SizedBox(
                                       width: SizeConfig.screenWidth * 0.7,
                                       child: buttonRedShape(
@@ -239,19 +225,22 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
   }
 
   void submmitNewAccount() async {
-    if (_formkey.currentState.validate() && location != null) {
+    if (_selectedProvince.isEmpty) {
+      showOverlay(context: context, text: 'الرجاء اختيار المحافظة');
+    }
+    if (_formkey.currentState.validate() && _location != null) {
       final newOrg = Organization(
         id: widget.user.uid,
         name: orgName.text,
         managerName: managerNameController.text,
-        province: provinceController.text,
+        province: _selectedProvince,
         description: descriptionController.text,
         distributionArea: distributionAreaController.text,
         managerPhoneNo: managerPhoneNoController.text,
         phoneNumber: phoneNumberController.text,
         location: Location(
-          longitude: location.longitude,
-          latitude: location.latitude,
+          longitude: _location.longitude,
+          latitude: _location.latitude,
         ),
       );
       setState(() {
@@ -278,7 +267,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
           ),
         );
       }
-    } else if (location == null) {
+    } else if (_location == null) {
       setState(() {
         locationIsEmpty = true;
       });

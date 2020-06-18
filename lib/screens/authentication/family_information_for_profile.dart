@@ -10,9 +10,9 @@ import '../../consts/loading.dart';
 import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../services/size_config.dart';
-import '../../screens/shared/map_screen.dart';
+import '../../functions/show_overlay.dart';
 import '../../services/shered_Preference.dart';
-import '../../functions/check_location_permission.dart';
+import '../shared/costume_province_dropdwon.dart';
 
 class FamilySignup extends StatefulWidget {
   final FirebaseUser user;
@@ -24,17 +24,15 @@ class FamilySignup extends StatefulWidget {
 }
 
 class _FamilySignupState extends State<FamilySignup> {
-  var _muhafazat =["بغداد","البصرة","المثنى","اربيل","السليمانية","القادسية","الانبار","النجف","بابل","ديالى","دهوك","ذي قار","صلاح الدين","كربلاء","كركوك","ميسان","نينوى","واسط"];
-  var _currentItemSelected="بغداد";
+  var _selectedProvince = "";
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
   bool locationIsEmpty = false;
-  LatLng location;
+  LatLng _location;
 
   final TextEditingController familyCountController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController nearPointController = TextEditingController();
-  final TextEditingController provinceController = TextEditingController();
   final TextEditingController fullFamilyaNameController =
       TextEditingController();
 
@@ -43,14 +41,12 @@ class _FamilySignupState extends State<FamilySignup> {
     familyCountController.dispose();
     cityController.dispose();
     nearPointController.dispose();
-    provinceController.dispose();
     fullFamilyaNameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // for initiliaze size config
     SizeConfig().init(context);
     return Scaffold(
       body: loading
@@ -79,7 +75,6 @@ class _FamilySignupState extends State<FamilySignup> {
                                     padding: const EdgeInsets.only(bottom: 15),
                                     child: Image.asset(
                                       "assets/icons/family_icon.png",
-                                      //color: const Color(0xFF2356C7),
                                       height: 150.0,
                                     ),
                                   ),
@@ -126,64 +121,11 @@ class _FamilySignupState extends State<FamilySignup> {
                                     isBlue: false,
                                   ),
                                   const SizedBox(height: 4),
-                                  Container(
-
-                                    width: double.infinity,
-                                    child: Card(
-
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      elevation: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: ButtonTheme(
-                                          alignedDropdown: true,
-
-
-                                          child: DropdownButton<String>(
-
-                                            style: const TextStyle(
-                                              fontSize: 16.0,
-                                              fontFamily: 'Changa',
-                                              fontWeight: FontWeight.w800,
-                                              color:const Color(0xffDC9292),
-                                            ),
-                                            isExpanded: true,
-                                            items: _muhafazat.map(( String dropDownStringItem){
-                                              return DropdownMenuItem<String>(
-                                                value: dropDownStringItem,
-                                                child: SizedBox(width:200,
-                                                    child: Text(dropDownStringItem, textAlign: TextAlign.right)),
-                                              );
-                                            }).toList(),
-                                            onChanged: (String newValueSelected){
-                                              setState(() {
-                                                this._currentItemSelected = newValueSelected;
-                                              });
-                                            },
-                                            hint:Text('اختر اسم محافظتك',
-                                              style: const TextStyle(
-                                                fontSize: 16.0,
-                                                fontFamily: 'Changa',
-                                                fontWeight: FontWeight.w800,
-                                                color:const Color(0xffDC9292),
-                                              ),),
-                                            value: _currentItemSelected,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                  SelectProvinceDropDwon(
+                                    initialValue: _selectedProvince,
+                                    onSelectedProvince: (newValue) => setState(
+                                        () => _selectedProvince = newValue),
                                   ),
-//                                  CrdTxtFrmFld(
-//                                    cntrTxt: provinceController,
-//                                    hinttxt: 'المحافظة',
-//                                    largerElseValue: 12,
-//                                    smallerValue: 3,
-//                                    validationifText: 'اسم المحافظة كبير جد',
-//                                    validationElseText: 'ادخل اسم المحافظة',
-//                                    isBlue: false,
-//                                  ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
                                     cntrTxt: cityController,
@@ -206,25 +148,17 @@ class _FamilySignupState extends State<FamilySignup> {
                                         ' ادخل النقطة  دالة للمنزل',
                                     isBlue: false,
                                   ),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
+                                  const SizedBox(height: 20),
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
-                                    onPressed: () {
-                                      checkLocationPermision(
-                                        navigateToMap: () async {
-                                          location =
-                                              await Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => const MapScreen(
-                                                isSelectLocation: true,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
+                                    onPressed: () => onSelectLocation(
+                                      context,
+                                      newLocation: (location) {
+                                        setState(() {
+                                          _location = location;
+                                        });
+                                      },
+                                    ),
                                     icon: Image.asset(
                                       'assets/icons/map_pin_1.png',
                                       color: Colors.red,
@@ -242,9 +176,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                           ),
                                         )
                                       : Container(),
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
+                                  const SizedBox(height: 20),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: <Widget>[
@@ -273,16 +205,19 @@ class _FamilySignupState extends State<FamilySignup> {
   }
 
   void submmitNewAccount() async {
-    if (_formkey.currentState.validate() && location != null) {
+    if (_selectedProvince.isEmpty) {
+      showOverlay(context: context, text: 'الرجاء اختيار المحافظة');
+    }
+    if (_formkey.currentState.validate() && _location != null) {
       final newFamily = Family(
         id: widget.user.uid,
         headOfFamily: fullFamilyaNameController.text,
-        province: provinceController.text,
+        province: _selectedProvince,
         city: cityController.text,
         phoneNo: widget.phoneNo.replaceAll('+964', '0'),
         location: Location(
-          longitude: location.longitude,
-          latitude: location.latitude,
+          longitude: _location.longitude,
+          latitude: _location.latitude,
         ),
         timeStamp: DateTime.now(),
         isNeedHelp: true,
@@ -313,7 +248,7 @@ class _FamilySignupState extends State<FamilySignup> {
           ),
         );
       }
-    } else if (location == null) {
+    } else if (_location == null) {
       setState(() {
         locationIsEmpty = true;
       });

@@ -11,8 +11,7 @@ import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../services/send_request.dart';
 import '../../functions/show_overlay.dart';
-import '../../screens/shared/map_screen.dart';
-import '../../functions/check_location_permission.dart';
+import '../shared/costume_province_dropdwon.dart';
 
 class AddFamily extends StatefulWidget {
   final bool isAdmin;
@@ -28,13 +27,13 @@ class AddFamily extends StatefulWidget {
 }
 
 class _AddFamilyState extends State<AddFamily> {
+  var _selectedProvince = "";
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
   bool locationIsEmpty = false;
-  LatLng location;
+  LatLng _location;
 
   final TextEditingController headOfFamilyController = TextEditingController();
-  final TextEditingController provinceController = TextEditingController();
   final TextEditingController cityController = TextEditingController();
   final TextEditingController nearPointController = TextEditingController();
   final TextEditingController phoneNoController = TextEditingController();
@@ -42,7 +41,7 @@ class _AddFamilyState extends State<AddFamily> {
 
   @override
   void didChangeDependencies() {
-    if (widget.location != null) location = widget.location;
+    if (widget.location != null) _location = widget.location;
     super.didChangeDependencies();
   }
 
@@ -53,8 +52,6 @@ class _AddFamilyState extends State<AddFamily> {
     headOfFamilyController.dispose();
     nearPointController.dispose();
     phoneNoController.dispose();
-    provinceController.dispose();
-
     super.dispose();
   }
 
@@ -124,14 +121,11 @@ class _AddFamilyState extends State<AddFamily> {
                                     validationElseText: 'رجاءا ادخل  رقم صحيح',
                                   ),
                                   const SizedBox(height: 4),
-                                  CrdTxtFrmFld(
-                                    cntrTxt: provinceController,
-                                    hinttxt: 'المحافظة',
-                                    largerElseValue: 12,
-                                    smallerValue: 4,
-                                    validationElseText:
-                                        'اسم المحافظة كبير جدا ',
-                                    validationifText: 'الاسم غير صحيح',
+                                  SelectProvinceDropDwon(
+                                    initialValue: _selectedProvince,
+                                    onSelectedProvince: (newValue) => setState(
+                                        () => _selectedProvince = newValue),
+                                    isBlue: true,
                                   ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
@@ -155,25 +149,20 @@ class _AddFamilyState extends State<AddFamily> {
                                   ),
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
-                                      onPressed: () async {
-                                        checkLocationPermision(
-                                          navigateToMap: () async {
-                                            location = await Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => const MapScreen(
-                                                isSelectLocation: true,
-                                              ),
-                                            ),
-                                          );
-                                          },
-                                        );
-                                      },
+                                      onPressed: () => onSelectLocation(
+                                            context,
+                                            newLocation: (location) {
+                                              setState(() {
+                                                _location = location;
+                                              });
+                                            },
+                                          ),
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',
                                         color: Colors.red,
                                       ),
                                       label: Text(
-                                        location == null
+                                        _location == null
                                             ? 'تحديد على الخريطة'
                                             : 'تحديد مرة اخرى',
                                         style: textStyle,
@@ -186,75 +175,11 @@ class _AddFamilyState extends State<AddFamily> {
                                           ),
                                         )
                                       : Container(),
-                                  const SizedBox(
-                                    height: 30,
-                                  ),
+                                  const SizedBox(height: 30),
                                   buttonBlueShape(
                                     'اضافة العائلة',
                                     context,
-                                    () async {
-                                      if (_formkey.currentState.validate() &&
-                                          location != null) {
-                                        final _family = Family(
-                                          id: Uuid().v4(),
-                                          headOfFamily:
-                                              headOfFamilyController.text,
-                                          province: provinceController.text,
-                                          city: cityController.text,
-                                          phoneNo: phoneNoController.text,
-                                          location: Location(
-                                            longitude: location.longitude,
-                                            latitude: location.latitude,
-                                          ),
-                                          timeStamp: DateTime.now(),
-                                          isNeedHelp: true,
-                                          noOfMembers: int.parse(
-                                              familyCountController.text),
-                                          nearestKnownPoint:
-                                              nearPointController.text,
-                                        );
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        try {
-                                          if (widget.isAdmin) {
-                                            await DatabaseService(_family.id)
-                                                .updateFamilyData(_family);
-
-                                            showOverlay(
-                                                context: context,
-                                                text: 'تم اضافة العائلة');
-                                          } else {
-                                            final org =
-                                                await DatabaseService('')
-                                                    .getOrganizationData();
-
-                                            await requestAddFamily(
-                                              Request(
-                                                id: Uuid().v4(),
-                                                orgThatRequested: org.name,
-                                                deleteReason: null,
-                                                theFamily: _family,
-                                                isDeleteRequest: false,
-                                              ),
-                                            );
-                                            showOverlay(
-                                                context: context,
-                                                text:
-                                                    'تم ارسال طلب الى الادمن');
-                                          }
-                                        } catch (e) {
-                                          await showCostumeDatabaseErrorNotif(
-                                              e);
-                                        }
-
-                                        Navigator.of(context).pop();
-                                      } else if (location == null) {
-                                        setState(() {
-                                          locationIsEmpty = true;
-                                        });
-                                      }
-                                    },
+                                    onAddPressed,
                                   )
                                 ],
                               ),
@@ -268,5 +193,59 @@ class _AddFamilyState extends State<AddFamily> {
               ),
             ),
     );
+  }
+
+  void onAddPressed() async {
+    if (_selectedProvince.isEmpty) {
+      showOverlay(context: context, text: 'الرجاء اختيار المحافظة');
+    }
+    if (_formkey.currentState.validate() && _location != null) {
+      final _family = Family(
+        id: Uuid().v4(),
+        headOfFamily: headOfFamilyController.text,
+        province: _selectedProvince,
+        city: cityController.text,
+        phoneNo: phoneNoController.text,
+        location: Location(
+          longitude: _location.longitude,
+          latitude: _location.latitude,
+        ),
+        timeStamp: DateTime.now(),
+        isNeedHelp: true,
+        noOfMembers: int.parse(familyCountController.text),
+        nearestKnownPoint: nearPointController.text,
+      );
+      setState(() {
+        loading = true;
+      });
+      try {
+        if (widget.isAdmin) {
+          await DatabaseService(_family.id).updateFamilyData(_family);
+
+          showOverlay(context: context, text: 'تم اضافة العائلة');
+        } else {
+          final org = await DatabaseService('').getOrganizationData();
+
+          await requestAddFamily(
+            Request(
+              id: Uuid().v4(),
+              orgThatRequested: org.name,
+              deleteReason: null,
+              theFamily: _family,
+              isDeleteRequest: false,
+            ),
+          );
+          showOverlay(context: context, text: 'تم ارسال طلب الى الادمن');
+        }
+      } catch (e) {
+        await showCostumeDatabaseErrorNotif(e);
+      }
+
+      Navigator.of(context).pop();
+    } else if (_location == null) {
+      setState(() {
+        locationIsEmpty = true;
+      });
+    }
   }
 }

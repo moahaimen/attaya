@@ -40,9 +40,7 @@ class _SignUpState extends State<SignUp> {
                 const Text("يرجى اختيار نوع الحساب", style: emptyRedText),
               ],
             ),
-            const SizedBox(
-              height: 90,
-            ),
+            const SizedBox(height: 90),
             SizedBox(
               width: SizeConfig.screenWidth * 0.7,
               child: buttonRedShape(
@@ -60,9 +58,7 @@ class _SignUpState extends State<SignUp> {
                 },
               ),
             ),
-            const SizedBox(
-              height: 50.0,
-            ),
+            const SizedBox(height: 50.0),
             SizedBox(
               width: SizeConfig.screenWidth * 0.7,
               child: buttonRedShape(

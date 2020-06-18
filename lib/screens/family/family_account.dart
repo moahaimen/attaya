@@ -9,8 +9,7 @@ import '../../consts/loading.dart';
 import '../../models/location.dart';
 import '../../services/data_base.dart';
 import '../../functions/show_overlay.dart';
-import '../../screens/shared/map_screen.dart';
-import '../../functions/check_location_permission.dart';
+import '../shared/costume_province_dropdwon.dart';
 
 class FamilyAccount extends StatelessWidget {
   @override
@@ -117,11 +116,10 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
   bool loading = false;
   bool locationIsEmpty = false;
   bool dataLoaded = false;
-
-  LatLng location;
+  String _selectedProvince = '';
+  LatLng _location;
 
   TextEditingController headOfFamilyController;
-  TextEditingController provinceController;
   TextEditingController cityController;
   TextEditingController nearPointController;
   TextEditingController phoneNoController;
@@ -133,8 +131,7 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
       headOfFamilyController =
           TextEditingController(text: widget.familyData.headOfFamily);
       cityController = TextEditingController(text: widget.familyData.city);
-      provinceController =
-          TextEditingController(text: widget.familyData.province);
+      _selectedProvince = widget.familyData.province;
       nearPointController =
           TextEditingController(text: widget.familyData.nearestKnownPoint);
       familyCountController =
@@ -142,7 +139,7 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
       phoneNoController =
           TextEditingController(text: widget.familyData.phoneNo);
 
-      location = LatLng(widget.familyData.location.latitude,
+      _location = LatLng(widget.familyData.location.latitude,
           widget.familyData.location.longitude);
     }
 
@@ -158,7 +155,6 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
     headOfFamilyController.dispose();
     nearPointController.dispose();
     phoneNoController.dispose();
-    provinceController.dispose();
 
     super.dispose();
   }
@@ -221,14 +217,11 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                     validationElseText: 'رجاءا ادخل  رقم صحيح',
                                   ),
                                   const SizedBox(height: 4),
-                                  CrdTxtFrmFld(
-                                    cntrTxt: provinceController,
-                                    hinttxt: 'المحافظة',
-                                    largerElseValue: 12,
-                                    smallerValue: 4,
-                                    validationElseText:
-                                        'اسم المحافظة كبير جدا ',
-                                    validationifText: 'الاسم غير صحيح',
+                                  SelectProvinceDropDwon(
+                                    initialValue: _selectedProvince,
+                                    onSelectedProvince: (newValue) => setState(
+                                        () => _selectedProvince = newValue),
+                                    isBlue: true,
                                   ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
@@ -252,26 +245,20 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                   ),
                                   const SizedBox(height: 30),
                                   FlatButton.icon(
-                                    onPressed: () async {
-                                      checkLocationPermision(
-                                        navigateToMap: () async {
-                                          location =
-                                              await Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => const MapScreen(
-                                                isSelectLocation: true,
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      );
-                                    },
+                                    onPressed: () => onSelectLocation(
+                                      context,
+                                      newLocation: (location) {
+                                        setState(() {
+                                          _location = location;
+                                        });
+                                      },
+                                    ),
                                     icon: Image.asset(
                                       'assets/icons/map_pin_1.png',
                                       color: Colors.red,
                                     ),
                                     label: Text(
-                                      location == null
+                                      _location == null
                                           ? 'تحديد على الخريطة'
                                           : 'تحديد مرة اخرى',
                                       style: textStyle,
@@ -291,49 +278,7 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                   buttonBlueShape(
                                     'تحديث المعلومات',
                                     context,
-                                    () async {
-                                      if (_formkey.currentState.validate()) {
-                                        final _family = Family(
-                                          id: widget.familyData.id,
-                                          headOfFamily:
-                                              headOfFamilyController.text,
-                                          province: provinceController.text,
-                                          city: cityController.text,
-                                          phoneNo: phoneNoController.text,
-                                          location: Location(
-                                            longitude: location.longitude,
-                                            latitude: location.latitude,
-                                          ),
-                                          timeStamp: DateTime.now(),
-                                          isNeedHelp:
-                                              widget.familyData.isNeedHelp,
-                                          noOfMembers: int.parse(
-                                              familyCountController.text),
-                                          nearestKnownPoint:
-                                              nearPointController.text,
-                                        );
-                                        setState(() {
-                                          loading = true;
-                                        });
-                                        try {
-                                          await DatabaseService(_family.id)
-                                              .updateFamilyData(_family);
-
-                                          showOverlay(
-                                              context: context,
-                                              text: 'تم تحديث معلومات العائلة');
-                                        } catch (e) {
-                                          await showCostumeDatabaseErrorNotif(
-                                              e);
-                                        }
-
-                                        Navigator.of(context).pop();
-                                      } else if (location == null) {
-                                        setState(() {
-                                          locationIsEmpty = true;
-                                        });
-                                      }
-                                    },
+                                    onUpdatePressed,
                                   )
                                 ],
                               ),
@@ -347,5 +292,44 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
               ),
             ),
     );
+  }
+
+  void onUpdatePressed() async {
+    if (_selectedProvince.isEmpty) {
+      showOverlay(context: context, text: 'الرجاء اختيار المحافظة');
+    }
+    if (_formkey.currentState.validate()) {
+      final _family = Family(
+        id: widget.familyData.id,
+        headOfFamily: headOfFamilyController.text,
+        province: _selectedProvince,
+        city: cityController.text,
+        phoneNo: phoneNoController.text,
+        location: Location(
+          longitude: _location.longitude,
+          latitude: _location.latitude,
+        ),
+        timeStamp: DateTime.now(),
+        isNeedHelp: widget.familyData.isNeedHelp,
+        noOfMembers: int.parse(familyCountController.text),
+        nearestKnownPoint: nearPointController.text,
+      );
+      setState(() {
+        loading = true;
+      });
+      try {
+        await DatabaseService(_family.id).updateFamilyData(_family);
+
+        showOverlay(context: context, text: 'تم تحديث معلومات العائلة');
+      } catch (e) {
+        await showCostumeDatabaseErrorNotif(e);
+      }
+
+      Navigator.of(context).pop();
+    } else if (_location == null) {
+      setState(() {
+        locationIsEmpty = true;
+      });
+    }
   }
 }

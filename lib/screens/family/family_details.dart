@@ -45,10 +45,17 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                     : Directionality(
                         textDirection: TextDirection.rtl,
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: SingleChildScrollView(
                             child: Column(
                               children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Image.asset(
+                                    "assets/icons/familycolored.png",
+                                    height: 140.0,
+                                  ),
+                                ),
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
@@ -103,9 +110,7 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                         'ارسال رسالة للعائلة', context, () {
                                       sendMessage(familyObj.phoneNo);
                                     }),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
+                                    const SizedBox(height: 20),
                                     FlatButton.icon(
                                       icon: Image.asset(
                                         'assets/icons/map_pin_1.png',

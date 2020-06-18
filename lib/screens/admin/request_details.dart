@@ -34,9 +34,7 @@ class _RequestDetailsState extends State<RequestDetails> {
                   'الموافقة على $type عائلة',
                   style: textStyle.copyWith(fontSize: 30),
                 ),
-                const SizedBox(
-                  height: 30,
-                ),
+                const SizedBox(height: 30),
                 Container(
                   padding: const EdgeInsets.all(15),
                   decoration: BoxDecoration(

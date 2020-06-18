@@ -69,9 +69,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 40,
-                      ),
+                      const SizedBox(height: 40),
                       Form(
                         key: _formKey,
                         child: CrdTxtFrmFld(
@@ -84,9 +82,7 @@ class _RequestDeleteState extends State<RequestDelete> {
                           cntrTxt: deleteReasonController,
                         ),
                       ),
-                      const SizedBox(
-                        height: 40,
-                      ),
+                      const SizedBox(height: 40),
                       buttonRedShape('حذف العائلة', context, () async {
                         setState(() {
                           isLoading = true;

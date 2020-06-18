@@ -37,15 +37,11 @@ class _ConformDeleteState extends State<ConformDelete> {
                       style: textStyle.copyWith(fontSize: 30),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(
-                      height: 40,
-                    ),
+                    const SizedBox(height: 40),
                     buttonBlueShape('لا', context, () {
                       Navigator.of(context).pop();
                     }),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    const SizedBox(height: 10),
                     buttonRedShape(
                       'نعم',
                       context,

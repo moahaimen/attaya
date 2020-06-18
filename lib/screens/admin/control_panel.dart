@@ -125,9 +125,7 @@ class ControlPanelButton extends StatelessWidget {
         child: Row(
           children: <Widget>[
             imageIcon,
-            const SizedBox(
-              width: 5,
-            ),
+            const SizedBox(width: 5),
             Text(
               lable,
               style: textStyle,

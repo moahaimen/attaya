@@ -1,7 +1,10 @@
 // import 'package:attayairaq/services/size_config.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../services/auth_service.dart';
+import '../screens/shared/map_screen.dart';
+import '../functions/check_location_permission.dart';
 
 TextStyle textStyle = const TextStyle(
   fontSize: 18,
@@ -13,7 +16,7 @@ TextStyle textStyle = const TextStyle(
 const cardBorderTextstyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
-  fontSize: 16.0,
+  fontSize: 20.0,
   fontFamily: 'Changa',
 );
 
@@ -45,6 +48,21 @@ const emptyRedText = TextStyle(
   fontWeight: FontWeight.w900,
   color: Color(0xFFC95555),
 );
+
+void onSelectLocation(
+  BuildContext context, {
+  @required Function(LatLng location) newLocation,
+}) async {
+  checkLocationPermision(
+    navigateToMap: () async {
+      final location = await Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (_) => const MapScreen(isSelectLocation: true)),
+      );
+      newLocation(location);
+    },
+  );
+}
 
 Card buttonBlueShape(
   String titleOfButton,
@@ -228,7 +246,6 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
                       FlatButton(
                         child: Text(
                           'نعم',
-                          
                           style: textStyle.copyWith(color: Colors.red),
                         ),
                         onPressed: AuthService().signOut,

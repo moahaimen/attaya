@@ -9,8 +9,8 @@ import '../../services/data_base.dart';
 import '../../models/organization.dart';
 import '../../services/size_config.dart';
 import '../../screens/shared/about.dart';
-import '../../screens/shared/map_screen.dart';
-import '../../functions/check_location_permission.dart';
+import '../../functions/show_overlay.dart';
+import '../shared/costume_province_dropdwon.dart';
 
 class OrganizationAccount extends StatelessWidget {
   final String uid;
@@ -80,9 +80,7 @@ class OrganizationAccount extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Row(
@@ -142,14 +140,13 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
   final _formkey = GlobalKey<FormState>();
   bool loading = false;
   bool dataLoaded = false;
-
-  LatLng location;
+  String _selectedProvince = '';
+  LatLng _location;
 
   TextEditingController orgName,
       managerNameController,
       managerPhoneNoController,
       phoneNumberController,
-      provinceController,
       distributionAreaController,
       descriptionController;
 
@@ -159,7 +156,7 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
       orgName = TextEditingController(text: widget.orgData.name);
       managerNameController =
           TextEditingController(text: widget.orgData.managerName);
-      provinceController = TextEditingController(text: widget.orgData.province);
+      _selectedProvince = widget.orgData.province;
       managerPhoneNoController =
           TextEditingController(text: widget.orgData.managerPhoneNo);
       phoneNumberController =
@@ -170,7 +167,7 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
       descriptionController =
           TextEditingController(text: widget.orgData.description);
 
-      location = LatLng(
+      _location = LatLng(
         widget.orgData.location.latitude,
         widget.orgData.location.longitude,
       );
@@ -187,7 +184,6 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
     managerNameController.dispose();
     managerPhoneNoController.dispose();
     phoneNumberController.dispose();
-    provinceController.dispose();
     distributionAreaController.dispose();
     descriptionController.dispose();
     super.dispose();
@@ -279,15 +275,12 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
                                         isNumber: true,
                                       ),
                                       const SizedBox(height: 4),
-                                      CrdTxtFrmFld(
-                                        cntrTxt: provinceController,
-                                        hinttxt: 'المحافظة',
-                                        largerElseValue: 11,
-                                        smallerValue: 4,
-                                        validationifText:
-                                            'اسم المحافظة قصير جدت',
-                                        validationElseText:
-                                            'يرجى ادخال اسم صحيح',
+                                      SelectProvinceDropDwon(
+                                        initialValue: _selectedProvince,
+                                        onSelectedProvince: (newValue) =>
+                                            setState(() =>
+                                                _selectedProvince = newValue),
+                                        isBlue: true,
                                       ),
                                       const SizedBox(height: 4),
                                       CrdTxtFrmFld(
@@ -310,82 +303,32 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
                                       ),
                                       const SizedBox(height: 30),
                                       FlatButton.icon(
-                                        onPressed: () async {
-                                          checkLocationPermision(
-                                            navigateToMap: () async {
-                                              location =
-                                                  await Navigator.of(context)
-                                                      .push(
-                                                MaterialPageRoute(
-                                                  builder: (_) =>
-                                                      const MapScreen(
-                                                    isSelectLocation: true,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        },
+                                        onPressed: () => onSelectLocation(
+                                          context,
+                                          newLocation: (location) {
+                                            setState(() {
+                                              _location = location;
+                                            });
+                                          },
+                                        ),
                                         icon: Image.asset(
                                           'assets/icons/map_pin_1.png',
                                           color: Colors.red,
                                         ),
                                         label: Text(
-                                          location == null
+                                          _location == null
                                               ? 'تحديد على الخريطة'
                                               : 'تحديد مرة اخرى',
                                           style: textStyle,
                                         ),
                                       ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
+                                      const SizedBox(height: 20),
                                       SizedBox(
                                         width: SizeConfig.screenWidth * 0.7,
                                         child: buttonBlueShape(
                                           'تحديث المعلومات',
                                           context,
-                                          () async {
-                                            if (_formkey.currentState
-                                                .validate()) {
-                                              final org = Organization(
-                                                id: widget.orgData.id,
-                                                name: orgName.text,
-                                                managerName:
-                                                    managerNameController.text,
-                                                province:
-                                                    provinceController.text,
-                                                description:
-                                                    descriptionController.text,
-                                                distributionArea:
-                                                    distributionAreaController
-                                                        .text,
-                                                managerPhoneNo:
-                                                    managerPhoneNoController
-                                                        .text,
-                                                phoneNumber:
-                                                    phoneNumberController.text,
-                                                location: Location(
-                                                  longitude: location.longitude,
-                                                  latitude: location.latitude,
-                                                ),
-                                              );
-                                              setState(() {
-                                                loading = true;
-                                              });
-                                              try {
-                                                await DatabaseService(
-                                                        widget.orgData.id)
-                                                    .updateOrganizationData(
-                                                        org);
-                                              } catch (e) {
-                                                await showCostumeDatabaseErrorNotif(
-                                                    e);
-                                              }
-
-                                              Navigator.of(context).pop();
-                                            }
-                                          },
+                                          onUpdatePressed,
                                         ),
                                       )
                                     ],
@@ -402,5 +345,37 @@ class _EditOrganizationAccountState extends State<EditOrganizationAccount> {
               ),
             ),
     );
+  }
+
+  void onUpdatePressed() async {
+    if (_selectedProvince.isEmpty) {
+      showOverlay(context: context, text: 'الرجاء اختيار المحافظة');
+    }
+    if (_formkey.currentState.validate()) {
+      final org = Organization(
+        id: widget.orgData.id,
+        name: orgName.text,
+        managerName: managerNameController.text,
+        province: _selectedProvince,
+        description: descriptionController.text,
+        distributionArea: distributionAreaController.text,
+        managerPhoneNo: managerPhoneNoController.text,
+        phoneNumber: phoneNumberController.text,
+        location: Location(
+          longitude: _location.longitude,
+          latitude: _location.latitude,
+        ),
+      );
+      setState(() {
+        loading = true;
+      });
+      try {
+        await DatabaseService(widget.orgData.id).updateOrganizationData(org);
+      } catch (e) {
+        await showCostumeDatabaseErrorNotif(e);
+      }
+
+      Navigator.of(context).pop();
+    }
   }
 }

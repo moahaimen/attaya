@@ -7,7 +7,7 @@ import '../consts/consts.dart';
 import '../consts/loading.dart';
 import '../services/data_base.dart';
 import '../models/organization.dart';
-import '../consts/costume_nav_bar.dart';
+import './shared/costume_nav_bar.dart';
 import '../screens/shared/map_screen.dart';
 import '../services/shered_Preference.dart';
 import '../screens/admin/control_panel.dart';
