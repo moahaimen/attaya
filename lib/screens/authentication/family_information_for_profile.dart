@@ -30,18 +30,17 @@ class _FamilySignupState extends State<FamilySignup> {
   bool locationIsEmpty = false;
   LatLng _location;
 
-  final TextEditingController familyCountController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController nearPointController = TextEditingController();
-  final TextEditingController fullFamilyaNameController =
-      TextEditingController();
+  final _familyCountController = TextEditingController();
+  final _cityController = TextEditingController();
+  final _nearPointController = TextEditingController();
+  final _fullFamilyaNameController = TextEditingController();
 
   @override
   void dispose() {
-    familyCountController.dispose();
-    cityController.dispose();
-    nearPointController.dispose();
-    fullFamilyaNameController.dispose();
+    _familyCountController.dispose();
+    _cityController.dispose();
+    _nearPointController.dispose();
+    _fullFamilyaNameController.dispose();
     super.dispose();
   }
 
@@ -98,7 +97,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                 children: <Widget>[
                                   const SizedBox(height: 30),
                                   CrdTxtFrmFld(
-                                    cntrTxt: fullFamilyaNameController,
+                                    cntrTxt: _fullFamilyaNameController,
                                     hinttxt: 'اسم رب العائلة: الاسم الثلاثي',
                                     largerElseValue: 30,
                                     smallerValue: 11,
@@ -111,7 +110,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                   ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
-                                    cntrTxt: familyCountController,
+                                    cntrTxt: _familyCountController,
                                     hinttxt: 'عدد افراد الاسرة',
                                     isNumber: true,
                                     largerElseValue: 2,
@@ -128,7 +127,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                   ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
-                                    cntrTxt: cityController,
+                                    cntrTxt: _cityController,
                                     hinttxt: 'المنطقة',
                                     largerElseValue: 22,
                                     smallerValue: 3,
@@ -138,7 +137,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                   ),
                                   const SizedBox(height: 4),
                                   CrdTxtFrmFld(
-                                    cntrTxt: nearPointController,
+                                    cntrTxt: _nearPointController,
                                     hinttxt: 'اقرب نقطة دالة للمنزل',
                                     largerElseValue: 22,
                                     smallerValue: 3,
@@ -155,7 +154,7 @@ class _FamilySignupState extends State<FamilySignup> {
                                       context,
                                       newLocation: (location) {
                                         setState(() {
-                                          _location = location;
+                                          _location = location ?? _location;
                                         });
                                       },
                                     ),
@@ -211,9 +210,9 @@ class _FamilySignupState extends State<FamilySignup> {
     if (_formkey.currentState.validate() && _location != null) {
       final newFamily = Family(
         id: widget.user.uid,
-        headOfFamily: fullFamilyaNameController.text,
+        headOfFamily: _fullFamilyaNameController.text,
         province: _selectedProvince,
-        city: cityController.text,
+        city: _cityController.text,
         phoneNo: widget.phoneNo.replaceAll('+964', '0'),
         location: Location(
           longitude: _location.longitude,
@@ -221,8 +220,8 @@ class _FamilySignupState extends State<FamilySignup> {
         ),
         timeStamp: DateTime.now(),
         isNeedHelp: true,
-        noOfMembers: int.parse(familyCountController.text),
-        nearestKnownPoint: nearPointController.text,
+        noOfMembers: int.parse(_familyCountController.text),
+        nearestKnownPoint: _nearPointController.text,
       );
       setState(() {
         loading = true;

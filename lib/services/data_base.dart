@@ -9,8 +9,8 @@ import '../models/request.dart';
 import '../models/organization.dart';
 import '../services/shered_Preference.dart';
 
+///this func. will show in-app notification if there is no internet
 Future<void> showCostumeDatabaseErrorNotif(String title) async {
-  //this func. will show in-app notification if there is no internet
   await Future.delayed(const Duration(seconds: 1));
   BotToast.showNotification(
     title: (child) {
@@ -56,8 +56,8 @@ class DatabaseService {
       Firestore.instance.collection('requests');
 
 // family functions
+  ///this can be used to add new family or update an exsisting one
   Future updateFamilyData(Family family) async {
-    //this can be used to add new family or update an exsisting one
     if (await connected()) {
       await familiesCollection.document(uid).setData(
         {
@@ -101,8 +101,8 @@ class DatabaseService {
     }
   }
 
+  ///this can be used to delete family and only can be used by the admin
   Future deleteFamily() async {
-    //this can be used to delete family and only can be used by the admin
     if (await connected()) {
       await familiesCollection.document(uid).delete();
     } else {
@@ -133,8 +133,8 @@ class DatabaseService {
 
   //org function
 
+  ///this can be used to add new organization or update an exsisting one
   Future updateOrganizationData(Organization organization) async {
-    //this can be used to add new organization or update an exsisting one
     if (await connected()) {
       organizationsCollection.document(uid).setData(
         {
@@ -190,8 +190,8 @@ class DatabaseService {
     return org;
   }
 
+  ///this can be used to delete organization and only can be used by the admin
   Future deleteOrg() async {
-    //this can be used to delete organization and only can be used by the admin
     if (await connected()) {
       await organizationsCollection.document(uid).delete();
     } else {

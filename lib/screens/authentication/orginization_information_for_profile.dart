@@ -32,23 +32,21 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
   bool locationIsEmpty = false;
   LatLng _location;
   String _selectedProvince = '';
-  final TextEditingController orgName = TextEditingController();
-  final TextEditingController managerNameController = TextEditingController();
-  final TextEditingController managerPhoneNoController =
-      TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController distributionAreaController =
-      TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
+  final _orgName = TextEditingController();
+  final _managerNameController = TextEditingController();
+  final _managerPhoneNoController = TextEditingController();
+  final _phoneNumberController = TextEditingController();
+  final _distributionAreaController = TextEditingController();
+  final _descriptionController = TextEditingController();
 
   @override
   void dispose() {
-    orgName.dispose();
-    managerNameController.dispose();
-    managerPhoneNoController.dispose();
-    phoneNumberController.dispose();
-    distributionAreaController.dispose();
-    descriptionController.dispose();
+    _orgName.dispose();
+    _managerNameController.dispose();
+    _managerPhoneNoController.dispose();
+    _phoneNumberController.dispose();
+    _distributionAreaController.dispose();
+    _descriptionController.dispose();
     super.dispose();
   }
 
@@ -100,7 +98,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                   children: <Widget>[
                                     const SizedBox(height: 30),
                                     CrdTxtFrmFld(
-                                      cntrTxt: orgName,
+                                      cntrTxt: _orgName,
                                       hinttxt: 'اسم المنظمة او الفريق التطوعي',
                                       largerElseValue: 30,
                                       smallerValue: 3,
@@ -111,7 +109,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
-                                      cntrTxt: managerNameController,
+                                      cntrTxt: _managerNameController,
                                       hinttxt: 'اسم المدير الثلاثي',
                                       largerElseValue: 50,
                                       smallerValue: 3,
@@ -121,7 +119,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
-                                      cntrTxt: managerPhoneNoController,
+                                      cntrTxt: _managerPhoneNoController,
                                       hinttxt:
                                           'رقم مدير المنظمة او الفريق التطوعي',
                                       largerElseValue: 12,
@@ -134,7 +132,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
-                                      cntrTxt: phoneNumberController,
+                                      cntrTxt: _phoneNumberController,
                                       hinttxt:
                                           'رقم التواصل مع المنظمة او الفريق التطوعي',
                                       largerElseValue: 12,
@@ -153,7 +151,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
-                                      cntrTxt: distributionAreaController,
+                                      cntrTxt: _distributionAreaController,
                                       hinttxt: 'اماكن التوزيع داخل المحافظة',
                                       largerElseValue: 100,
                                       smallerValue: 4,
@@ -163,7 +161,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 4),
                                     CrdTxtFrmFld(
-                                      cntrTxt: descriptionController,
+                                      cntrTxt: _descriptionController,
                                       hinttxt: 'وصف قصير عن المنظمة',
                                       largerElseValue: 1000,
                                       smallerValue: 5,
@@ -178,7 +176,7 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                         context,
                                         newLocation: (location) {
                                           setState(() {
-                                            _location = location;
+                                            _location = location ?? _location;
                                           });
                                         },
                                       ),
@@ -231,13 +229,13 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
     if (_formkey.currentState.validate() && _location != null) {
       final newOrg = Organization(
         id: widget.user.uid,
-        name: orgName.text,
-        managerName: managerNameController.text,
+        name: _orgName.text,
+        managerName: _managerNameController.text,
         province: _selectedProvince,
-        description: descriptionController.text,
-        distributionArea: distributionAreaController.text,
-        managerPhoneNo: managerPhoneNoController.text,
-        phoneNumber: phoneNumberController.text,
+        description: _descriptionController.text,
+        distributionArea: _distributionAreaController.text,
+        managerPhoneNo: _managerPhoneNoController.text,
+        phoneNumber: _phoneNumberController.text,
         location: Location(
           longitude: _location.longitude,
           latitude: _location.latitude,

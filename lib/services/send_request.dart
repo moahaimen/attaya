@@ -6,13 +6,13 @@ import '../services/data_base.dart';
 CollectionReference requestsCollection =
     Firestore.instance.collection('requests');
 
+  ///to delete the request from the list by Admin
 Future<void> deleteRequest(String requestId) async {
-  //to delete the request from the list by Admin
   await requestsCollection.document(requestId).delete();
 }
 
+  ///request to Add Family by Organization
 Future<void> requestAddFamily(Request request) async {
-  //request to Add Family by Organization
   if (await connected()) {
     await requestsCollection.document(request.id).setData({
       'org_that_requested': request.orgThatRequested,
@@ -39,8 +39,8 @@ Future<void> requestAddFamily(Request request) async {
   }
 }
 
+  ///request to delete Family by Organization
 Future<void> sendDeleteRequestByOrg({Request request}) async {
-  //request to delete Family by Organization
   if (await connected()) {
     await requestsCollection.document(request.id).setData({
       'org_that_requested': request.orgThatRequested,
