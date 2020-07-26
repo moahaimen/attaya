@@ -8,7 +8,7 @@ import '../functions/check_location_permission.dart';
 
 TextStyle textStyle = const TextStyle(
   fontSize: 18,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
   fontWeight: FontWeight.bold,
   color: Color(0xFF130f40),
 );
@@ -17,12 +17,12 @@ const cardBorderTextstyle = TextStyle(
   color: Colors.black,
   fontWeight: FontWeight.bold,
   fontSize: 20.0,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
 );
 
 const emptyblueText = TextStyle(
   fontSize: 34.0,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
   fontWeight: FontWeight.w800,
   color: Color(0xFF2356C7),
 );
@@ -36,7 +36,7 @@ const emptyBlackTextWithShadows = TextStyle(
     ),
   ],
   fontSize: 28.0,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
   fontWeight: FontWeight.w800,
   color: Color(0xFF130f40),
 // shadows: Colors.black
@@ -44,7 +44,7 @@ const emptyBlackTextWithShadows = TextStyle(
 
 const emptyRedText = TextStyle(
   fontSize: 30.0,
-  fontFamily: 'Changa',
+  fontFamily: 'Cairo',
   fontWeight: FontWeight.w900,
   color: Color(0xFFC95555),
 );
@@ -82,7 +82,7 @@ Card buttonBlueShape(
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 20.0,
-            fontFamily: 'Changa',
+            fontFamily: 'Cairo',
             fontWeight: FontWeight.w800,
             color: Colors.white,
           ),
@@ -111,7 +111,7 @@ Card buttonRedShape(
           textAlign: TextAlign.center,
           style: const TextStyle(
             fontSize: 20.0,
-            fontFamily: 'Changa',
+            fontFamily: 'Cairo',
             fontWeight: FontWeight.w800,
             color: Colors.white,
           ),
@@ -177,7 +177,7 @@ class CrdTxtFrmFld extends StatelessWidget {
             hintText: hinttxt,
             hintStyle: TextStyle(
               fontSize: 16.0,
-              fontFamily: 'Changa',
+              fontFamily: 'Cairo',
               fontWeight: FontWeight.bold,
               color: isBlue ? const Color(0xffA5D5EB) : const Color(0xffDC9292),
             ),
@@ -212,7 +212,7 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
         fontSize: 24.0,
         color: Colors.white,
         fontWeight: FontWeight.bold,
-        fontFamily: 'Changa',
+        fontFamily: 'Cairo',
       ),
     ),
     backgroundColor: const Color(0xFF2356C7),
@@ -239,7 +239,7 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
                       FlatButton(
                         child: Text(
                           'لا',
-                          style: textStyle.copyWith(color: Colors.greenAccent),
+                          style: textStyle.copyWith(color: Colors.green),
                         ),
                         onPressed: () => Navigator.pop(context),
                       ),
@@ -254,10 +254,14 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
                   ),
                 );
               },
-              child: Text(
-                'تسجيل الخروج',
-                style: textStyle.copyWith(fontSize: 10, color: Colors.white),
+              child: Image.asset(
+                'assets/icons/sing_out.png',
+                height: 30,
               ),
+              // Text(
+              //   'تسجيل الخروج',
+              //   style: textStyle.copyWith(fontSize: 10, color: Colors.white),
+              // ),
             )
           : Container(),
     ],

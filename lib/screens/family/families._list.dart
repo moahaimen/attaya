@@ -144,6 +144,7 @@ class FamiliesList extends StatelessWidget {
                                               'حالة العائلة: ${familyList[i].isNeedHelp ? 'تطلب مساعدة' : 'لا  تطلب مساعدة'}',
                                               style: textStyle,
                                             ),
+                                            const SizedBox(height: 20),
                                             Row(
                                               mainAxisAlignment:
                                                   MainAxisAlignment
@@ -155,7 +156,7 @@ class FamiliesList extends StatelessWidget {
                                                         familyList[i].phoneNo);
                                                   },
                                                   child: Text(
-                                                    'ارسال رسالة',
+                                                    'ارسال رسالة على الهاتف',
                                                     style: textStyle.copyWith(
                                                         fontSize: 12),
                                                   ),
