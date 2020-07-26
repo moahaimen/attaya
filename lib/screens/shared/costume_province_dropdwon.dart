@@ -47,7 +47,7 @@ class SelectProvinceDropDwon extends StatelessWidget {
             child: DropdownButton<String>(
               style: TextStyle(
                 fontSize: 16.0,
-                fontFamily: 'Changa',
+                fontFamily: 'Cairo',
                 fontWeight: FontWeight.w800,
                 color:
                     isBlue ? const Color(0xffA5D5EB) : const Color(0xffDC9292),
@@ -68,7 +68,7 @@ class SelectProvinceDropDwon extends StatelessWidget {
                 'اختر محافظتك',
                 style: TextStyle(
                   fontSize: 16.0,
-                  fontFamily: 'Changa',
+                  fontFamily: 'Cairo',
                   fontWeight: FontWeight.w800,
                   color: isBlue
                       ? const Color(0xffA5D5EB)

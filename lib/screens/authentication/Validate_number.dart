@@ -1,3 +1,4 @@
+import '../../functions/show_overlay.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -63,7 +64,7 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
                       fontSize: 24.0,
                       color: Colors.blue[900],
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Changa',
+                      fontFamily: 'Cairo',
                     ),
                   ),
                   const SizedBox(height: 65),
@@ -132,7 +133,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
   FocusNode focusNode4 = FocusNode();
   FocusNode focusNode5 = FocusNode();
   FocusNode focusNode6 = FocusNode();
-  String code = "000000";
+  String code = "++++++";
   bool loading = false;
 
   @override
@@ -206,6 +207,11 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
             loading
                 ? null
                 : () async {
+                    if (code.contains("+")) {
+                      showOverlay(
+                          context: context, text: 'الرجاء ادخال 6 ارقام');
+                      return;
+                    }
                     setState(() {
                       loading = true;
                     });

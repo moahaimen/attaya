@@ -7,7 +7,6 @@ import '../../models/family.dart';
 import './editFamilt_account.dart';
 import '../../consts/loading.dart';
 
-
 class FamilyAccount extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -18,14 +17,6 @@ class FamilyAccount extends StatelessWidget {
         : ListView(
             children: <Widget>[
               const SizedBox(height: 25),
-              Text(
-                familyData.headOfFamily,
-                style: textStyle.copyWith(
-                  fontSize: 25,
-                  color: const Color.fromRGBO(19, 15, 64, 1),
-                ),
-                textAlign: TextAlign.center,
-              ),
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -99,5 +90,3 @@ class FamilyAccount extends StatelessWidget {
           );
   }
 }
-
-

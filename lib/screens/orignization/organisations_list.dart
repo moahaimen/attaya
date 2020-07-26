@@ -113,6 +113,7 @@ class OrganizationsList extends StatelessWidget {
                                         'مناطق التوزيع: ${organizationsList[i].distributionArea}',
                                         style: textStyle,
                                       ),
+                                      const SizedBox(height: 20),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
@@ -123,7 +124,7 @@ class OrganizationsList extends StatelessWidget {
                                                   .phoneNumber);
                                             },
                                             child: Text(
-                                              'ارسال رسالة',
+                                              'ارسال رسالة على الهاتف',
                                               style: textStyle.copyWith(
                                                   fontSize: 12),
                                             ),
@@ -140,7 +141,7 @@ class OrganizationsList extends StatelessWidget {
                                               );
                                             },
                                             child: Text(
-                                              'قرائة المزيد',
+                                              'قراءة المزيد',
                                               style: textStyle.copyWith(
                                                   fontSize: 12),
                                             ),

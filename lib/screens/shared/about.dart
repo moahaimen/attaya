@@ -4,19 +4,36 @@ import '../../consts/consts.dart';
 
 class About extends StatelessWidget {
   final bool isAboutApp;
+  final bool fromNavBar;
 
-  const About({this.isAboutApp});
+  const About({this.isAboutApp, this.fromNavBar = false});
 
   @override
   Widget build(BuildContext context) {
+    var title = isAboutApp ? 'حول التطبيق' : 'حول المبادرة ';
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white.withOpacity(0),
+        backgroundColor: fromNavBar
+            ? const Color.fromRGBO(35, 68, 199, 1)
+            : Colors.white.withOpacity(0),
         elevation: 0,
+        centerTitle: true,
+        title: fromNavBar
+            ? Text(
+                title,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 24.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Cairo',
+                ),
+              )
+            : null,
         leading: IconButton(
           icon: Icon(
             Icons.arrow_back_ios,
-            color: Colors.black,
+            color: fromNavBar ? Colors.white : Colors.black,
           ),
           onPressed: () {
             Navigator.of(context).pop();

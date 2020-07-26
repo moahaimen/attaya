@@ -1,4 +1,4 @@
-package com.example.attayairaq;
+package org.codeforiraq.attaya;
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity;

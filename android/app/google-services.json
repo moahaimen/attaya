@@ -8,17 +8,33 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:659535613833:android:69a2b37ca346e30cad9b58",
+        "mobilesdk_app_id": "1:659535613833:android:65734f27ebeb2677ad9b58",
         "android_client_info": {
-          "package_name": "com.example.attayairaq"
+          "package_name": "org.codeforiraq.attaya"
         }
       },
       "oauth_client": [
         {
-          "client_id": "659535613833-7pv1e6teq70bameu18o0749tuuphr7ik.apps.googleusercontent.com",
+          "client_id": "659535613833-c82hmncpaj90a7asncb5mtbc3mb9mjes.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.attayairaq",
+            "package_name": "org.codeforiraq.attaya",
+            "certificate_hash": "33cd4c1a9a20d9c2418ffb891de95ee8a9f1ef49"
+          }
+        },
+        {
+          "client_id": "659535613833-70fvn18bb3u3pfcfuhocc24pj6ip2ojr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codeforiraq.attaya",
+            "certificate_hash": "faf2a0f239a60ff82acbe8f3cf911341e20c5c00"
+          }
+        },
+        {
+          "client_id": "659535613833-gvfg55tf2mkkptv0bfnle9riq4clmlvp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.codeforiraq.attaya",
             "certificate_hash": "5c2360cd6ecd8ea72bd0a4bf3b1d36cee277dfad"
           }
         },
