@@ -10,7 +10,6 @@ import '../../services/data_base.dart';
 import '../../screens/admin/delete.dart';
 import '../../functions/send_message.dart';
 import '../../screens/shared/map_screen.dart';
-import '../../functions/check_location_permission.dart';
 import '../../screens/orignization/send_request_delete.dart';
 
 class FamilyDetails extends StatefulWidget {
@@ -122,15 +121,12 @@ class _FamilyDetailsState extends State<FamilyDetails> {
                                         style: textStyle,
                                       ),
                                       onPressed: () {
-                                        checkLocationPermision(
-                                          navigateToMap: () =>
-                                              Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (_) => MapScreen(
-                                                findOnMap: LatLng(
-                                                  familyObj.location.latitude,
-                                                  familyObj.location.longitude,
-                                                ),
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (_) => MapScreen(
+                                              findOnMap: LatLng(
+                                                familyObj.location.latitude,
+                                                familyObj.location.longitude,
                                               ),
                                             ),
                                           ),

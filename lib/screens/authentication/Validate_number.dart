@@ -30,7 +30,7 @@ class _ValidateNumberPageState extends State<ValidateNumberPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
           onPressed: () {
             FocusScope.of(context).unfocus();
             Navigator.of(context).pop();
@@ -143,7 +143,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
         backgroundColor: Colors.white.withOpacity(0),
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back_ios,
             color: Colors.black,
           ),
@@ -278,7 +278,7 @@ class _PhoneAuthVerifyState extends State<PhoneAuthVerify> {
           textAlign: TextAlign.center,
           cursorColor: Colors.black,
           keyboardType: TextInputType.number,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.w600,
             color: Colors.black,

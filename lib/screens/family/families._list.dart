@@ -14,13 +14,14 @@ import '../../screens/orignization/send_request_delete.dart';
 
 class FamiliesList extends StatelessWidget {
   final bool isAdmin;
+  final bool isNotsubScreen;
 
-  const FamiliesList({@required this.isAdmin});
+  const FamiliesList({@required this.isAdmin, this.isNotsubScreen = false});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: apBar('العوائل', context),
+      appBar: apBar('العوائل', context, isNotsubScreen: isNotsubScreen),
       body: StreamBuilder<List<Family>>(
         stream: DatabaseService('').families,
         builder: (context, snapshot) {

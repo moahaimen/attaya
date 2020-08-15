@@ -42,15 +42,15 @@ class _SearchAndFilterState extends State<SearchAndFilter> {
                 controller: widget._searchTextController,
                 textDirection: TextDirection.rtl,
                 decoration: InputDecoration(
-                  border: OutlineInputBorder(
+                  border: const OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.teal),
                   ),
                   hintText: 'بحث عن عائلة',
                   labelText: 'بحث عن عائلة',
                   isDense: true,
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                   suffixIcon: IconButton(
-                    icon: Icon(Icons.sort),
+                    icon: const Icon(Icons.sort),
                     onPressed: () {
                       setState(() => showSortingOptions = !showSortingOptions);
                     },
@@ -167,7 +167,6 @@ class _SearchAndFilterState extends State<SearchAndFilter> {
                   ),
                 )
               : Container(),
-         
         ],
       ),
     );

@@ -5,19 +5,33 @@ import '../../consts/consts.dart';
 import '../../consts/loading.dart';
 import '../../services/data_base.dart';
 import '../../models/organization.dart';
-import '../../screens/shared/about.dart';
 import './edit_orgnization_account.dart';
+import '../../services/shered_Preference.dart';
 
+class OrganizationAccount extends StatefulWidget {
+  const OrganizationAccount();
+  @override
+  _OrganizationAccountState createState() => _OrganizationAccountState();
+}
 
-class OrganizationAccount extends StatelessWidget {
-  final String uid;
+class _OrganizationAccountState extends State<OrganizationAccount> {
+  String uid;
 
-  const OrganizationAccount({this.uid});
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final user = (await SharedPrefs().getUser());
+      setState(() {
+        uid = user.uid;
+      });
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: apBar('حساب المنظمة', context),
+      appBar: apBar('حساب المنظمة', context, isNotsubScreen: true),
       body: StreamBuilder<Organization>(
           stream: DatabaseService(uid).organizatioData,
           builder: (context, snapshot) {
@@ -77,42 +91,23 @@ class OrganizationAccount extends StatelessWidget {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.all(20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          FlatButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => EditOrganizationAccount(
-                                    orgData: org,
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'تعديل المعلومات',
-                              style: textStyle.copyWith(color: Colors.black),
+                      child: FlatButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => EditOrganizationAccount(
+                                orgData: org,
+                              ),
                             ),
-                          ),
-                          FlatButton(
-                            onPressed: () {
-                              Navigator.of(context).push(
-                                CupertinoPageRoute(
-                                  builder: (_) =>
-                                      const About(isAboutApp: false),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              'حول المبادرة',
-                              style: textStyle,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
+                        child: Text(
+                          'تعديل المعلومات',
+                          style: textStyle.copyWith(color: Colors.black),
+                        ),
                       ),
                     ),
                   ],
@@ -123,4 +118,3 @@ class OrganizationAccount extends StatelessWidget {
     );
   }
 }
-

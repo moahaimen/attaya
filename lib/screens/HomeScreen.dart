@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user.dart';
+import './shared/about.dart';
 import '../models/family.dart';
-import '../consts/consts.dart';
 import '../consts/loading.dart';
 import '../services/data_base.dart';
 import '../models/organization.dart';
+import './family/families._list.dart';
 import './shared/costume_nav_bar.dart';
 import '../screens/shared/map_screen.dart';
 import '../services/shered_Preference.dart';
 import '../screens/admin/control_panel.dart';
 import '../screens/family/family_account.dart';
+import './orignization/organisations_list.dart';
+import './orignization/organization_account.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -48,20 +51,41 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class AdminHomeScreen extends StatelessWidget {
+class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({Key key}) : super(key: key);
 
   @override
+  _AdminHomeScreenState createState() => _AdminHomeScreenState();
+}
+
+class _AdminHomeScreenState extends State<AdminHomeScreen> {
+  final List<Widget> pages = [
+    const ControlPanel(hasLoginIcon: true),
+    const FamiliesList(isAdmin: true, isNotsubScreen: true),
+    const MapScreen(),
+    const OrganizationsList(isAdmin: true, isNotsubScreen: true),
+    const About(isAboutApp: false, fromNavBar: true),
+    const About(isAboutApp: true, fromNavBar: true),
+  ];
+  int currentIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: apBar('لوحة التحكم', context, isNotsubScreen: true),
-      body: const ControlPanel(),
-      bottomNavigationBar: const AdminNavBar(),
+      body: pages[currentIndex],
+      bottomNavigationBar: CustomNavBar(
+        currentIndex: currentIndex,
+        userType: UserType.admin,
+        onSelectedTap: (newIndex) {
+          setState(() {
+            currentIndex = newIndex;
+          });
+        },
+      ),
     );
   }
 }
 
-class OrganizationHomeScreen extends StatelessWidget {
+class OrganizationHomeScreen extends StatefulWidget {
   final User user;
 
   const OrganizationHomeScreen({
@@ -70,19 +94,39 @@ class OrganizationHomeScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _OrganizationHomeScreenState createState() => _OrganizationHomeScreenState();
+}
+
+class _OrganizationHomeScreenState extends State<OrganizationHomeScreen> {
+  final List<Widget> pages = [
+    const MapScreen(isOrg: true, hasLoginIcon: true),
+    const OrganizationAccount(),
+    const FamiliesList(isAdmin: false, isNotsubScreen: true),
+    const About(isAboutApp: false, fromNavBar: true),
+    const About(isAboutApp: true, fromNavBar: true),
+  ];
+  int currentIndex = 0;
+  @override
   Widget build(BuildContext context) {
-    return StreamProvider<Organization>.value(
-      value: DatabaseService(user.uid).organizatioData,
-      child: Scaffold(
-        appBar: apBar('الخريطة', context, isNotsubScreen: true),
-        body: const MapScreen(isOrg: true),
-        bottomNavigationBar: const OrganizationNavBar(),
+    return Scaffold(
+      body: StreamProvider<Organization>.value(
+        value: DatabaseService(widget.user.uid).organizatioData,
+        child: pages[currentIndex],
+      ),
+      bottomNavigationBar: CustomNavBar(
+        currentIndex: currentIndex,
+        userType: UserType.organisation,
+        onSelectedTap: (newIndex) {
+          setState(() {
+            currentIndex = newIndex;
+          });
+        },
       ),
     );
   }
 }
 
-class FamilyHomeScreen extends StatelessWidget {
+class FamilyHomeScreen extends StatefulWidget {
   final User user;
   const FamilyHomeScreen({
     Key key,
@@ -90,14 +134,33 @@ class FamilyHomeScreen extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  _FamilyHomeScreenState createState() => _FamilyHomeScreenState();
+}
+
+class _FamilyHomeScreenState extends State<FamilyHomeScreen> {
+  final List<Widget> pages = [
+    const FamilyAccount(hasLoginIcon: true),
+    const OrganizationsList(isAdmin: false, isNotsubScreen: true),
+    const About(isAboutApp: false, fromNavBar: true),
+    const About(isAboutApp: true, fromNavBar: true),
+  ];
+  int currentIndex = 0;
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: apBar('حساب العائلة', context, isNotsubScreen: true),
       body: StreamProvider<Family>.value(
-        value: DatabaseService(user.uid).familyData,
-        child: FamilyAccount(),
+        value: DatabaseService(widget.user.uid).familyData,
+        child: pages[currentIndex],
       ),
-      bottomNavigationBar: const FamilyNavBar(),
+      bottomNavigationBar: CustomNavBar(
+        currentIndex: currentIndex,
+        userType: UserType.family,
+        onSelectedTap: (newIndex) {
+          setState(() {
+            currentIndex = newIndex;
+          });
+        },
+      ),
     );
   }
 }

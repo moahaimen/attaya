@@ -96,7 +96,7 @@ class RequestsList extends StatelessWidget {
                                       ),
                                     ),
                                     const Spacer(),
-                                    Icon(Icons.arrow_forward_ios),
+                                    const Icon(Icons.arrow_forward_ios),
                                   ],
                                 ),
                               ),

@@ -12,13 +12,15 @@ import '../../screens/orignization/organization_details.dart';
 
 class OrganizationsList extends StatelessWidget {
   final bool isAdmin;
+  final bool isNotsubScreen; //If comming from navbar
 
-  const OrganizationsList({@required this.isAdmin});
+  const OrganizationsList(
+      {@required this.isAdmin, this.isNotsubScreen = false});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: apBar('المنظمات والجمعيات', context),
+      appBar: apBar('المنظمات', context, isNotsubScreen: isNotsubScreen),
       body: StreamBuilder<List<Organization>>(
         stream: DatabaseService('').organizations,
         builder: (context, snapshot) {

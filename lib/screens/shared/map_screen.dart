@@ -21,11 +21,13 @@ class MapScreen extends StatefulWidget {
   final LatLng findOnMap;
   final bool isSelectLocation;
   final bool isOrg;
+  final bool hasLoginIcon;
 
   const MapScreen({
     this.findOnMap,
     this.isSelectLocation = false,
     this.isOrg = false,
+    this.hasLoginIcon = false,
   });
   @override
   _MapScreenState createState() => _MapScreenState();
@@ -41,6 +43,18 @@ class _MapScreenState extends State<MapScreen> {
   LatLng myLocation;
   final TextEditingController searchTextController = TextEditingController();
   final _controller = Completer();
+  bool hasPremission;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final requestPremissionResult = await checkLocationPermision();
+      setState(() {
+        hasPremission = requestPremissionResult;
+      });
+    });
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -58,11 +72,12 @@ class _MapScreenState extends State<MapScreen> {
     });
 
     return Scaffold(
-      appBar: widget.isOrg ? null : apBar('الخريطة', context),
+      appBar: apBar('الخريطة', context,
+          isNotsubScreen: true, hasLoginIcon: widget.hasLoginIcon),
       body: StreamBuilder<Position>(
         stream: Stream.fromFuture(mylocation()),
         builder: (context, snapshot) {
-          if (snapshot.data != null) {
+          if (snapshot.data != null && hasPremission) {
             final position = snapshot.data;
             roads.clear();
             myLocation = LatLng(position.latitude, position.longitude);
@@ -185,8 +200,8 @@ class _MapScreenState extends State<MapScreen> {
               },
             );
           } else {
-            checkLocationPermision(navigateToMap: () {});
-            return const Loading();
+            return Center(
+                child: Text('يجب تفعيل الموقع الجغرافي', style: textStyle));
           }
         },
       ),

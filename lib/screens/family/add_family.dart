@@ -153,7 +153,8 @@ class _AddFamilyState extends State<AddFamily> {
                                             context,
                                             newLocation: (location) {
                                               setState(() {
-                                                _location = location ?? _location;
+                                                _location =
+                                                    location ?? _location;
                                               });
                                             },
                                           ),
@@ -168,7 +169,7 @@ class _AddFamilyState extends State<AddFamily> {
                                         style: textStyle,
                                       )),
                                   locationIsEmpty
-                                      ? Center(
+                                      ? const Center(
                                           child: Text(
                                             'الرجاء تحديد الموقع',
                                             style: TextStyle(color: Colors.red),

@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../services/auth_service.dart';
 import '../screens/shared/map_screen.dart';
-import '../functions/check_location_permission.dart';
 
 TextStyle textStyle = const TextStyle(
   fontSize: 18,
@@ -53,15 +52,10 @@ void onSelectLocation(
   BuildContext context, {
   @required Function(LatLng location) newLocation,
 }) async {
-  checkLocationPermision(
-    navigateToMap: () async {
-      final location = await Navigator.of(context).push(
-        MaterialPageRoute(
-            builder: (_) => const MapScreen(isSelectLocation: true)),
-      );
-      newLocation(location);
-    },
+  final location = await Navigator.of(context).push(
+    MaterialPageRoute(builder: (_) => const MapScreen(isSelectLocation: true)),
   );
+  newLocation(location);
 }
 
 Card buttonBlueShape(
@@ -202,7 +196,8 @@ class CrdTxtFrmFld extends StatelessWidget {
   }
 }
 
-AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
+AppBar apBar(String ttl, BuildContext context,
+    {bool isNotsubScreen = false, bool hasLoginIcon = false}) {
   return AppBar(
     centerTitle: true,
     title: Text(
@@ -220,11 +215,11 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
     leading: isNotsubScreen
         ? Container()
         : IconButton(
-            icon: Icon(Icons.arrow_back_ios),
+            icon: const Icon(Icons.arrow_back_ios),
             onPressed: () => Navigator.of(context).pop(),
           ),
     actions: <Widget>[
-      isNotsubScreen
+      hasLoginIcon
           ? FlatButton(
               onPressed: () {
                 showDialog(
@@ -258,10 +253,6 @@ AppBar apBar(String ttl, BuildContext context, {bool isNotsubScreen = false}) {
                 'assets/icons/sing_out.png',
                 height: 30,
               ),
-              // Text(
-              //   'تسجيل الخروج',
-              //   style: textStyle.copyWith(fontSize: 10, color: Colors.white),
-              // ),
             )
           : Container(),
     ],

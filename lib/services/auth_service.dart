@@ -13,7 +13,6 @@ import '../consts/consts.dart';
 import '../services/data_base.dart';
 import '../services/shered_Preference.dart';
 import '../screens/authentication/authenticate.dart';
-import '../functions/check_location_permission.dart';
 import '../screens/authentication/family_information_for_profile.dart';
 import '../screens/authentication/orginization_information_for_profile.dart';
 
@@ -228,13 +227,11 @@ class AuthService {
             );
           } else {
             await SharedPrefs().setUser(phone, user.uid, 'organisation');
-            checkLocationPermision(
-              navigateToMap: () => navigatorKey.currentState.pushAndRemoveUntil(
-                CupertinoPageRoute(
-                  builder: (_) => const Wrapper(isLogedIn: true),
-                ),
-                (route) => false,
+            navigatorKey.currentState.pushAndRemoveUntil(
+              CupertinoPageRoute(
+                builder: (_) => const Wrapper(isLogedIn: true),
               ),
+              (route) => false,
             );
           }
         }

@@ -171,7 +171,7 @@ class _EditFamilyAccountState extends State<EditFamilyAccount> {
                                     ),
                                   ),
                                   locationIsEmpty
-                                      ? Center(
+                                      ? const Center(
                                           child: Text(
                                             'الرجاء تحديد الموقع',
                                             style: TextStyle(color: Colors.red),

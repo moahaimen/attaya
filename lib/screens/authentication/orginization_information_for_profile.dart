@@ -172,25 +172,27 @@ class _OrgiziationSignupState extends State<OrgiziationSignup> {
                                     ),
                                     const SizedBox(height: 30),
                                     FlatButton.icon(
-                                      onPressed: () => onSelectLocation(
-                                        context,
-                                        newLocation: (location) {
-                                          setState(() {
-                                            _location = location ?? _location;
-                                          });
-                                        },
-                                      ),
-                                      icon: Image.asset(
-                                        'assets/icons/map_pin_1.png',
-                                        color: Colors.red,
-                                      ),
-                                      label: Text(
-                                        'تحديد على الخريطة',
-                                        style: textStyle,
-                                      ),
-                                    ),
+                                        onPressed: () => onSelectLocation(
+                                              context,
+                                              newLocation: (location) {
+                                                setState(() {
+                                                  _location =
+                                                      location ?? _location;
+                                                });
+                                              },
+                                            ),
+                                        icon: Image.asset(
+                                          'assets/icons/map_pin_1.png',
+                                          color: Colors.red,
+                                        ),
+                                        label: Text(
+                                          _location == null
+                                              ? 'تحديد على الخريطة'
+                                              : 'تحديد مرة اخرى',
+                                          style: textStyle,
+                                        )),
                                     locationIsEmpty
-                                        ? Center(
+                                        ? const Center(
                                             child: Text(
                                               'الرجاء تحديد الموقع',
                                               style:

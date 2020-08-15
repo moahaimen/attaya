@@ -8,88 +8,93 @@ import '../../screens/family/families._list.dart';
 import '../../screens/orignization/organisations_list.dart';
 
 class ControlPanel extends StatelessWidget {
-  const ControlPanel({Key key}) : super(key: key);
+  final bool hasLoginIcon;
+  const ControlPanel({Key key, this.hasLoginIcon = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Text(
-              'التحكم',
-              style: textStyle.copyWith(fontSize: 25),
-              textAlign: TextAlign.center,
-            ),
-            ControlPanelButton(
-              textStyle: textStyle,
-              imageIcon: Image.asset('assets/icons/add_icon.png'),
-              lable: 'اضافة عائلة',
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (_) => const AddFamily(isAdmin: true),
-                  ),
-                );
-              },
-            ),
-            ControlPanelButton(
-              textStyle: textStyle,
-              imageIcon: Image.asset('assets/icons/delete_icon.png'),
-              lable: 'حذف عائلة',
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (_) => const FamiliesList(isAdmin: true),
-                  ),
-                );
-              },
-            ),
-            ControlPanelButton(
-              textStyle: textStyle,
-              imageIcon: Image.asset('assets/icons/family.png'),
-              lable: 'طلبات الاضافة من الجمعيات',
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (_) => const RequestsList(
-                      showDeleteRequests: false,
+    return Scaffold(
+      appBar: apBar('لوحة التحكم', context,
+          isNotsubScreen: true, hasLoginIcon: hasLoginIcon),
+      body: Directionality(
+        textDirection: TextDirection.rtl,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Text(
+                'التحكم',
+                style: textStyle.copyWith(fontSize: 25),
+                textAlign: TextAlign.center,
+              ),
+              ControlPanelButton(
+                textStyle: textStyle,
+                imageIcon: Image.asset('assets/icons/add_icon.png'),
+                lable: 'اضافة عائلة',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => const AddFamily(isAdmin: true),
                     ),
-                  ),
-                );
-              },
-            ),
-            ControlPanelButton(
-              textStyle: textStyle,
-              imageIcon: Image.asset('assets/icons/delete_icon.png'),
-              lable: 'طلبات الحذف  من الجمعيات',
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (_) => const RequestsList(
-                      showDeleteRequests: true,
+                  );
+                },
+              ),
+              ControlPanelButton(
+                textStyle: textStyle,
+                imageIcon: Image.asset('assets/icons/delete_icon.png'),
+                lable: 'حذف عائلة',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => const FamiliesList(isAdmin: true),
                     ),
-                  ),
-                );
-              },
-            ),
-            ControlPanelButton(
-              textStyle: textStyle,
-              imageIcon: Image.asset('assets/icons/delete_icon.png'),
-              lable: 'حذف جمعية او فريق',
-              onPressed: () {
-                Navigator.of(context).push(
-                  CupertinoPageRoute(
-                    builder: (_) => const OrganizationsList(isAdmin: true),
-                  ),
-                );
-              },
-            ),
-          ],
+                  );
+                },
+              ),
+              ControlPanelButton(
+                textStyle: textStyle,
+                imageIcon: Image.asset('assets/icons/family.png'),
+                lable: 'طلبات الاضافة من الجمعيات',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => const RequestsList(
+                        showDeleteRequests: false,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ControlPanelButton(
+                textStyle: textStyle,
+                imageIcon: Image.asset('assets/icons/delete_icon.png'),
+                lable: 'طلبات الحذف  من الجمعيات',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => const RequestsList(
+                        showDeleteRequests: true,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ControlPanelButton(
+                textStyle: textStyle,
+                imageIcon: Image.asset('assets/icons/delete_icon.png'),
+                lable: 'حذف جمعية او فريق',
+                onPressed: () {
+                  Navigator.of(context).push(
+                    CupertinoPageRoute(
+                      builder: (_) => const OrganizationsList(isAdmin: true),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

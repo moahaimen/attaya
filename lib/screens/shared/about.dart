@@ -31,10 +31,12 @@ class About extends StatelessWidget {
               )
             : null,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios,
-            color: fromNavBar ? Colors.white : Colors.black,
-          ),
+          icon: fromNavBar
+              ? Container()
+              : Icon(
+                  Icons.arrow_back_ios,
+                  color: fromNavBar ? Colors.white : Colors.black,
+                ),
           onPressed: () {
             Navigator.of(context).pop();
           },
